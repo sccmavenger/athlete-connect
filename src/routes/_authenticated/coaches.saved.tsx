@@ -24,6 +24,7 @@ function SavedList() {
     enabled: !!user?.id && isCoach,
     queryKey: ["saved-athletes", user?.id],
     queryFn: async () => {
+      if (isMockMode()) return mockSavedAthletes();
       const { data, error } = await supabase
         .from("coach_saved_athletes")
         .select("id, notes, athletes(id, full_name, high_school, state, grad_year, position, profile_photo_url)")
