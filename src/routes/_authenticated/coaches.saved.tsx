@@ -57,7 +57,7 @@ function SavedList() {
       <p className="mt-1 text-sm text-muted-foreground">Your private shortlist.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {q.data?.map((row) => {
+        {q.data?.map((row: any) => {
           const a = row.athletes as {
             id: string;
             full_name: string;
