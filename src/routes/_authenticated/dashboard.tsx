@@ -24,6 +24,7 @@ function Dashboard() {
     enabled: !!user?.id && isAthlete,
     queryKey: ["my-athlete", user?.id],
     queryFn: async () => {
+      if (isMockMode()) return mockMyAthlete();
       const { data } = await supabase
         .from("athletes")
         .select("*, athlete_videos(id), athlete_events(id, event_date)")
