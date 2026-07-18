@@ -110,7 +110,7 @@ function CoachesDirectory() {
       </Card>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {q.data?.map((a) => (
+        {q.data?.map((a: any) => (
           <Link
             key={a.id}
             to="/a/$athleteId"

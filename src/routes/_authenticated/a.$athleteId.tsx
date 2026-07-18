@@ -183,7 +183,7 @@ function AthleteView() {
         <Card className="mt-6 p-5">
           <h2 className="mb-3 font-display text-lg font-bold">Highlight videos</h2>
           <ul className="space-y-2">
-            {q.data.videos.map((v) => (
+            {q.data.videos.map((v: any) => (
               <li key={v.id}>
                 <a
                   href={v.url}
@@ -206,7 +206,7 @@ function AthleteView() {
             <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
           </h2>
           <ul className="divide-y">
-            {q.data.events.map((ev) => (
+            {q.data.events.map((ev: any) => (
               <li key={ev.id} className="flex items-center justify-between py-2 text-sm">
                 <div>
                   <div className="font-medium">

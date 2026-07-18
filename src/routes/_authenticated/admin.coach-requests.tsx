@@ -69,7 +69,7 @@ function CoachRequests() {
     <div className="container mx-auto max-w-4xl px-4 py-10">
       <h1 className="font-display text-4xl font-bold">Coach requests</h1>
       <div className="mt-6 space-y-4">
-        {q.data?.map((r) => (
+        {q.data?.map((r: any) => (
           <Card key={r.id} className="p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
