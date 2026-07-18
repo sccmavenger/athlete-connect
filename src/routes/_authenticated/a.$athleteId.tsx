@@ -24,6 +24,7 @@ function AthleteView() {
   const q = useQuery({
     queryKey: ["athlete-view", athleteId],
     queryFn: async () => {
+      if (isMockMode()) return mockAthleteFull(athleteId);
       const [{ data: a }, { data: videos }, { data: events }] = await Promise.all([
         supabase.from("athletes").select("*").eq("id", athleteId).maybeSingle(),
         supabase.from("athlete_videos").select("*").eq("athlete_id", athleteId),
