@@ -23,6 +23,7 @@ function CoachRequests() {
     enabled: isAdmin,
     queryKey: ["coach-requests"],
     queryFn: async () => {
+      if (isMockMode()) return mockCoachRequests();
       const { data, error } = await supabase
         .from("coach_requests")
         .select("*")
