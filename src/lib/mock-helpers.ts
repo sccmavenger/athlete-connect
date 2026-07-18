@@ -1,0 +1,27 @@
+// Temporary mockup helper. Removed after screenshots.
+import { MOCK_ATHLETES, MOCK_VIDEOS, MOCK_EVENTS, MOCK_COACH_REQUESTS } from "./mock-data";
+
+export function isMockMode() {
+  if (typeof window === "undefined") return false;
+  return !!new URLSearchParams(window.location.search).get("mockRole");
+}
+
+export function mockAthletesList() { return MOCK_ATHLETES; }
+export function mockMyAthlete() {
+  return { ...MOCK_ATHLETES[0], athlete_videos: MOCK_VIDEOS.filter(v => v.athlete_id === "a1"), athlete_events: MOCK_EVENTS.filter(e => e.athlete_id === "a1") };
+}
+export function mockAthleteFull(id: string) {
+  const athlete = MOCK_ATHLETES.find(a => a.id === id) ?? MOCK_ATHLETES[0];
+  return {
+    athlete,
+    videos: MOCK_VIDEOS.filter(v => v.athlete_id === athlete.id),
+    events: MOCK_EVENTS.filter(e => e.athlete_id === athlete.id),
+  };
+}
+export function mockCoachRequests() { return MOCK_COACH_REQUESTS; }
+export function mockSavedAthletes() {
+  return [
+    { id: "s1", notes: "Great motor", athletes: MOCK_ATHLETES[0] },
+    { id: "s2", notes: "", athletes: MOCK_ATHLETES[2] },
+  ];
+}
