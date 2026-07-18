@@ -32,6 +32,7 @@ function CoachesDirectory() {
     enabled: !loading && (isCoach || isAdmin),
     queryKey: ["athletes-directory", { state, gradYear, position, minHeight, minGpa, search }],
     queryFn: async () => {
+      if (isMockMode()) return mockAthletesList();
       let query = supabase
         .from("athletes")
         .select("id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url")
