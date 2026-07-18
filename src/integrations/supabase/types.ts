@@ -14,16 +14,324 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      athlete_events: {
+        Row: {
+          athlete_id: string
+          created_at: string
+          event_date: string
+          event_time: string | null
+          id: string
+          is_mayb: boolean
+          location: string | null
+          notes: string | null
+          opponent: string | null
+        }
+        Insert: {
+          athlete_id: string
+          created_at?: string
+          event_date: string
+          event_time?: string | null
+          id?: string
+          is_mayb?: boolean
+          location?: string | null
+          notes?: string | null
+          opponent?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          created_at?: string
+          event_date?: string
+          event_time?: string | null
+          id?: string
+          is_mayb?: boolean
+          location?: string | null
+          notes?: string | null
+          opponent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_events_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      athlete_photos: {
+        Row: {
+          athlete_id: string
+          caption: string | null
+          created_at: string
+          id: string
+          url: string
+        }
+        Insert: {
+          athlete_id: string
+          caption?: string | null
+          created_at?: string
+          id?: string
+          url: string
+        }
+        Update: {
+          athlete_id?: string
+          caption?: string | null
+          created_at?: string
+          id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_photos_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      athlete_videos: {
+        Row: {
+          athlete_id: string
+          created_at: string
+          id: string
+          title: string | null
+          url: string
+        }
+        Insert: {
+          athlete_id: string
+          created_at?: string
+          id?: string
+          title?: string | null
+          url: string
+        }
+        Update: {
+          athlete_id?: string
+          created_at?: string
+          id?: string
+          title?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_videos_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      athletes: {
+        Row: {
+          act_score: number | null
+          bio: string | null
+          created_at: string
+          full_name: string
+          gpa: number | null
+          grad_year: number | null
+          height_inches: number | null
+          high_school: string | null
+          hometown: string | null
+          id: string
+          instagram_handle: string | null
+          intended_major: string | null
+          jersey_number: string | null
+          position: string | null
+          profile_photo_url: string | null
+          sat_score: number | null
+          state: string | null
+          tiktok_handle: string | null
+          updated_at: string
+          user_id: string
+          weight_lbs: number | null
+        }
+        Insert: {
+          act_score?: number | null
+          bio?: string | null
+          created_at?: string
+          full_name: string
+          gpa?: number | null
+          grad_year?: number | null
+          height_inches?: number | null
+          high_school?: string | null
+          hometown?: string | null
+          id?: string
+          instagram_handle?: string | null
+          intended_major?: string | null
+          jersey_number?: string | null
+          position?: string | null
+          profile_photo_url?: string | null
+          sat_score?: number | null
+          state?: string | null
+          tiktok_handle?: string | null
+          updated_at?: string
+          user_id: string
+          weight_lbs?: number | null
+        }
+        Update: {
+          act_score?: number | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string
+          gpa?: number | null
+          grad_year?: number | null
+          height_inches?: number | null
+          high_school?: string | null
+          hometown?: string | null
+          id?: string
+          instagram_handle?: string | null
+          intended_major?: string | null
+          jersey_number?: string | null
+          position?: string | null
+          profile_photo_url?: string | null
+          sat_score?: number | null
+          state?: string | null
+          tiktok_handle?: string | null
+          updated_at?: string
+          user_id?: string
+          weight_lbs?: number | null
+        }
+        Relationships: []
+      }
+      coach_requests: {
+        Row: {
+          college: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          message: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["coach_request_status"]
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          college?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          message?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["coach_request_status"]
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          college?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["coach_request_status"]
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      coach_saved_athletes: {
+        Row: {
+          athlete_id: string
+          coach_user_id: string
+          created_at: string
+          id: string
+          notes: string | null
+        }
+        Insert: {
+          athlete_id: string
+          coach_user_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          coach_user_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_saved_athletes_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "coach" | "athlete"
+      coach_request_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +458,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "coach", "athlete"],
+      coach_request_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
