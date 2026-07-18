@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
+import { isMockMode, mockMyAthlete } from "@/lib/mock-helpers";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, Circle, Clock } from "lucide-react";
@@ -23,6 +24,7 @@ function Dashboard() {
     enabled: !!user?.id && isAthlete,
     queryKey: ["my-athlete", user?.id],
     queryFn: async () => {
+      if (isMockMode()) return mockMyAthlete();
       const { data } = await supabase
         .from("athletes")
         .select("*, athlete_videos(id), athlete_events(id, event_date)")

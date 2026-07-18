@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
+import { isMockMode, mockSavedAthletes } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ function SavedList() {
     enabled: !!user?.id && isCoach,
     queryKey: ["saved-athletes", user?.id],
     queryFn: async () => {
+      if (isMockMode()) return mockSavedAthletes();
       const { data, error } = await supabase
         .from("coach_saved_athletes")
         .select("id, notes, athletes(id, full_name, high_school, state, grad_year, position, profile_photo_url)")
@@ -55,7 +57,7 @@ function SavedList() {
       <p className="mt-1 text-sm text-muted-foreground">Your private shortlist.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {q.data?.map((row) => {
+        {q.data?.map((row: any) => {
           const a = row.athletes as {
             id: string;
             full_name: string;

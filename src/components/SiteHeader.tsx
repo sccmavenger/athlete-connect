@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth-hooks";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import maybLogo from "@/assets/mayb-logo.png";
 
 export function SiteHeader() {
   const { user, roles, loading } = useAuth();
@@ -24,9 +25,7 @@ export function SiteHeader() {
     <header className="border-b bg-primary text-primary-foreground">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground font-display text-lg font-bold">
-            RH
-          </div>
+          <img src={maybLogo} alt="MAYB" className="h-10 w-auto" />
           <span className="font-display text-xl font-bold tracking-wide">
             RECRUITING HUB
           </span>

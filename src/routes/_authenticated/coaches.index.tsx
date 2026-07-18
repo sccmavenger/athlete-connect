@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
+import { isMockMode, mockAthletesList } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +32,7 @@ function CoachesDirectory() {
     enabled: !loading && (isCoach || isAdmin),
     queryKey: ["athletes-directory", { state, gradYear, position, minHeight, minGpa, search }],
     queryFn: async () => {
+      if (isMockMode()) return mockAthletesList();
       let query = supabase
         .from("athletes")
         .select("id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url")
@@ -108,7 +110,7 @@ function CoachesDirectory() {
       </Card>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {q.data?.map((a) => (
+        {q.data?.map((a: any) => (
           <Link
             key={a.id}
             to="/a/$athleteId"

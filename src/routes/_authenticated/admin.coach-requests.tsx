@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
+import { isMockMode, mockCoachRequests } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -22,6 +23,7 @@ function CoachRequests() {
     enabled: isAdmin,
     queryKey: ["coach-requests"],
     queryFn: async () => {
+      if (isMockMode()) return mockCoachRequests();
       const { data, error } = await supabase
         .from("coach_requests")
         .select("*")
@@ -67,7 +69,7 @@ function CoachRequests() {
     <div className="container mx-auto max-w-4xl px-4 py-10">
       <h1 className="font-display text-4xl font-bold">Coach requests</h1>
       <div className="mt-6 space-y-4">
-        {q.data?.map((r) => (
+        {q.data?.map((r: any) => (
           <Card key={r.id} className="p-5">
             <div className="flex items-start justify-between gap-4">
               <div>

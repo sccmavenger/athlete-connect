@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
+import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ function AthleteView() {
   const q = useQuery({
     queryKey: ["athlete-view", athleteId],
     queryFn: async () => {
+      if (isMockMode()) return mockAthleteFull(athleteId);
       const [{ data: a }, { data: videos }, { data: events }] = await Promise.all([
         supabase.from("athletes").select("*").eq("id", athleteId).maybeSingle(),
         supabase.from("athlete_videos").select("*").eq("athlete_id", athleteId),
@@ -181,7 +183,7 @@ function AthleteView() {
         <Card className="mt-6 p-5">
           <h2 className="mb-3 font-display text-lg font-bold">Highlight videos</h2>
           <ul className="space-y-2">
-            {q.data.videos.map((v) => (
+            {q.data.videos.map((v: any) => (
               <li key={v.id}>
                 <a
                   href={v.url}
@@ -204,7 +206,7 @@ function AthleteView() {
             <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
           </h2>
           <ul className="divide-y">
-            {q.data.events.map((ev) => (
+            {q.data.events.map((ev: any) => (
               <li key={ev.id} className="flex items-center justify-between py-2 text-sm">
                 <div>
                   <div className="font-medium">
