@@ -44,11 +44,11 @@
   --popover: oklch(0.17 0 0);
   --popover-foreground: oklch(0.98 0 0);
 
-  /* Dodger blue — primary */
-  --primary: oklch(0.63 0.20 255);
+  /* Black — primary surface (header, hero) */
+  --primary: oklch(0.15 0 0);
   --primary-foreground: oklch(0.98 0 0);
 
-  /* Blue accent (same family) */
+  /* Dodger blue accent — CTAs, links */
   --accent: oklch(0.63 0.20 255);
   --accent-foreground: oklch(0.98 0 0);
 
