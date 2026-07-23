@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth-hooks";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import maybLogo from "@/assets/mayb-logo.png";
+import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
 export function SiteHeader() {
   const { user, roles, loading } = useAuth();
@@ -25,7 +25,7 @@ export function SiteHeader() {
     <header className="border-b bg-primary text-primary-foreground">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={maybLogo} alt="MAYB" className="h-10 w-auto" />
+          <img src={summitLogo.url} alt="Summit Hoops" className="h-10 w-auto" />
           <span className="font-display text-xl font-bold tracking-wide">
             RECRUITING HUB
           </span>
