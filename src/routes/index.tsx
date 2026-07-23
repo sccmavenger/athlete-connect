@@ -14,7 +14,7 @@ function Landing() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+      <section className="relative overflow-hidden bg-background text-foreground">
         <img
           src={heroImg}
           alt="Youth basketball player driving to the hoop"
@@ -30,7 +30,7 @@ function Landing() {
             <h1 className="mt-6 font-display text-5xl font-bold leading-tight md:text-7xl">
               Get seen by the coaches who matter.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-primary-foreground/85">
+            <p className="mt-6 max-w-xl text-lg text-foreground/85">
               Recruiting Hub is a regional recruiting database built for Summit Hoops athletes.
               Build your profile, share your highlights, and let college coaches find you.
             </p>
@@ -44,7 +44,7 @@ function Landing() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+                className="border-foreground/40 bg-transparent text-foreground hover:bg-foreground/10"
               >
                 <Link to="/auth" search={{ role: "coach" }}>
                   I'm a college coach
@@ -84,12 +84,13 @@ function Landing() {
       </section>
 
       {/* CTA band */}
-      <section className="bg-primary text-primary-foreground">
+      <section className="bg-card text-card-foreground border-t">
         <div className="container mx-auto flex flex-col items-center gap-6 px-4 py-16 text-center">
           <h2 className="font-display text-4xl font-bold md:text-5xl">
             Playing Summit Hoops this season? Get on the map.
           </h2>
-          <p className="max-w-2xl text-primary-foreground/85">
+          <p className="max-w-2xl text-card-foreground/85">
+
             Free to start. Build your profile in minutes and share your link with coaches, family, and scouts.
           </p>
           <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
