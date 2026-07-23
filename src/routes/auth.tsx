@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,22 +50,6 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleGoogle() {
-    setLoading(true);
-    try {
-      const res = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (res.error) {
-        toast.error(res.error.message);
-        return;
-      }
-      if (res.redirected) return;
-      navigate({ to: "/dashboard", replace: true });
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
@@ -129,21 +113,6 @@ function AuthPage() {
           </p>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleGoogle}
-          disabled={loading}
-          className="w-full"
-        >
-          Continue with Google
-        </Button>
-
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" />
-          OR
-          <div className="h-px flex-1 bg-border" />
-        </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}>
           <TabsList className="grid w-full grid-cols-2">
