@@ -44,26 +44,27 @@
   --popover: oklch(0.17 0 0);
   --popover-foreground: oklch(0.98 0 0);
 
-  /* Black — primary surface (header, hero) */
-  --primary: oklch(0.15 0 0);
+  /* Dodger blue — primary CTAs, links */
+  --primary: oklch(0.63 0.20 255);
   --primary-foreground: oklch(0.98 0 0);
 
-  /* Dodger blue accent — CTAs, links */
+  /* Same dodger blue as accent for highlights */
   --accent: oklch(0.63 0.20 255);
   --accent-foreground: oklch(0.98 0 0);
 
-  --secondary: oklch(0.22 0 0);
+  --secondary: oklch(0.28 0 0);
   --secondary-foreground: oklch(0.98 0 0);
 
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.72 0 0);
+  --muted: oklch(0.28 0 0);
+  --muted-foreground: oklch(0.78 0 0);
 
   --destructive: oklch(0.62 0.22 27);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(1 0 0 / 14%);
-  --input: oklch(1 0 0 / 16%);
+  --border: oklch(1 0 0 / 20%);
+  --input: oklch(1 0 0 / 22%);
   --ring: oklch(0.63 0.20 255);
+
 }
 
 
