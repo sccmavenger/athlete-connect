@@ -439,7 +439,7 @@ function ProfileEdit() {
                     )
                   }
                 />
-                MAYB event
+                Summit Hoops event
               </label>
               <Button
                 type="button"

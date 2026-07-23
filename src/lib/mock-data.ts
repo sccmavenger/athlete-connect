@@ -22,7 +22,7 @@ export const MOCK_ATHLETES = [
     intended_major: "Business",
     instagram_handle: "jalen.hoops",
     tiktok_handle: null,
-    bio: "Combo guard with a quick first step. Led team to MAYB regional final in 2025.",
+    bio: "Combo guard with a quick first step. Led team to Summit Hoops regional final in 2025.",
     profile_photo_url: null,
     created_at: new Date().toISOString(),
   },
@@ -134,13 +134,13 @@ export const MOCK_ATHLETES = [
 ];
 
 export const MOCK_VIDEOS = [
-  { id: "v1", athlete_id: "a1", title: "2025 MAYB Nationals Highlights", provider: "youtube", url: "https://youtube.com/watch?v=x" },
+  { id: "v1", athlete_id: "a1", title: "2025 Summit Hoops Nationals Highlights", provider: "youtube", url: "https://youtube.com/watch?v=x" },
   { id: "v2", athlete_id: "a1", title: "Junior Year Season Mix", provider: "hudl", url: "https://hudl.com/x" },
 ];
 
 export const MOCK_EVENTS = [
-  { id: "e1", athlete_id: "a1", title: "MAYB Summer Kickoff", event_date: "2026-08-15", location: "Wichita, KS", opponent: "KC Elite" },
-  { id: "e2", athlete_id: "a1", title: "MAYB Nationals Pool Play", event_date: "2026-07-22", location: "OKC, OK", opponent: "Tulsa Storm" },
+  { id: "e1", athlete_id: "a1", title: "Summit Hoops Summer Kickoff", event_date: "2026-08-15", location: "Wichita, KS", opponent: "KC Elite" },
+  { id: "e2", athlete_id: "a1", title: "Summit Hoops Nationals Pool Play", event_date: "2026-07-22", location: "OKC, OK", opponent: "Tulsa Storm" },
 ];
 
 export const MOCK_COACH_REQUESTS = [

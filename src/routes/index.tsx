@@ -31,7 +31,7 @@ function Landing() {
               Get seen by the coaches who matter.
             </h1>
             <p className="mt-6 max-w-xl text-lg text-primary-foreground/85">
-              Recruiting Hub is a regional recruiting database built for MAYB athletes.
+              Recruiting Hub is a regional recruiting database built for Summit Hoops athletes.
               Build your profile, share your highlights, and let college coaches find you.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -69,7 +69,7 @@ function Landing() {
             { icon: Trophy, title: "Verified measurements", desc: "Track camp results and combine numbers over time." },
             { icon: GraduationCap, title: "Academic info", desc: "GPA, test scores, and intended major front and center." },
             { icon: Video, title: "Highlight videos", desc: "Link Hudl, YouTube, and Vimeo reels straight to your page." },
-            { icon: Calendar, title: "MAYB schedule", desc: "Post upcoming games so coaches know when to watch." },
+            { icon: Calendar, title: "Summit Hoops schedule", desc: "Post upcoming games so coaches know when to watch." },
             { icon: MapPin, title: "Regional focus", desc: "Built for Midwest athletes and the coaches who scout them." },
           ].map((f) => (
             <div key={f.title} className="rounded-xl border bg-card p-6 shadow-sm">
@@ -87,7 +87,7 @@ function Landing() {
       <section className="bg-primary text-primary-foreground">
         <div className="container mx-auto flex flex-col items-center gap-6 px-4 py-16 text-center">
           <h2 className="font-display text-4xl font-bold md:text-5xl">
-            Playing MAYB this season? Get on the map.
+            Playing Summit Hoops this season? Get on the map.
           </h2>
           <p className="max-w-2xl text-primary-foreground/85">
             Free to start. Build your profile in minutes and share your link with coaches, family, and scouts.

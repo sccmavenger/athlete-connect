@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Recruiting Hub connects Midwest youth basketball athletes with college coaches. Player profiles, highlight videos, academics, and MAYB event schedules.",
+          "Recruiting Hub connects Midwest youth basketball athletes with college coaches. Player profiles, highlight videos, academics, and Summit Hoops event schedules.",
       },
       { property: "og:title", content: "Recruiting Hub — Midwest youth basketball recruiting" },
       {
