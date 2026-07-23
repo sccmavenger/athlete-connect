@@ -225,7 +225,7 @@ function AthleteView() {
                 </div>
                 {ev.is_mayb && (
                   <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-foreground">
-                    MAYB
+                    Summit Hoops
                   </span>
                 )}
               </li>
