@@ -50,22 +50,6 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleGoogle() {
-    setLoading(true);
-    try {
-      const res = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (res.error) {
-        toast.error(res.error.message);
-        return;
-      }
-      if (res.redirected) return;
-      navigate({ to: "/dashboard", replace: true });
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
