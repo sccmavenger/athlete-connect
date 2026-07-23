@@ -22,7 +22,7 @@ export function SiteHeader() {
   const isAthlete = roles.includes("athlete");
 
   return (
-    <header className="border-b bg-primary text-primary-foreground">
+    <header className="border-b bg-card text-card-foreground">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img src={summitLogo.url} alt="Summit Hoops" className="h-10 w-auto" />
