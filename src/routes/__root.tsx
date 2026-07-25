@@ -89,10 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "A regional recruiting database for Midwest athletes and the college coaches who scout them.",
+          "Recruiting Hub connects Midwest youth basketball athletes with college coaches. Player profiles, highlight videos, academics, and Summit Hoops event schedules.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Recruiting Hub — Midwest youth basketball recruiting" },
+      { name: "twitter:description", content: "Recruiting Hub connects Midwest youth basketball athletes with college coaches. Player profiles, highlight videos, academics, and Summit Hoops event schedules." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c241b9e-1a60-4ba3-adac-2bc66ae76a6c/id-preview-8c2d3b77--e78b2f67-fcfc-4a7c-ac11-53270ce76f6d.lovable.app-1784772501599.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c241b9e-1a60-4ba3-adac-2bc66ae76a6c/id-preview-8c2d3b77--e78b2f67-fcfc-4a7c-ac11-53270ce76f6d.lovable.app-1784772501599.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
