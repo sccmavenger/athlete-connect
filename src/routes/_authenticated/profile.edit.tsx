@@ -36,6 +36,7 @@ type AthleteForm = {
   tiktok_handle: string;
   bio: string;
   profile_photo_url: string;
+  is_published: boolean;
 };
 
 const empty: AthleteForm = {
@@ -56,6 +57,7 @@ const empty: AthleteForm = {
   tiktok_handle: "",
   bio: "",
   profile_photo_url: "",
+  is_published: false,
 };
 
 type Video = { id?: string; url: string; title: string; _new?: boolean };
@@ -107,6 +109,7 @@ function ProfileEdit() {
           tiktok_handle: athlete.tiktok_handle ?? "",
           bio: athlete.bio ?? "",
           profile_photo_url: athlete.profile_photo_url ?? "",
+          is_published: athlete.is_published ?? false,
         });
         const [{ data: v }, { data: ev }] = await Promise.all([
           supabase.from("athlete_videos").select("*").eq("athlete_id", athlete.id),
@@ -179,6 +182,7 @@ function ProfileEdit() {
         tiktok_handle: form.tiktok_handle || null,
         bio: form.bio || null,
         profile_photo_url: form.profile_photo_url || null,
+        is_published: form.is_published,
       };
 
       let athleteId = form.id;
@@ -298,6 +302,31 @@ function ProfileEdit() {
         <Field label="Bio">
           <Textarea value={form.bio} onChange={(e) => update("bio", e.target.value)} maxLength={1000} rows={3} />
         </Field>
+      </Card>
+
+      {/* Visibility */}
+      <Card className="mt-6 space-y-3 p-6">
+        <h2 className="font-display text-xl font-bold">Profile visibility</h2>
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 accent-[hsl(var(--primary))]"
+            checked={form.is_published}
+            onChange={(e) => update("is_published", e.target.checked)}
+          />
+          <span>
+            <span className="font-semibold">Publish this profile publicly</span>
+            <span className="block text-muted-foreground">
+              Anyone with the link can view your profile, highlights and schedule — great for sharing with college
+              coaches on social media. Leave off to keep the profile visible only to verified coaches and admins.
+            </span>
+          </span>
+        </label>
+        {form.id && form.is_published && (
+          <p className="text-xs text-muted-foreground">
+            Public link: <span className="text-primary">/a/{form.id}</span>
+          </p>
+        )}
       </Card>
 
       {/* Academics */}
