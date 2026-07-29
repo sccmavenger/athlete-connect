@@ -26,7 +26,7 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | 8 | Mobile responsive audit (390–414 px) | [ ] | Tap targets, spacing, overflow |
-| 9 | Decide athlete profile visibility model | [ ] | Currently `/a/:athleteId` is auth-only. Decide public vs coach-only |
+| 9 | Decide athlete profile visibility model | [x] | | Public: `/a/:athleteId` is a public SSR route with OG tags. Athletes opt in via a "Publish this profile publicly" toggle (`athletes.is_published`); unpublished profiles stay visible only to the owner, coaches and admins |
 | 10 | Add contact info on athlete profile for coaches | [ ] | Email / phone visible only to approved coaches |
 | 11 | Action photos upload (up to 6) | [ ] | Currently only profile photo |
 | 12 | Form validation and error handling | [ ] | Height, GPA, grad year, URLs, duplicate coach requests |

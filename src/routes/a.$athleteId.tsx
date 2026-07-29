@@ -3,26 +3,55 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
+import { getPublicAthlete } from "@/lib/athlete-public.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Bookmark, BookmarkCheck, Calendar, ExternalLink, GraduationCap, Instagram, MapPin, Ruler } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/a/$athleteId")({
-  head: () => ({
-    meta: [{ title: "Athlete profile — Recruiting Hub" }, { name: "robots", content: "noindex" }],
-  }),
+export const Route = createFileRoute("/a/$athleteId")({
+  loader: async ({ params }) => getPublicAthlete({ data: { athleteId: params.athleteId } }),
+  head: ({ loaderData }) => {
+    const a = loaderData?.athlete;
+    const name = a?.full_name ?? "Athlete profile";
+    const title = a ? `${name} — Summit Hoops Recruiting Profile` : "Athlete profile — Summit Hoops";
+    const description = a
+      ? `${name}${a.position ? `, ${a.position}` : ""}${a.grad_year ? `, Class of ${a.grad_year}` : ""}${
+          a.high_school ? ` at ${a.high_school}` : ""
+        }. Verified measurements, academics, highlights and game schedule.`
+      : "Youth basketball recruiting profile on the Summit Hoops circuit.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "profile" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
+  errorComponent: () => (
+    <div className="container mx-auto max-w-2xl px-4 py-12 text-muted-foreground">
+      Something went wrong loading this profile.
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="container mx-auto max-w-2xl px-4 py-12 text-muted-foreground">Athlete not found.</div>
+  ),
   component: AthleteView,
 });
 
 function AthleteView() {
   const { athleteId } = Route.useParams();
+  const publicData = Route.useLoaderData();
   const { user, roles } = useAuth();
   const isCoach = roles.includes("coach");
   const qc = useQueryClient();
 
   const q = useQuery({
-    queryKey: ["athlete-view", athleteId],
+    queryKey: ["athlete-view", athleteId, user?.id ?? "anon"],
+    initialData: publicData?.athlete ? publicData : undefined,
     queryFn: async () => {
       if (isMockMode()) return mockAthleteFull(athleteId);
       const [{ data: a }, { data: videos }, { data: events }] = await Promise.all([
@@ -30,6 +59,7 @@ function AthleteView() {
         supabase.from("athlete_videos").select("*").eq("athlete_id", athleteId),
         supabase.from("athlete_events").select("*").eq("athlete_id", athleteId).order("event_date"),
       ]);
+      if (!a) return publicData ?? { athlete: null, videos: [], events: [] };
       return { athlete: a, videos: videos ?? [], events: events ?? [] };
     },
   });
@@ -68,7 +98,7 @@ function AthleteView() {
   if (!a) {
     return (
       <div className="container mx-auto max-w-2xl px-4 py-12 text-muted-foreground">
-        Athlete not found or you don't have access.
+        This profile isn't published yet, or you don't have access to it.
       </div>
     );
   }
@@ -81,7 +111,7 @@ function AthleteView() {
     <div className="container mx-auto max-w-4xl px-4 py-10">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
         {a.profile_photo_url ? (
-          <img src={a.profile_photo_url} alt="" className="h-32 w-32 rounded-xl object-cover" />
+          <img src={a.profile_photo_url} alt={`${a.full_name} profile photo`} className="h-32 w-32 rounded-xl object-cover" />
         ) : (
           <div className="flex h-32 w-32 items-center justify-center rounded-xl bg-primary text-primary-foreground font-display text-3xl">
             {a.full_name.slice(0, 2).toUpperCase()}
@@ -239,6 +269,6 @@ function AthleteView() {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">{children}</span>
+    <span className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-semibold">{children}</span>
   );
 }

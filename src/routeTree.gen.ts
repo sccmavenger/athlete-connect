@@ -15,12 +15,12 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AAthleteIdRouteImport } from './routes/a.$athleteId'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
 import { Route as AuthenticatedAdminCoachRequestsRouteImport } from './routes/_authenticated/admin.coach-requests'
-import { Route as AuthenticatedAAthleteIdRouteImport } from './routes/_authenticated/a.$athleteId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -49,6 +49,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AAthleteIdRoute = AAthleteIdRouteImport.update({
+  id: '/a/$athleteId',
+  path: '/a/$athleteId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -80,11 +85,6 @@ const AuthenticatedAdminCoachRequestsRoute =
     path: '/admin/coach-requests',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAAthleteIdRoute = AuthenticatedAAthleteIdRouteImport.update({
-  id: '/a/$athleteId',
-  path: '/a/$athleteId',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -93,7 +93,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/a/$athleteId': typeof AuthenticatedAAthleteIdRoute
+  '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
@@ -106,7 +106,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/a/$athleteId': typeof AuthenticatedAAthleteIdRoute
+  '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
@@ -121,7 +121,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/a/$athleteId': typeof AuthenticatedAAthleteIdRoute
+  '/a/$athleteId': typeof AAthleteIdRoute
   '/_authenticated/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
   '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
@@ -163,7 +163,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/terms'
     | '/_authenticated/dashboard'
-    | '/_authenticated/a/$athleteId'
+    | '/a/$athleteId'
     | '/_authenticated/admin/coach-requests'
     | '/_authenticated/coaches/saved'
     | '/_authenticated/profile/edit'
@@ -177,6 +177,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
+  AAthleteIdRoute: typeof AAthleteIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -223,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/a/$athleteId': {
+      id: '/a/$athleteId'
+      path: '/a/$athleteId'
+      fullPath: '/a/$athleteId'
+      preLoaderRoute: typeof AAthleteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -258,19 +266,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCoachRequestsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/a/$athleteId': {
-      id: '/_authenticated/a/$athleteId'
-      path: '/a/$athleteId'
-      fullPath: '/a/$athleteId'
-      preLoaderRoute: typeof AuthenticatedAAthleteIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedAAthleteIdRoute: typeof AuthenticatedAAthleteIdRoute
   AuthenticatedAdminCoachRequestsRoute: typeof AuthenticatedAdminCoachRequestsRoute
   AuthenticatedCoachesSavedRoute: typeof AuthenticatedCoachesSavedRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
@@ -279,7 +279,6 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedAAthleteIdRoute: AuthenticatedAAthleteIdRoute,
   AuthenticatedAdminCoachRequestsRoute: AuthenticatedAdminCoachRequestsRoute,
   AuthenticatedCoachesSavedRoute: AuthenticatedCoachesSavedRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
@@ -296,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
+  AAthleteIdRoute: AAthleteIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
