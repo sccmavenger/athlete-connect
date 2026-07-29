@@ -4,7 +4,23 @@ import { SiteHeader } from "@/components/SiteHeader";
 import heroImg from "@/assets/hero-basketball.jpg";
 import { Trophy, Video, GraduationCap, Users, MapPin, Calendar } from "lucide-react";
 
+const TITLE = "Recruiting Hub — Midwest youth basketball recruiting";
+const DESC =
+  "Build a recruiting profile with measurements, academics, highlights, and your Summit Hoops schedule so college coaches can find you.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESC },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://athletic-spark.lovable.app/" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://athletic-spark.lovable.app/" }],
+  }),
   component: Landing,
 });
 
