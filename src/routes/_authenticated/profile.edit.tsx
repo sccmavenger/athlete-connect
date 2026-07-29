@@ -135,7 +135,7 @@ function ProfileEdit() {
     })();
   }, [user]);
 
-  function update<K extends keyof AthleteForm>(k: K, v: string) {
+  function update<K extends keyof AthleteForm>(k: K, v: AthleteForm[K]) {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
