@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +7,8 @@ import { isMockMode, mockCoachRequests } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { reviewCoachRequest } from "@/lib/coach-admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/coach-requests")({
   head: () => ({
@@ -33,27 +36,20 @@ function CoachRequests() {
     },
   });
 
-  async function approve(userId: string, reqId: string) {
-    // Grant coach role
-    const { error: e1 } = await supabase.from("user_roles").insert({ user_id: userId, role: "coach" });
-    if (e1 && !e1.message.includes("duplicate")) return toast.error(e1.message);
-    const { error: e2 } = await supabase
-      .from("coach_requests")
-      .update({ status: "approved", reviewed_at: new Date().toISOString() })
-      .eq("id", reqId);
-    if (e2) return toast.error(e2.message);
-    qc.invalidateQueries({ queryKey: ["coach-requests"] });
-    toast.success("Coach approved");
-  }
+  const review = useServerFn(reviewCoachRequest);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
-  async function reject(reqId: string) {
-    const { error } = await supabase
-      .from("coach_requests")
-      .update({ status: "rejected", reviewed_at: new Date().toISOString() })
-      .eq("id", reqId);
-    if (error) return toast.error(error.message);
-    qc.invalidateQueries({ queryKey: ["coach-requests"] });
-    toast.success("Rejected");
+  async function decide(reqId: string, decision: "approved" | "rejected") {
+    setBusyId(reqId);
+    try {
+      await review({ data: { requestId: reqId, decision } });
+      qc.invalidateQueries({ queryKey: ["coach-requests"] });
+      toast.success(decision === "approved" ? "Coach approved" : "Request rejected");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Something went wrong");
+    } finally {
+      setBusyId(null);
+    }
   }
 
   if (loading) return <div className="container mx-auto px-4 py-12">Loading...</div>;
@@ -98,10 +94,15 @@ function CoachRequests() {
                 </span>
                 {r.status === "pending" && (
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => reject(r.id)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busyId === r.id}
+                      onClick={() => decide(r.id, "rejected")}
+                    >
                       Reject
                     </Button>
-                    <Button size="sm" onClick={() => approve(r.user_id, r.id)}>
+                    <Button size="sm" disabled={busyId === r.id} onClick={() => decide(r.id, "approved")}>
                       Approve
                     </Button>
                   </div>
