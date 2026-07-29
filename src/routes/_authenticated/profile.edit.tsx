@@ -476,11 +476,11 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <div>
-      <Label className="mb-1 block">
+    <Label className="block font-normal">
+      <span className="mb-1 block text-sm font-medium">
         {label} {required && <span className="text-destructive">*</span>}
-      </Label>
+      </span>
       {children}
-    </div>
+    </Label>
   );
 }
