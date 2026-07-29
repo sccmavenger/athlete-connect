@@ -136,6 +136,7 @@ export type Database = {
           id: string
           instagram_handle: string | null
           intended_major: string | null
+          is_published: boolean
           jersey_number: string | null
           position: string | null
           profile_photo_url: string | null
@@ -159,6 +160,7 @@ export type Database = {
           id?: string
           instagram_handle?: string | null
           intended_major?: string | null
+          is_published?: boolean
           jersey_number?: string | null
           position?: string | null
           profile_photo_url?: string | null
@@ -182,6 +184,7 @@ export type Database = {
           id?: string
           instagram_handle?: string | null
           intended_major?: string | null
+          is_published?: boolean
           jersey_number?: string | null
           position?: string | null
           profile_photo_url?: string | null
