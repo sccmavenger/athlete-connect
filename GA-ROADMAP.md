@@ -14,11 +14,11 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | # | Task | Status | Owner | Notes |
 |---|------|--------|-------|-------|
 | 1 | End-to-end real-account smoke test (athlete → profile → media → coach → save) | [ ] | | Use real auth, not mock mode |
-| 2 | Assign a project admin account in `user_roles` | [ ] | | Need customer email for admin account |
-| 3 | Secure coach approve/reject with `createServerFn` + `has_role()` + `supabaseAdmin` | [ ] | | Currently browser client can call `user_roles.insert` |
-| 4 | Audit and verify RLS policies on every table | [ ] | | `athletes`, `athlete_videos`, `athlete_photos`, `athlete_events`, `coach_requests`, `coach_saved_athletes`, `user_roles`, `profiles` |
-| 5 | Verify `athlete-media` storage bucket exists and RLS upload rules work | [ ] | | Athletes only, per-user folders |
-| 6 | Production build passes cleanly (`bun run build`) | [ ] | | Run before each release |
+| 2 | Assign a project admin account in `user_roles` | [x] | | `dguilloryjr@msn.com` granted `admin` |
+| 3 | Secure coach approve/reject with `createServerFn` + `has_role()` + `supabaseAdmin` | [x] | | `src/lib/coach-admin.functions.ts`; admin page no longer writes `user_roles` |
+| 4 | Audit and verify RLS policies on every table | [x] | | All public tables have RLS enabled; owner + coach/admin policies verified |
+| 5 | Verify `athlete-media` storage bucket exists and RLS upload rules work | [x] | | Private bucket, per-user folder policies + coach/admin read verified |
+| 6 | Production build passes cleanly (`bun run build`) | [x] | | Build + typecheck clean |
 | 7 | Password reset page tested end-to-end | [ ] | | `/reset-password` exists but untested |
 
 ## Important before launch
