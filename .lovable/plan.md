@@ -86,7 +86,12 @@ RLS summary:
 1. Enable Lovable Cloud.
 2. Migration: `user_roles` + `has_role` + `profiles` + `athletes` + child tables + `coach_requests` + `coach_saved_athletes` + RLS + grants + triggers.
 3. Storage bucket `athlete-media`.
-4. Design tokens in `src/styles.css` (teal/orange palette).
+4. Design tokens in `src/styles.css` (Summit Hoops dark palette).
 5. Routes: landing, auth, athlete dashboard + profile edit, public athlete page, coach directory + saved, admin coach-requests.
-6. Google + email/password auth wired; coach-approval gate; sign-out hygiene.
+6. Email/password auth wired; coach-approval gate; sign-out hygiene.
 7. Generated basketball hero image for landing.
+
+## Ongoing tracking
+
+- See `GA-ROADMAP.md` in the repo root for the daily GA milestone checklist.
+

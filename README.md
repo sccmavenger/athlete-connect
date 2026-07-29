@@ -45,9 +45,14 @@ Add `?mockRole=athlete`, `?mockRole=coach`, or `?mockRole=admin` to any authenti
 
 ## Branding
 
-- Logo and icons sourced from the MAYB website.
+- Logo and icons sourced from the Summit Hoops brand.
 - Color scheme inspired by Summit Hoops: black background, white text, and dodger blue accents.
+
+## Project Roadmap
+
+The day-to-day GA checklist lives in **[GA-ROADMAP.md](./GA-ROADMAP.md)**. We review and update it daily until launch.
 
 ## Project Name
 
 Recruiting Hub
+
