@@ -30,9 +30,9 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | 10 | Add contact info on athlete profile for coaches | [ ] | Email / phone visible only to approved coaches |
 | 11 | Action photos upload (up to 6) | [ ] | Currently only profile photo |
 | 12 | Form validation and error handling | [ ] | Height, GPA, grad year, URLs, duplicate coach requests |
-| 13 | SEO head metadata on all routes | [ ] | Landing done; internal routes need `description`, `og:title`, `og:description`, `twitter:card` |
+| 13 | SEO head metadata on all routes | [x] | Landing, Terms, Privacy have full meta + canonical; authed routes intentionally `noindex` |
 | 14 | Loading and empty states | [ ] | Replace plain “Loading…” with skeletons or friendly empties |
-| 15 | Terms of Service and Privacy Policy pages | [ ] | Required for user-generated content and coach approvals |
+| 15 | Terms of Service and Privacy Policy pages | [x] | `/terms` and `/privacy` live, linked from the landing footer |
 
 ## Nice-to-have / post-launch
 
