@@ -46,7 +46,9 @@ type AthleteForm = {
   tiktok_handle: string;
   bio: string;
   profile_photo_url: string;
+  zip_code: string;
   is_published: boolean;
+
 };
 
 const empty: AthleteForm = {
