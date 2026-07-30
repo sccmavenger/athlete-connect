@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/coaches/games")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: CoachGames;
+  component: CoachGames,
 });
 
 const RADII = [25, 50, 100, 250];
@@ -50,7 +50,7 @@ function CoachGames() {
 
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(100);
-  const [window, setWindow] = useState<"weekend" | "7" | "30">("7");
+  const [span, setSpan] = useState<"weekend" | "7" | "30">("7");
   const [maybOnly, setMaybOnly] = useState(false);
 
   const origin = useQuery({
@@ -61,7 +61,7 @@ function CoachGames() {
   });
 
   const range = useMemo(() => {
-    if (window === "weekend") {
+    if (span === "weekend") {
       const now = new Date();
       const day = now.getDay(); // 0 Sun … 6 Sat
       const toFri = (5 - day + 7) % 7;
@@ -71,8 +71,8 @@ function CoachGames() {
       sun.setDate(fri.getDate() + 2);
       return { from: fri.toISOString().slice(0, 10), to: sun.toISOString().slice(0, 10) };
     }
-    return { from: isoDay(0), to: isoDay(window === "7" ? 7 : 30) };
-  }, [window]);
+    return { from: isoDay(0), to: isoDay(span === "7" ? 7 : 30) };
+  }, [span]);
 
   const games = useQuery({
     enabled: isCoach,
@@ -206,8 +206,8 @@ function CoachGames() {
                 key={v}
                 type="button"
                 size="sm"
-                variant={window === v ? "default" : "outline"}
-                onClick={() => setWindow(v)}
+                variant={span === v ? "default" : "outline"}
+                onClick={() => setSpan(v)}
               >
                 {label}
               </Button>
