@@ -49,7 +49,9 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
+          {user && <NotificationsBell />}
           <nav className="hidden items-center gap-6 md:flex">
+
             {links.map((l) => (
               <Link key={l.to} to={l.to} className="text-sm hover:text-accent">
                 {l.label}
