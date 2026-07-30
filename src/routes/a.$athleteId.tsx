@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
 import { getPublicAthlete } from "@/lib/athlete-public.functions";
 import { ProfileSkeleton } from "@/components/Skeletons";
+import { VideoEmbed } from "@/components/VideoEmbed";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
