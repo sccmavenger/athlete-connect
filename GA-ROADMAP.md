@@ -27,11 +27,11 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 |---|------|--------|-------|
 | 8 | Mobile responsive audit (390–414 px) | [x] | Mobile drawer nav in header, no horizontal overflow at 390 px, larger tap targets, responsive hero/dashboard |
 | 9 | Decide athlete profile visibility model | [x] | | Public: `/a/:athleteId` is a public SSR route with OG tags. Athletes opt in via a "Publish this profile publicly" toggle (`athletes.is_published`); unpublished profiles stay visible only to the owner, coaches and admins |
-| 10 | Add contact info on athlete profile for coaches | [ ] | Email / phone visible only to approved coaches |
-| 11 | Action photos upload (up to 6) | [ ] | Currently only profile photo |
-| 12 | Form validation and error handling | [ ] | Height, GPA, grad year, URLs, duplicate coach requests |
+| 10 | Add contact info on athlete profile for coaches | [x] | `athlete_contacts` table with RLS; visible only to approved coaches/admins and the owner |
+| 11 | Action photos upload (up to 6) | [x] | Uploads to `athlete-media`, stored in `athlete_photos`, gallery on the profile |
+| 12 | Form validation and error handling | [x] | Zod validation in the profile editor and sign-up form with inline errors |
 | 13 | SEO head metadata on all routes | [x] | Landing, Terms, Privacy have full meta + canonical; authed routes intentionally `noindex` |
-| 14 | Loading and empty states | [ ] | Replace plain “Loading…” with skeletons or friendly empties |
+| 14 | Loading and empty states | [x] | Skeleton loaders + friendly empty states on dashboard, directory, saved, admin |
 | 15 | Terms of Service and Privacy Policy pages | [x] | `/terms` and `/privacy` live, linked from the landing footer |
 
 ## Nice-to-have / post-launch
