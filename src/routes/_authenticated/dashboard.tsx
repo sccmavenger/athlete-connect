@@ -50,13 +50,19 @@ function Dashboard() {
   });
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-12 text-muted-foreground">Loading...</div>;
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
+        <PageHeaderSkeleton />
+        <CardListSkeleton count={2} />
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-10">
-      <h1 className="font-display text-4xl font-bold">Dashboard</h1>
-      <p className="mt-1 text-muted-foreground">{user?.email}</p>
+    <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
+      <h1 className="font-display text-3xl font-bold sm:text-4xl">Dashboard</h1>
+      <p className="mt-1 break-all text-muted-foreground">{user?.email}</p>
+
 
       {/* Pending coach */}
       {!isAthlete && !isCoach && !isAdmin && (
