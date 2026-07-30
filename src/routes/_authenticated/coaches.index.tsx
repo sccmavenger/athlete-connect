@@ -106,7 +106,7 @@ function CoachesDirectory() {
     );
   }
 
-  const hasFilters = !!(search || state || gradYear || position || minHeight || minGpa);
+  const hasFilters = !!(search || state || gradYear || position || minHeight || minGpa || zip);
 
   function clearFilters() {
     setSearch("");
@@ -115,7 +115,27 @@ function CoachesDirectory() {
     setPosition("");
     setMinHeight("");
     setMinGpa("");
+    setZip("");
   }
+
+  const originCoords = origin.data;
+  const radiusMiles = Number.parseInt(radius, 10);
+
+  const results: any[] = (() => {
+    const rows = (q.data as any[]) ?? [];
+    if (!originCoords) return rows;
+    return rows
+      .map((a) => ({
+        ...a,
+        _miles:
+          a.latitude != null && a.longitude != null
+            ? milesBetween(originCoords.latitude, originCoords.longitude, a.latitude, a.longitude)
+            : null,
+      }))
+      .filter((a) => a._miles != null && a._miles <= radiusMiles)
+      .sort((a, b) => (a._miles ?? 0) - (b._miles ?? 0));
+  })();
+
 
   return (
     <div className="container mx-auto px-4 py-8 sm:py-10">
