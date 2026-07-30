@@ -1,9 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
 import { getPublicAthlete } from "@/lib/athlete-public.functions";
+import { recordProfileView, recordPublicProfileView } from "@/lib/analytics.functions";
+import { contactWindows, NCAA_ELIGIBILITY_CENTER_URL } from "@/lib/compliance";
+import { buildIcs, downloadFile, type IcsEvent } from "@/lib/ics";
+import { MessageThread } from "@/components/MessageThread";
 import { ProfileSkeleton } from "@/components/Skeletons";
 import { VideoEmbed } from "@/components/VideoEmbed";
 
@@ -14,15 +20,18 @@ import {
   Bookmark,
   BookmarkCheck,
   Calendar,
-  ExternalLink,
+  Download,
   GraduationCap,
   Instagram,
   Lock,
   Mail,
   MapPin,
+  MessageSquare,
   Phone,
   Ruler,
+  ShieldCheck,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/a/$athleteId")({
   loader: async ({ params }) => getPublicAthlete({ data: { athleteId: params.athleteId } }),
