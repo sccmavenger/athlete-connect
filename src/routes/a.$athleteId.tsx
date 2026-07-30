@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
 import { getPublicAthlete } from "@/lib/athlete-public.functions";
 import { ProfileSkeleton } from "@/components/Skeletons";
+import { VideoEmbed } from "@/components/VideoEmbed";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -326,23 +328,14 @@ function AthleteView() {
       {q.data && q.data.videos.length > 0 && (
         <Card className="mt-6 p-5">
           <h2 className="mb-3 font-display text-lg font-bold">Highlight videos</h2>
-          <ul className="space-y-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {q.data.videos.map((v: any) => (
-              <li key={v.id}>
-                <a
-                  href={v.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 break-all py-1 text-primary hover:underline"
-                >
-                  <ExternalLink className="h-4 w-4 shrink-0" />
-                  {v.title || v.url}
-                </a>
-              </li>
+              <VideoEmbed key={v.id} url={v.url} title={v.title} />
             ))}
-          </ul>
+          </div>
         </Card>
       )}
+
 
       {q.data && q.data.events.length > 0 && (
         <Card className="mt-6 p-5">

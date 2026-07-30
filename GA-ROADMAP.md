@@ -33,6 +33,10 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | 13 | SEO head metadata on all routes | [x] | Landing, Terms, Privacy have full meta + canonical; authed routes intentionally `noindex` |
 | 14 | Loading and empty states | [x] | Skeleton loaders + friendly empty states on dashboard, directory, saved, admin |
 | 15 | Terms of Service and Privacy Policy pages | [x] | `/terms` and `/privacy` live, linked from the landing footer |
+| 21 | Coach location search (ZIP + radius) | [x] | Athletes save a ZIP (geocoded server-side); coaches filter "within 25/50/100/250 miles" with distance shown on each card |
+| 22 | Multi-platform highlight embeds | [x] | Hudl, YouTube (incl. Shorts), Vimeo, TikTok, Instagram play inline on the profile; other links fall back to an outbound link |
+| 23 | Bookmark notifications | [x] | `notifications` table + trigger on `coach_saved_athletes`; in-app bell in the header with unread badge and mark-all-read |
+
 
 ## Nice-to-have / post-launch
 

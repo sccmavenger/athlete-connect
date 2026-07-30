@@ -41,6 +41,13 @@ export const athleteSchema = z.object({
       message: "Use a 2-letter state code (e.g. KS)",
     }),
   high_school: optionalText(120, "High school"),
+  zip_code: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || /^\d{5}$/.test(v), { message: "Enter a 5-digit ZIP code" }),
+
   grad_year: numberInRange(CURRENT_YEAR - 1, CURRENT_YEAR + 8, "Grad year"),
   position: optionalText(20, "Position"),
   height_inches: numberInRange(40, 96, "Height (inches)"),

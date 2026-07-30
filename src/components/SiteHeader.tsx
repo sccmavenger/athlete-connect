@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NotificationsBell } from "@/components/NotificationsBell";
+
 import { Menu } from "lucide-react";
 import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
@@ -49,7 +51,9 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
+          {user && <NotificationsBell />}
           <nav className="hidden items-center gap-6 md:flex">
+
             {links.map((l) => (
               <Link key={l.to} to={l.to} className="text-sm hover:text-accent">
                 {l.label}

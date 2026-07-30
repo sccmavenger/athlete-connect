@@ -1,5 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { geocodeZip } from "@/lib/geocode.functions";
 import { useEffect, useState } from "react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { Button } from "@/components/ui/button";
@@ -46,7 +49,9 @@ type AthleteForm = {
   tiktok_handle: string;
   bio: string;
   profile_photo_url: string;
+  zip_code: string;
   is_published: boolean;
+
 };
 
 const empty: AthleteForm = {
@@ -67,7 +72,9 @@ const empty: AthleteForm = {
   tiktok_handle: "",
   bio: "",
   profile_photo_url: "",
+  zip_code: "",
   is_published: false,
+
 };
 
 type ContactForm = {
@@ -103,7 +110,9 @@ type Event = {
 
 function ProfileEdit() {
   const { user, loading: authLoading } = useAuth();
+  const geocode = useServerFn(geocodeZip);
   const navigate = useNavigate();
+
   const [form, setForm] = useState<AthleteForm>(empty);
   const [contact, setContact] = useState<ContactForm>(emptyContact);
   const [videos, setVideos] = useState<Video[]>([]);
@@ -143,7 +152,9 @@ function ProfileEdit() {
           tiktok_handle: athlete.tiktok_handle ?? "",
           bio: athlete.bio ?? "",
           profile_photo_url: athlete.profile_photo_url ?? "",
+          zip_code: athlete.zip_code ?? "",
           is_published: athlete.is_published ?? false,
+
         });
         const [{ data: v }, { data: ev }, { data: ph }, { data: c }] = await Promise.all([
           supabase.from("athlete_videos").select("*").eq("athlete_id", athlete.id),
@@ -300,6 +311,17 @@ function ProfileEdit() {
     if (!validate()) return;
     setSaving(true);
     try {
+      const zip = form.zip_code.trim();
+      let coords: { latitude: number; longitude: number } | null = null;
+      if (zip) {
+        try {
+          coords = await geocode({ data: { zip } });
+        } catch {
+          coords = null;
+        }
+        if (!coords) toast.warning("We couldn't locate that ZIP code — distance search may not find you.");
+      }
+
       const payload = {
         user_id: user.id,
         full_name: form.full_name.trim(),
@@ -319,8 +341,12 @@ function ProfileEdit() {
         tiktok_handle: form.tiktok_handle.trim() || null,
         bio: form.bio.trim() || null,
         profile_photo_url: form.profile_photo_url || null,
+        zip_code: zip || null,
+        ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
+        ...(zip ? {} : { latitude: null, longitude: null }),
         is_published: form.is_published,
       };
+
 
       let athleteId = form.id;
       if (athleteId) {
@@ -462,6 +488,21 @@ function ProfileEdit() {
               placeholder="KS"
             />
           </Field>
+          <Field
+            label="ZIP code"
+            error={errors.zip_code}
+            hint="Used so coaches can find players within driving distance."
+          >
+            <Input
+              value={form.zip_code}
+              onChange={(e) => update("zip_code", e.target.value.replace(/[^0-9]/g, ""))}
+              maxLength={5}
+              inputMode="numeric"
+              placeholder="67207"
+              autoComplete="postal-code"
+            />
+          </Field>
+
           <Field label="High school" error={errors.high_school}>
             <Input value={form.high_school} onChange={(e) => update("high_school", e.target.value)} maxLength={120} />
           </Field>
@@ -738,14 +779,19 @@ function ProfileEdit() {
             size="sm"
             variant="outline"
             className="shrink-0"
-            disabled={videos.length >= 5}
+            disabled={videos.length >= 8}
             onClick={() => setVideos((v) => [...v, { url: "", title: "" }])}
           >
             <Plus className="mr-1 h-4 w-4" /> Add
           </Button>
         </div>
+        <p className="text-sm text-muted-foreground">
+          Paste links from Hudl, YouTube (including Shorts), Vimeo, TikTok or Instagram — they play right on your
+          profile.
+        </p>
         {videos.length === 0 && (
-          <p className="text-sm text-muted-foreground">No videos yet. YouTube, Hudl, Vimeo links work great.</p>
+          <p className="text-sm text-muted-foreground">No videos yet.</p>
+
         )}
         {videos.map((v, i) => (
           <div key={i} className="space-y-2">
@@ -891,11 +937,13 @@ function Field({
   children,
   required,
   error,
+  hint,
 }: {
   label: string;
   children: React.ReactNode;
   required?: boolean;
   error?: string;
+  hint?: string;
 }) {
   return (
     <Label className="block font-normal">
@@ -903,7 +951,9 @@ function Field({
         {label} {required && <span className="text-destructive">*</span>}
       </span>
       {children}
+      {hint && !error && <span className="mt-1 block text-xs text-muted-foreground">{hint}</span>}
       {error && <span className="mt-1 block text-xs text-destructive">{error}</span>}
     </Label>
   );
 }
+

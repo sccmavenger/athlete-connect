@@ -1,16 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthletesList } from "@/lib/mock-helpers";
+import { geocodeZip } from "@/lib/geocode.functions";
+import { formatMiles, isValidZip, milesBetween } from "@/lib/geo";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { EmptyState } from "@/components/EmptyState";
-import { AlertCircle, SearchX, Users } from "lucide-react";
+import { AlertCircle, MapPin, SearchX, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/coaches/")({
   head: () => ({
@@ -19,10 +29,13 @@ export const Route = createFileRoute("/_authenticated/coaches/")({
   component: CoachesDirectory,
 });
 
+const RADIUS_OPTIONS = ["25", "50", "100", "250"];
+
 function CoachesDirectory() {
   const { roles, loading } = useAuth();
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
+  const geocode = useServerFn(geocodeZip);
 
   const [state, setState] = useState("");
   const [gradYear, setGradYear] = useState("");
@@ -30,6 +43,15 @@ function CoachesDirectory() {
   const [minHeight, setMinHeight] = useState("");
   const [minGpa, setMinGpa] = useState("");
   const [search, setSearch] = useState("");
+  const [zip, setZip] = useState("");
+  const [radius, setRadius] = useState("50");
+
+  const origin = useQuery({
+    enabled: isValidZip(zip),
+    queryKey: ["zip-origin", zip],
+    staleTime: 1000 * 60 * 60,
+    queryFn: () => geocode({ data: { zip: zip.trim() } }),
+  });
 
   const q = useQuery({
     enabled: !loading && (isCoach || isAdmin),
@@ -38,9 +60,11 @@ function CoachesDirectory() {
       if (isMockMode()) return mockAthletesList();
       let query = supabase
         .from("athletes")
-        .select("id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url")
+        .select(
+          "id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url, zip_code, latitude, longitude",
+        )
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(200);
       if (state) query = query.ilike("state", state);
       if (gradYear) query = query.eq("grad_year", parseInt(gradYear));
       if (position) query = query.ilike("position", `%${position}%`);
@@ -52,6 +76,7 @@ function CoachesDirectory() {
       return data;
     },
   });
+
 
   if (loading) {
     return (
@@ -81,7 +106,7 @@ function CoachesDirectory() {
     );
   }
 
-  const hasFilters = !!(search || state || gradYear || position || minHeight || minGpa);
+  const hasFilters = !!(search || state || gradYear || position || minHeight || minGpa || zip);
 
   function clearFilters() {
     setSearch("");
@@ -90,7 +115,27 @@ function CoachesDirectory() {
     setPosition("");
     setMinHeight("");
     setMinGpa("");
+    setZip("");
   }
+
+  const originCoords = origin.data;
+  const radiusMiles = Number.parseInt(radius, 10);
+
+  const results: any[] = (() => {
+    const rows = (q.data as any[]) ?? [];
+    if (!originCoords) return rows;
+    return rows
+      .map((a) => ({
+        ...a,
+        _miles:
+          a.latitude != null && a.longitude != null
+            ? milesBetween(originCoords.latitude, originCoords.longitude, a.latitude, a.longitude)
+            : null,
+      }))
+      .filter((a) => a._miles != null && a._miles <= radiusMiles)
+      .sort((a, b) => (a._miles ?? 0) - (b._miles ?? 0));
+  })();
+
 
   return (
     <div className="container mx-auto px-4 py-8 sm:py-10">
@@ -125,8 +170,44 @@ function CoachesDirectory() {
             <Label className="text-xs">Min GPA</Label>
             <Input type="number" step="0.01" inputMode="decimal" value={minGpa} onChange={(e) => setMinGpa(e.target.value)} />
           </div>
+          <div>
+            <Label className="text-xs">Near ZIP</Label>
+            <Input
+              value={zip}
+              inputMode="numeric"
+              maxLength={5}
+              placeholder="67207"
+              onChange={(e) => setZip(e.target.value.replace(/[^0-9]/g, ""))}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">Within</Label>
+            <Select value={radius} onValueChange={setRadius}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {RADIUS_OPTIONS.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {r} miles
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        {isValidZip(zip) && (
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 text-primary" />
+            {origin.isPending
+              ? "Looking up that ZIP…"
+              : origin.data
+                ? `Showing athletes within ${radius} miles of ${origin.data.place}. Athletes without a ZIP on file are hidden.`
+                : "We couldn't find that ZIP code."}
+          </p>
+        )}
         {hasFilters && (
+
           <Button variant="ghost" size="sm" className="mt-3" onClick={clearFilters}>
             Clear filters
           </Button>
@@ -148,13 +229,13 @@ function CoachesDirectory() {
             }
           />
         </div>
-      ) : q.data && q.data.length === 0 ? (
+      ) : results.length === 0 ? (
         <div className="mt-6">
           {hasFilters ? (
             <EmptyState
               icon={SearchX}
               title="No athletes match your filters"
-              description="Try widening the grad year, height or GPA range."
+              description="Try widening the distance, grad year, height or GPA range."
               action={
                 <Button variant="outline" onClick={clearFilters}>
                   Clear filters
@@ -171,7 +252,8 @@ function CoachesDirectory() {
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {q.data?.map((a: any) => (
+          {results.map((a: any) => (
+
             <Link
               key={a.id}
               to="/a/$athleteId"
@@ -203,6 +285,12 @@ function CoachesDirectory() {
                   </span>
                 )}
                 {a.gpa && <span className="rounded-full bg-secondary px-2 py-0.5">GPA {a.gpa}</span>}
+                {a._miles != null && (
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-primary">
+                    {formatMiles(a._miles)} away
+                  </span>
+                )}
+
               </div>
             </Link>
           ))}
