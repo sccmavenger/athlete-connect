@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AAthleteIdRouteImport } from './routes/a.$athleteId'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
+import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated/family'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticated/colleges'
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
@@ -69,6 +70,11 @@ const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFamilyRoute = AuthenticatedFamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/family': typeof AuthenticatedFamilyRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/family': typeof AuthenticatedFamilyRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/colleges': typeof AuthenticatedCollegesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/family': typeof AuthenticatedFamilyRoute
   '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/colleges'
     | '/dashboard'
+    | '/family'
     | '/insights'
     | '/messages'
     | '/a/$athleteId'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/colleges'
     | '/dashboard'
+    | '/family'
     | '/insights'
     | '/messages'
     | '/a/$athleteId'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/colleges'
     | '/_authenticated/dashboard'
+    | '/_authenticated/family'
     | '/_authenticated/insights'
     | '/_authenticated/messages'
     | '/a/$athleteId'
@@ -281,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInsightsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/family': {
+      id: '/_authenticated/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof AuthenticatedFamilyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -329,6 +348,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCollegesRoute: typeof AuthenticatedCollegesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFamilyRoute: typeof AuthenticatedFamilyRoute
   AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedAdminCoachRequestsRoute: typeof AuthenticatedAdminCoachRequestsRoute
@@ -340,6 +360,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCollegesRoute: AuthenticatedCollegesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFamilyRoute: AuthenticatedFamilyRoute,
   AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedAdminCoachRequestsRoute: AuthenticatedAdminCoachRequestsRoute,
