@@ -18,6 +18,7 @@ import {
   isValidHttpUrl,
   type FieldErrors,
 } from "@/lib/validation";
+import { isUnder18 } from "@/lib/compliance";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload } from "lucide-react";
 
@@ -319,6 +320,14 @@ function ProfileEdit() {
         next[`event.${i}`] = "Add a date for this event";
       }
     });
+
+    if (
+      form.is_published &&
+      isUnder18(form.date_of_birth || null) &&
+      !(form.guardian_consent_name.trim() && form.guardian_consent_email.trim())
+    ) {
+      next.guardian_consent_name = "A parent or guardian is required to publish a profile for a minor";
+    }
 
     setErrors(next);
     if (Object.keys(next).length > 0) {
