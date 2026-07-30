@@ -488,6 +488,21 @@ function ProfileEdit() {
               placeholder="KS"
             />
           </Field>
+          <Field
+            label="ZIP code"
+            error={errors.zip_code}
+            hint="Used so coaches can find players within driving distance."
+          >
+            <Input
+              value={form.zip_code}
+              onChange={(e) => update("zip_code", e.target.value.replace(/[^0-9]/g, ""))}
+              maxLength={5}
+              inputMode="numeric"
+              placeholder="67207"
+              autoComplete="postal-code"
+            />
+          </Field>
+
           <Field label="High school" error={errors.high_school}>
             <Input value={form.high_school} onChange={(e) => update("high_school", e.target.value)} maxLength={120} />
           </Field>
