@@ -28,17 +28,31 @@ export function SiteHeader() {
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
   const isAthlete = roles.includes("athlete");
+  const isParent = roles.includes("parent");
 
   const links: { to: string; label: string }[] = [];
-  if (user && isAthlete) {
-    links.push({ to: "/dashboard", label: "Dashboard" }, { to: "/profile/edit", label: "My Profile" });
+  if (user && (isAthlete || isParent)) {
+    links.push(
+      { to: "/dashboard", label: "Dashboard" },
+      { to: "/profile/edit", label: "My Profile" },
+      { to: "/messages", label: "Messages" },
+      { to: "/colleges", label: "Colleges" },
+      { to: "/insights", label: "Insights" },
+      { to: "/family", label: "Family" },
+    );
   }
   if (user && isCoach) {
-    links.push({ to: "/coaches", label: "Athletes" }, { to: "/coaches/saved", label: "Saved" });
+    links.push(
+      { to: "/coaches", label: "Athletes" },
+      { to: "/coaches/games", label: "Games" },
+      { to: "/coaches/saved", label: "Saved" },
+      { to: "/coaches/messages", label: "Inbox" },
+    );
   }
   if (user && isAdmin) {
     links.push({ to: "/admin/coach-requests", label: "Coach Requests" });
   }
+
 
   return (
     <header className="border-b bg-card text-card-foreground">

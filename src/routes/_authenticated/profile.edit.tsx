@@ -18,6 +18,7 @@ import {
   isValidHttpUrl,
   type FieldErrors,
 } from "@/lib/validation";
+import { isUnder18 } from "@/lib/compliance";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload } from "lucide-react";
 
@@ -32,6 +33,7 @@ const MAX_PHOTOS = 6;
 
 type AthleteForm = {
   id?: string;
+  owner_user_id?: string;
   full_name: string;
   hometown: string;
   state: string;
@@ -50,8 +52,12 @@ type AthleteForm = {
   bio: string;
   profile_photo_url: string;
   zip_code: string;
+  ncaa_id: string;
+  date_of_birth: string;
+  guardian_consent_name: string;
+  guardian_consent_email: string;
+  guardian_consent_at: string | null;
   is_published: boolean;
-
 };
 
 const empty: AthleteForm = {
@@ -73,9 +79,14 @@ const empty: AthleteForm = {
   bio: "",
   profile_photo_url: "",
   zip_code: "",
+  ncaa_id: "",
+  date_of_birth: "",
+  guardian_consent_name: "",
+  guardian_consent_email: "",
+  guardian_consent_at: null,
   is_published: false,
-
 };
+
 
 type ContactForm = {
   athlete_email: string;
@@ -127,14 +138,21 @@ function ProfileEdit() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: athlete } = await supabase
-        .from("athletes")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      const wanted =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("athleteId")
+          : null;
+      // RLS scopes this to profiles the user owns or manages as a guardian.
+      const { data: rows } = await supabase.from("athletes").select("*").order("created_at");
+      const athlete =
+        (wanted ? rows?.find((r) => r.id === wanted) : null) ??
+        rows?.find((r) => r.user_id === user.id) ??
+        rows?.[0] ??
+        null;
       if (athlete) {
         setForm({
           id: athlete.id,
+          owner_user_id: athlete.user_id,
           full_name: athlete.full_name ?? "",
           hometown: athlete.hometown ?? "",
           state: athlete.state ?? "",
@@ -153,9 +171,14 @@ function ProfileEdit() {
           bio: athlete.bio ?? "",
           profile_photo_url: athlete.profile_photo_url ?? "",
           zip_code: athlete.zip_code ?? "",
+          ncaa_id: athlete.ncaa_id ?? "",
+          date_of_birth: athlete.date_of_birth ?? "",
+          guardian_consent_name: athlete.guardian_consent_name ?? "",
+          guardian_consent_email: athlete.guardian_consent_email ?? "",
+          guardian_consent_at: athlete.guardian_consent_at ?? null,
           is_published: athlete.is_published ?? false,
-
         });
+
         const [{ data: v }, { data: ev }, { data: ph }, { data: c }] = await Promise.all([
           supabase.from("athlete_videos").select("*").eq("athlete_id", athlete.id),
           supabase
@@ -298,6 +321,14 @@ function ProfileEdit() {
       }
     });
 
+    if (
+      form.is_published &&
+      isUnder18(form.date_of_birth || null) &&
+      !(form.guardian_consent_name.trim() && form.guardian_consent_email.trim())
+    ) {
+      next.guardian_consent_name = "A parent or guardian is required to publish a profile for a minor";
+    }
+
     setErrors(next);
     if (Object.keys(next).length > 0) {
       toast.error("Please fix the highlighted fields");
@@ -322,8 +353,12 @@ function ProfileEdit() {
         if (!coords) toast.warning("We couldn't locate that ZIP code — distance search may not find you.");
       }
 
+      const consentName = form.guardian_consent_name.trim();
+      const consentEmail = form.guardian_consent_email.trim();
+      const hasConsent = !!(consentName && consentEmail);
+
       const payload = {
-        user_id: user.id,
+        user_id: form.owner_user_id ?? user.id,
         full_name: form.full_name.trim(),
         hometown: form.hometown.trim() || null,
         state: form.state.trim().toUpperCase() || null,
@@ -342,10 +377,18 @@ function ProfileEdit() {
         bio: form.bio.trim() || null,
         profile_photo_url: form.profile_photo_url || null,
         zip_code: zip || null,
+        ncaa_id: form.ncaa_id.trim() || null,
+        date_of_birth: form.date_of_birth || null,
+        guardian_consent_name: consentName || null,
+        guardian_consent_email: consentEmail || null,
+        guardian_consent_at: hasConsent
+          ? (form.guardian_consent_at ?? new Date().toISOString())
+          : null,
         ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
         ...(zip ? {} : { latitude: null, longitude: null }),
         is_published: form.is_published,
       };
+
 
 
       let athleteId = form.id;
@@ -640,6 +683,50 @@ function ProfileEdit() {
           </p>
         )}
       </Card>
+
+      {/* Eligibility & consent */}
+      <Card className="mt-6 space-y-4 p-4 sm:p-6">
+        <h2 className="font-display text-xl font-bold">Eligibility &amp; consent</h2>
+        <p className="text-sm text-muted-foreground">
+          Your NCAA Eligibility Center ID and date of birth help coaches confirm your recruiting class. Athletes under
+          18 need a parent or guardian on record before the profile can be published.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="NCAA Eligibility Center ID" error={errors.ncaa_id}>
+            <Input
+              value={form.ncaa_id}
+              onChange={(e) => update("ncaa_id", e.target.value)}
+              placeholder="2411234567"
+            />
+          </Field>
+          <Field label="Date of birth" error={errors.date_of_birth}>
+            <Input
+              type="date"
+              value={form.date_of_birth}
+              onChange={(e) => update("date_of_birth", e.target.value)}
+            />
+          </Field>
+          <Field label="Parent / guardian name" error={errors.guardian_consent_name}>
+            <Input
+              value={form.guardian_consent_name}
+              onChange={(e) => update("guardian_consent_name", e.target.value)}
+            />
+          </Field>
+          <Field label="Parent / guardian email" error={errors.guardian_consent_email}>
+            <Input
+              type="email"
+              value={form.guardian_consent_email}
+              onChange={(e) => update("guardian_consent_email", e.target.value)}
+            />
+          </Field>
+        </div>
+        {form.guardian_consent_at && (
+          <p className="text-xs text-muted-foreground">
+            Consent recorded {new Date(form.guardian_consent_at).toLocaleDateString()}.
+          </p>
+        )}
+      </Card>
+
 
       {/* Academics */}
       <Card className="mt-6 space-y-4 p-4 sm:p-6">

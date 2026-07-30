@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      athlete_college_interests: {
+        Row: {
+          athlete_id: string
+          college_name: string
+          created_at: string
+          division: string | null
+          id: string
+          notes: string | null
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          athlete_id: string
+          college_name: string
+          created_at?: string
+          division?: string | null
+          id?: string
+          notes?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          athlete_id?: string
+          college_name?: string
+          created_at?: string
+          division?: string | null
+          id?: string
+          notes?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_college_interests_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       athlete_contacts: {
         Row: {
           athlete_email: string | null
@@ -108,6 +152,82 @@ export type Database = {
           },
         ]
       }
+      athlete_guardians: {
+        Row: {
+          athlete_id: string
+          created_at: string
+          id: string
+          relationship: string | null
+          user_id: string
+        }
+        Insert: {
+          athlete_id: string
+          created_at?: string
+          id?: string
+          relationship?: string | null
+          user_id: string
+        }
+        Update: {
+          athlete_id?: string
+          created_at?: string
+          id?: string
+          relationship?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_guardians_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      athlete_invites: {
+        Row: {
+          athlete_id: string
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          invited_email: string | null
+          redeemed_at: string | null
+          redeemed_by: string | null
+          relationship: string | null
+        }
+        Insert: {
+          athlete_id: string
+          code: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invited_email?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          relationship?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invited_email?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          relationship?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_invites_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       athlete_photos: {
         Row: {
           athlete_id: string
@@ -177,9 +297,13 @@ export type Database = {
           act_score: number | null
           bio: string | null
           created_at: string
+          date_of_birth: string | null
           full_name: string
           gpa: number | null
           grad_year: number | null
+          guardian_consent_at: string | null
+          guardian_consent_email: string | null
+          guardian_consent_name: string | null
           height_inches: number | null
           high_school: string | null
           hometown: string | null
@@ -190,6 +314,7 @@ export type Database = {
           jersey_number: string | null
           latitude: number | null
           longitude: number | null
+          ncaa_id: string | null
           position: string | null
           profile_photo_url: string | null
           sat_score: number | null
@@ -204,9 +329,13 @@ export type Database = {
           act_score?: number | null
           bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           full_name: string
           gpa?: number | null
           grad_year?: number | null
+          guardian_consent_at?: string | null
+          guardian_consent_email?: string | null
+          guardian_consent_name?: string | null
           height_inches?: number | null
           high_school?: string | null
           hometown?: string | null
@@ -217,6 +346,7 @@ export type Database = {
           jersey_number?: string | null
           latitude?: number | null
           longitude?: number | null
+          ncaa_id?: string | null
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
@@ -231,9 +361,13 @@ export type Database = {
           act_score?: number | null
           bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           full_name?: string
           gpa?: number | null
           grad_year?: number | null
+          guardian_consent_at?: string | null
+          guardian_consent_email?: string | null
+          guardian_consent_name?: string | null
           height_inches?: number | null
           high_school?: string | null
           hometown?: string | null
@@ -244,6 +378,7 @@ export type Database = {
           jersey_number?: string | null
           latitude?: number | null
           longitude?: number | null
+          ncaa_id?: string | null
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
@@ -305,6 +440,9 @@ export type Database = {
           created_at: string
           id: string
           notes: string | null
+          stage: string
+          tags: string[]
+          updated_at: string
         }
         Insert: {
           athlete_id: string
@@ -312,6 +450,9 @@ export type Database = {
           created_at?: string
           id?: string
           notes?: string | null
+          stage?: string
+          tags?: string[]
+          updated_at?: string
         }
         Update: {
           athlete_id?: string
@@ -319,10 +460,84 @@ export type Database = {
           created_at?: string
           id?: string
           notes?: string | null
+          stage?: string
+          tags?: string[]
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "coach_saved_athletes_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_saved_searches: {
+        Row: {
+          alerts_enabled: boolean
+          coach_user_id: string
+          created_at: string
+          filters: Json
+          id: string
+          last_run_at: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          alerts_enabled?: boolean
+          coach_user_id: string
+          created_at?: string
+          filters?: Json
+          id?: string
+          last_run_at?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          alerts_enabled?: boolean
+          coach_user_id?: string
+          created_at?: string
+          filters?: Json
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          athlete_id: string
+          body: string
+          coach_user_id: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_user_id: string
+        }
+        Insert: {
+          athlete_id: string
+          body: string
+          coach_user_id: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_user_id: string
+        }
+        Update: {
+          athlete_id?: string
+          body?: string
+          coach_user_id?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_athlete_id_fkey"
             columns: ["athlete_id"]
             isOneToOne: false
             referencedRelation: "athletes"
@@ -362,6 +577,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      profile_views: {
+        Row: {
+          athlete_id: string
+          created_at: string
+          id: string
+          viewer_label: string | null
+          viewer_role: string
+          viewer_user_id: string | null
+        }
+        Insert: {
+          athlete_id: string
+          created_at?: string
+          id?: string
+          viewer_label?: string | null
+          viewer_role?: string
+          viewer_user_id?: string | null
+        }
+        Update: {
+          athlete_id?: string
+          created_at?: string
+          id?: string
+          viewer_label?: string | null
+          viewer_role?: string
+          viewer_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_views_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -423,9 +673,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_athlete_manager: {
+        Args: { _athlete_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      app_role: "admin" | "coach" | "athlete"
+      app_role: "admin" | "coach" | "athlete" | "parent"
       coach_request_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -554,7 +808,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "coach", "athlete"],
+      app_role: ["admin", "coach", "athlete", "parent"],
       coach_request_status: ["pending", "approved", "rejected"],
     },
   },

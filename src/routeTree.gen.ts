@@ -16,10 +16,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AAthleteIdRouteImport } from './routes/a.$athleteId'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
+import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
+import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated/family'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticated/colleges'
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
+import { Route as AuthenticatedCoachesMessagesRouteImport } from './routes/_authenticated/coaches.messages'
+import { Route as AuthenticatedCoachesGamesRouteImport } from './routes/_authenticated/coaches.games'
 import { Route as AuthenticatedAdminCoachRequestsRouteImport } from './routes/_authenticated/admin.coach-requests'
 
 const TermsRoute = TermsRouteImport.update({
@@ -56,9 +62,29 @@ const AAthleteIdRoute = AAthleteIdRouteImport.update({
   path: '/a/$athleteId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFamilyRoute = AuthenticatedFamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCollegesRoute = AuthenticatedCollegesRouteImport.update({
+  id: '/colleges',
+  path: '/colleges',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCoachesIndexRoute =
@@ -79,6 +105,18 @@ const AuthenticatedCoachesSavedRoute =
     path: '/coaches/saved',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoachesMessagesRoute =
+  AuthenticatedCoachesMessagesRouteImport.update({
+    id: '/coaches/messages',
+    path: '/coaches/messages',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoachesGamesRoute =
+  AuthenticatedCoachesGamesRouteImport.update({
+    id: '/coaches/games',
+    path: '/coaches/games',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminCoachRequestsRoute =
   AuthenticatedAdminCoachRequestsRouteImport.update({
     id: '/admin/coach-requests',
@@ -92,9 +130,15 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
+  '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/family': typeof AuthenticatedFamilyRoute
+  '/insights': typeof AuthenticatedInsightsRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/coaches/games': typeof AuthenticatedCoachesGamesRoute
+  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/coaches/': typeof AuthenticatedCoachesIndexRoute
@@ -105,9 +149,15 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
+  '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/family': typeof AuthenticatedFamilyRoute
+  '/insights': typeof AuthenticatedInsightsRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/coaches/games': typeof AuthenticatedCoachesGamesRoute
+  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/coaches': typeof AuthenticatedCoachesIndexRoute
@@ -120,9 +170,15 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/colleges': typeof AuthenticatedCollegesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/family': typeof AuthenticatedFamilyRoute
+  '/_authenticated/insights': typeof AuthenticatedInsightsRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/_authenticated/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/_authenticated/coaches/games': typeof AuthenticatedCoachesGamesRoute
+  '/_authenticated/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/coaches/': typeof AuthenticatedCoachesIndexRoute
@@ -135,9 +191,15 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/reset-password'
     | '/terms'
+    | '/colleges'
     | '/dashboard'
+    | '/family'
+    | '/insights'
+    | '/messages'
     | '/a/$athleteId'
     | '/admin/coach-requests'
+    | '/coaches/games'
+    | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
     | '/coaches/'
@@ -148,9 +210,15 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/reset-password'
     | '/terms'
+    | '/colleges'
     | '/dashboard'
+    | '/family'
+    | '/insights'
+    | '/messages'
     | '/a/$athleteId'
     | '/admin/coach-requests'
+    | '/coaches/games'
+    | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
     | '/coaches'
@@ -162,9 +230,15 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/reset-password'
     | '/terms'
+    | '/_authenticated/colleges'
     | '/_authenticated/dashboard'
+    | '/_authenticated/family'
+    | '/_authenticated/insights'
+    | '/_authenticated/messages'
     | '/a/$athleteId'
     | '/_authenticated/admin/coach-requests'
+    | '/_authenticated/coaches/games'
+    | '/_authenticated/coaches/messages'
     | '/_authenticated/coaches/saved'
     | '/_authenticated/profile/edit'
     | '/_authenticated/coaches/'
@@ -231,11 +305,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AAthleteIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/insights': {
+      id: '/_authenticated/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof AuthenticatedInsightsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/family': {
+      id: '/_authenticated/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof AuthenticatedFamilyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/colleges': {
+      id: '/_authenticated/colleges'
+      path: '/colleges'
+      fullPath: '/colleges'
+      preLoaderRoute: typeof AuthenticatedCollegesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/coaches/': {
@@ -259,6 +361,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoachesSavedRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/coaches/messages': {
+      id: '/_authenticated/coaches/messages'
+      path: '/coaches/messages'
+      fullPath: '/coaches/messages'
+      preLoaderRoute: typeof AuthenticatedCoachesMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/coaches/games': {
+      id: '/_authenticated/coaches/games'
+      path: '/coaches/games'
+      fullPath: '/coaches/games'
+      preLoaderRoute: typeof AuthenticatedCoachesGamesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/coach-requests': {
       id: '/_authenticated/admin/coach-requests'
       path: '/admin/coach-requests'
@@ -270,16 +386,28 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCollegesRoute: typeof AuthenticatedCollegesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFamilyRoute: typeof AuthenticatedFamilyRoute
+  AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedAdminCoachRequestsRoute: typeof AuthenticatedAdminCoachRequestsRoute
+  AuthenticatedCoachesGamesRoute: typeof AuthenticatedCoachesGamesRoute
+  AuthenticatedCoachesMessagesRoute: typeof AuthenticatedCoachesMessagesRoute
   AuthenticatedCoachesSavedRoute: typeof AuthenticatedCoachesSavedRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedCoachesIndexRoute: typeof AuthenticatedCoachesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCollegesRoute: AuthenticatedCollegesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFamilyRoute: AuthenticatedFamilyRoute,
+  AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedAdminCoachRequestsRoute: AuthenticatedAdminCoachRequestsRoute,
+  AuthenticatedCoachesGamesRoute: AuthenticatedCoachesGamesRoute,
+  AuthenticatedCoachesMessagesRoute: AuthenticatedCoachesMessagesRoute,
   AuthenticatedCoachesSavedRoute: AuthenticatedCoachesSavedRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedCoachesIndexRoute: AuthenticatedCoachesIndexRoute,

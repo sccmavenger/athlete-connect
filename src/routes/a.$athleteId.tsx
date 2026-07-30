@@ -1,9 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthleteFull } from "@/lib/mock-helpers";
 import { getPublicAthlete } from "@/lib/athlete-public.functions";
+import { recordProfileView, recordPublicProfileView } from "@/lib/analytics.functions";
+import { contactWindows, NCAA_ELIGIBILITY_CENTER_URL } from "@/lib/compliance";
+import { buildIcs, downloadFile, type IcsEvent } from "@/lib/ics";
+import { MessageThread } from "@/components/MessageThread";
 import { ProfileSkeleton } from "@/components/Skeletons";
 import { VideoEmbed } from "@/components/VideoEmbed";
 
@@ -14,15 +20,18 @@ import {
   Bookmark,
   BookmarkCheck,
   Calendar,
-  ExternalLink,
+  Download,
   GraduationCap,
   Instagram,
   Lock,
   Mail,
   MapPin,
+  MessageSquare,
   Phone,
   Ruler,
+  ShieldCheck,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/a/$athleteId")({
   loader: async ({ params }) => getPublicAthlete({ data: { athleteId: params.athleteId } }),
@@ -60,10 +69,24 @@ export const Route = createFileRoute("/a/$athleteId")({
 function AthleteView() {
   const { athleteId } = Route.useParams();
   const publicData = Route.useLoaderData();
-  const { user, roles } = useAuth();
+  const { user, roles, loading: authLoading } = useAuth();
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
   const qc = useQueryClient();
+  const [showThread, setShowThread] = useState(false);
+  const trackAuthed = useServerFn(recordProfileView);
+  const trackPublic = useServerFn(recordPublicProfileView);
+  const tracked = useRef(false);
+
+  // Record the view once per mount, attributed when the viewer is signed in.
+  useEffect(() => {
+    if (tracked.current || authLoading || isMockMode()) return;
+    tracked.current = true;
+    const fn = user ? trackAuthed({ data: { athleteId } }) : trackPublic({ data: { athleteId } });
+    Promise.resolve(fn).catch(() => undefined);
+  }, [athleteId, user, authLoading, trackAuthed, trackPublic]);
+
+
 
   const q = useQuery({
     queryKey: ["athlete-view", athleteId, user?.id ?? "anon"],
@@ -209,11 +232,17 @@ function AthleteView() {
               )}
             </Button>
           )}
+          {isCoach && (
+            <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => setShowThread((v) => !v)}>
+              <MessageSquare className="mr-1 h-4 w-4" /> Message
+            </Button>
+          )}
           {user?.id === a.user_id && (
             <Button asChild variant="outline" className="flex-1 sm:flex-none">
               <Link to="/profile/edit">Edit</Link>
             </Button>
           )}
+
         </div>
       </div>
 
@@ -242,11 +271,52 @@ function AthleteView() {
               This athlete hasn't added contact details yet.
             </p>
           )}
-          <p className="mt-3 text-xs text-muted-foreground">
-            Follow NCAA contact rules for this athlete's grad year before reaching out.
-          </p>
+          <div className="mt-4 rounded-lg border border-border/70 p-3">
+            <p className="flex items-center gap-2 text-sm font-semibold">
+              <ShieldCheck className="h-4 w-4 text-primary" /> NCAA contact windows
+              {a.ncaa_id && (
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  NCAA ID on file
+                </span>
+              )}
+            </p>
+            <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+              {contactWindows(a.grad_year).map((w) => (
+                <li key={w.division} className="flex items-start gap-2">
+                  <span className={`font-semibold ${w.open ? "text-primary" : ""}`}>{w.division}</span>
+                  <span>{w.summary}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Informational only — confirm current rules with your compliance office and the{" "}
+              <a
+                href={NCAA_ELIGIBILITY_CENTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                NCAA Eligibility Center
+              </a>
+              .
+            </p>
+          </div>
         </Card>
       )}
+
+      {isCoach && showThread && user && (
+        <Card className="mt-6 overflow-hidden p-0">
+          <MessageThread
+            athleteId={athleteId}
+            coachUserId={user.id}
+            currentUserId={user.id}
+            side="coach"
+            title={`Message ${a.full_name}`}
+            subtitle="The athlete and their linked parent/guardian both see this thread."
+          />
+        </Card>
+      )}
+
 
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <Card className="p-5">
@@ -339,9 +409,33 @@ function AthleteView() {
 
       {q.data && q.data.events.length > 0 && (
         <Card className="mt-6 p-5">
-          <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-            <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
-          </h2>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold">
+              <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
+            </h2>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const events: IcsEvent[] = (q.data?.events ?? []).map((ev: any) => ({
+                  uid: ev.id,
+                  date: ev.event_date,
+                  time: ev.event_time,
+                  title: `${a.full_name}${ev.opponent ? ` vs ${ev.opponent}` : ""}`,
+                  location: ev.location,
+                  description: a.high_school ?? undefined,
+                }));
+                downloadFile(
+                  `${a.full_name.replace(/\s+/g, "-").toLowerCase()}-schedule.ics`,
+                  buildIcs(events, `${a.full_name} — games`),
+                  "text/calendar",
+                );
+              }}
+            >
+              <Download className="mr-1.5 h-4 w-4" /> Add to calendar
+            </Button>
+          </div>
+
           <ul className="divide-y">
             {q.data.events.map((ev: any) => (
               <li key={ev.id} className="flex items-start justify-between gap-3 py-2 text-sm">
