@@ -81,16 +81,27 @@ function CoachesDirectory() {
     );
   }
 
+  const hasFilters = !!(search || state || gradYear || position || minHeight || minGpa);
+
+  function clearFilters() {
+    setSearch("");
+    setState("");
+    setGradYear("");
+    setPosition("");
+    setMinHeight("");
+    setMinGpa("");
+  }
+
   return (
-    <div className="container mx-auto px-4 py-10">
-      <h1 className="font-display text-4xl font-bold">Athletes</h1>
+    <div className="container mx-auto px-4 py-8 sm:py-10">
+      <h1 className="font-display text-3xl font-bold sm:text-4xl">Athletes</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Search the Midwest recruiting database.
       </p>
 
       <Card className="mt-6 p-4">
-        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          <div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="col-span-2 sm:col-span-1">
             <Label className="text-xs">Search</Label>
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Name" />
           </div>
@@ -100,7 +111,7 @@ function CoachesDirectory() {
           </div>
           <div>
             <Label className="text-xs">Grad year</Label>
-            <Input type="number" value={gradYear} onChange={(e) => setGradYear(e.target.value)} placeholder="2027" />
+            <Input type="number" inputMode="numeric" value={gradYear} onChange={(e) => setGradYear(e.target.value)} placeholder="2027" />
           </div>
           <div>
             <Label className="text-xs">Position</Label>
@@ -108,54 +119,94 @@ function CoachesDirectory() {
           </div>
           <div>
             <Label className="text-xs">Min height (in)</Label>
-            <Input type="number" value={minHeight} onChange={(e) => setMinHeight(e.target.value)} />
+            <Input type="number" inputMode="numeric" value={minHeight} onChange={(e) => setMinHeight(e.target.value)} />
           </div>
           <div>
             <Label className="text-xs">Min GPA</Label>
-            <Input type="number" step="0.01" value={minGpa} onChange={(e) => setMinGpa(e.target.value)} />
+            <Input type="number" step="0.01" inputMode="decimal" value={minGpa} onChange={(e) => setMinGpa(e.target.value)} />
           </div>
         </div>
+        {hasFilters && (
+          <Button variant="ghost" size="sm" className="mt-3" onClick={clearFilters}>
+            Clear filters
+          </Button>
+        )}
       </Card>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {q.data?.map((a: any) => (
-          <Link
-            key={a.id}
-            to="/a/$athleteId"
-            params={{ athleteId: a.id }}
-            className="group rounded-xl border bg-card p-4 shadow-sm transition hover:border-primary"
-          >
-            <div className="flex items-center gap-3">
-              {a.profile_photo_url ? (
-                <img src={a.profile_photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />
-              ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground font-display text-xl">
-                  {a.full_name.slice(0, 2).toUpperCase()}
+      {q.isPending ? (
+        <AthleteGridSkeleton />
+      ) : q.isError ? (
+        <div className="mt-6">
+          <EmptyState
+            icon={AlertCircle}
+            title="Couldn't load athletes"
+            description="Something went wrong fetching the directory. Try again in a moment."
+            action={
+              <Button variant="outline" onClick={() => q.refetch()}>
+                Retry
+              </Button>
+            }
+          />
+        </div>
+      ) : q.data && q.data.length === 0 ? (
+        <div className="mt-6">
+          {hasFilters ? (
+            <EmptyState
+              icon={SearchX}
+              title="No athletes match your filters"
+              description="Try widening the grad year, height or GPA range."
+              action={
+                <Button variant="outline" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              }
+            />
+          ) : (
+            <EmptyState
+              icon={Users}
+              title="No athletes yet"
+              description="Athlete profiles will appear here as players join the Summit Hoops circuit."
+            />
+          )}
+        </div>
+      ) : (
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {q.data?.map((a: any) => (
+            <Link
+              key={a.id}
+              to="/a/$athleteId"
+              params={{ athleteId: a.id }}
+              className="group rounded-xl border bg-card p-4 shadow-sm transition hover:border-primary"
+            >
+              <div className="flex items-center gap-3">
+                {a.profile_photo_url ? (
+                  <img src={a.profile_photo_url} alt="" className="h-16 w-16 shrink-0 rounded-full object-cover" />
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xl text-primary-foreground">
+                    {a.full_name.slice(0, 2).toUpperCase()}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h3 className="truncate font-display text-lg font-bold group-hover:text-primary">{a.full_name}</h3>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {a.high_school ?? "—"}
+                    {a.state ? ` • ${a.state}` : ""}
+                  </p>
                 </div>
-              )}
-              <div>
-                <h3 className="font-display text-lg font-bold group-hover:text-primary">{a.full_name}</h3>
-                <p className="text-xs text-muted-foreground">
-                  {a.high_school ?? "—"}
-                  {a.state ? ` • ${a.state}` : ""}
-                </p>
               </div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-              {a.position && <span className="rounded-full bg-secondary px-2 py-0.5">{a.position}</span>}
-              {a.grad_year && <span className="rounded-full bg-secondary px-2 py-0.5">'{String(a.grad_year).slice(2)}</span>}
-              {a.height_inches && (
-                <span className="rounded-full bg-secondary px-2 py-0.5">
-                  {Math.floor(a.height_inches / 12)}'{a.height_inches % 12}"
-                </span>
-              )}
-              {a.gpa && <span className="rounded-full bg-secondary px-2 py-0.5">GPA {a.gpa}</span>}
-            </div>
-          </Link>
-        ))}
-      </div>
-      {q.data && q.data.length === 0 && (
-        <p className="mt-6 text-center text-muted-foreground">No athletes match your filters.</p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                {a.position && <span className="rounded-full bg-secondary px-2 py-0.5">{a.position}</span>}
+                {a.grad_year && <span className="rounded-full bg-secondary px-2 py-0.5">'{String(a.grad_year).slice(2)}</span>}
+                {a.height_inches && (
+                  <span className="rounded-full bg-secondary px-2 py-0.5">
+                    {Math.floor(a.height_inches / 12)}'{a.height_inches % 12}"
+                  </span>
+                )}
+                {a.gpa && <span className="rounded-full bg-secondary px-2 py-0.5">GPA {a.gpa}</span>}
+              </div>
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   );
