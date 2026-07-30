@@ -69,11 +69,10 @@ export const Route = createFileRoute("/a/$athleteId")({
 function AthleteView() {
   const { athleteId } = Route.useParams();
   const publicData = Route.useLoaderData();
-  const { user, roles } = useAuth();
+  const { user, roles, loading: authLoading } = useAuth();
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
   const qc = useQueryClient();
-  const { loading: authLoading } = useAuth();
   const [showThread, setShowThread] = useState(false);
   const trackAuthed = useServerFn(recordProfileView);
   const trackPublic = useServerFn(recordPublicProfileView);
