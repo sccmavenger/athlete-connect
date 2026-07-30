@@ -137,14 +137,21 @@ function ProfileEdit() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: athlete } = await supabase
-        .from("athletes")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      const wanted =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("athleteId")
+          : null;
+      // RLS scopes this to profiles the user owns or manages as a guardian.
+      const { data: rows } = await supabase.from("athletes").select("*").order("created_at");
+      const athlete =
+        (wanted ? rows?.find((r) => r.id === wanted) : null) ??
+        rows?.find((r) => r.user_id === user.id) ??
+        rows?.[0] ??
+        null;
       if (athlete) {
         setForm({
           id: athlete.id,
+          owner_user_id: athlete.user_id,
           full_name: athlete.full_name ?? "",
           hometown: athlete.hometown ?? "",
           state: athlete.state ?? "",
@@ -163,9 +170,14 @@ function ProfileEdit() {
           bio: athlete.bio ?? "",
           profile_photo_url: athlete.profile_photo_url ?? "",
           zip_code: athlete.zip_code ?? "",
+          ncaa_id: athlete.ncaa_id ?? "",
+          date_of_birth: athlete.date_of_birth ?? "",
+          guardian_consent_name: athlete.guardian_consent_name ?? "",
+          guardian_consent_email: athlete.guardian_consent_email ?? "",
+          guardian_consent_at: athlete.guardian_consent_at ?? null,
           is_published: athlete.is_published ?? false,
-
         });
+
         const [{ data: v }, { data: ev }, { data: ph }, { data: c }] = await Promise.all([
           supabase.from("athlete_videos").select("*").eq("athlete_id", athlete.id),
           supabase
