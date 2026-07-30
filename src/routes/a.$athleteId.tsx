@@ -271,11 +271,52 @@ function AthleteView() {
               This athlete hasn't added contact details yet.
             </p>
           )}
-          <p className="mt-3 text-xs text-muted-foreground">
-            Follow NCAA contact rules for this athlete's grad year before reaching out.
-          </p>
+          <div className="mt-4 rounded-lg border border-border/70 p-3">
+            <p className="flex items-center gap-2 text-sm font-semibold">
+              <ShieldCheck className="h-4 w-4 text-primary" /> NCAA contact windows
+              {a.ncaa_id && (
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  NCAA ID on file
+                </span>
+              )}
+            </p>
+            <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+              {contactWindows(a.grad_year).map((w) => (
+                <li key={w.division} className="flex items-start gap-2">
+                  <span className={`font-semibold ${w.open ? "text-primary" : ""}`}>{w.division}</span>
+                  <span>{w.summary}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Informational only — confirm current rules with your compliance office and the{" "}
+              <a
+                href={NCAA_ELIGIBILITY_CENTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                NCAA Eligibility Center
+              </a>
+              .
+            </p>
+          </div>
         </Card>
       )}
+
+      {isCoach && showThread && user && (
+        <Card className="mt-6 overflow-hidden p-0">
+          <MessageThread
+            athleteId={athleteId}
+            coachUserId={user.id}
+            currentUserId={user.id}
+            side="coach"
+            title={`Message ${a.full_name}`}
+            subtitle="The athlete and their linked parent/guardian both see this thread."
+          />
+        </Card>
+      )}
+
 
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <Card className="p-5">
