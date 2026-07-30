@@ -69,7 +69,9 @@ const empty: AthleteForm = {
   tiktok_handle: "",
   bio: "",
   profile_photo_url: "",
+  zip_code: "",
   is_published: false,
+
 };
 
 type ContactForm = {
