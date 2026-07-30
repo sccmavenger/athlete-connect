@@ -3,10 +3,17 @@ import type { TestUser } from "./admin";
 
 export async function signIn(page: Page, user: TestUser) {
   await page.goto("/auth");
-  await page.getByRole("tab", { name: "Sign in" }).click();
-  await page.getByLabel("Email", { exact: true }).fill(user.email);
-  await page.getByLabel("Password", { exact: true }).fill(user.password);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  const tab = page.getByRole("tab", { name: "Sign in" });
+  await expect(tab).toBeVisible();
+  // Retry until React has hydrated and the tab actually switches panels.
+  await expect(async () => {
+    await tab.click();
+    await expect(page.locator("#si-email")).toBeVisible({ timeout: 2000 });
+  }).toPass({ timeout: 30_000 });
+
+  await page.locator("#si-email").fill(user.email);
+  await page.locator("#si-pass").fill(user.password);
+  await page.locator("form").filter({ has: page.locator("#si-email") }).getByRole("button", { name: "Sign in" }).click();
   await page.waitForURL("**/dashboard", { timeout: 30_000 });
 }
 
