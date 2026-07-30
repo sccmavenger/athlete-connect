@@ -5,8 +5,10 @@ import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockSavedAthletes } from "@/lib/mock-helpers";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
+import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { Bookmark, X } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/coaches/saved")({
   head: () => ({
