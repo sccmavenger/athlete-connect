@@ -72,14 +72,14 @@ function Landing() {
       </section>
 
       {/* Features */}
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-14 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-4xl font-bold md:text-5xl">Everything you need on one profile</h2>
+          <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">Everything you need on one profile</h2>
           <p className="mt-4 text-muted-foreground">
             The information college coaches actually want, in one place they can search.
           </p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
           {[
             { icon: Users, title: "Player profiles", desc: "Basics, position, height, weight, and jersey number." },
             { icon: Trophy, title: "Verified measurements", desc: "Track camp results and combine numbers over time." },
