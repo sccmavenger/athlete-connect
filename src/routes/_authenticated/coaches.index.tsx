@@ -1,16 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthletesList } from "@/lib/mock-helpers";
+import { geocodeZip } from "@/lib/geocode.functions";
+import { formatMiles, isValidZip, milesBetween } from "@/lib/geo";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { EmptyState } from "@/components/EmptyState";
-import { AlertCircle, SearchX, Users } from "lucide-react";
+import { AlertCircle, MapPin, SearchX, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/coaches/")({
   head: () => ({
@@ -19,10 +29,13 @@ export const Route = createFileRoute("/_authenticated/coaches/")({
   component: CoachesDirectory,
 });
 
+const RADIUS_OPTIONS = ["25", "50", "100", "250"];
+
 function CoachesDirectory() {
   const { roles, loading } = useAuth();
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
+  const geocode = useServerFn(geocodeZip);
 
   const [state, setState] = useState("");
   const [gradYear, setGradYear] = useState("");
@@ -30,6 +43,15 @@ function CoachesDirectory() {
   const [minHeight, setMinHeight] = useState("");
   const [minGpa, setMinGpa] = useState("");
   const [search, setSearch] = useState("");
+  const [zip, setZip] = useState("");
+  const [radius, setRadius] = useState("50");
+
+  const origin = useQuery({
+    enabled: isValidZip(zip),
+    queryKey: ["zip-origin", zip],
+    staleTime: 1000 * 60 * 60,
+    queryFn: () => geocode({ data: { zip: zip.trim() } }),
+  });
 
   const q = useQuery({
     enabled: !loading && (isCoach || isAdmin),
@@ -38,9 +60,11 @@ function CoachesDirectory() {
       if (isMockMode()) return mockAthletesList();
       let query = supabase
         .from("athletes")
-        .select("id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url")
+        .select(
+          "id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, gpa, profile_photo_url, zip_code, latitude, longitude",
+        )
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(200);
       if (state) query = query.ilike("state", state);
       if (gradYear) query = query.eq("grad_year", parseInt(gradYear));
       if (position) query = query.ilike("position", `%${position}%`);
@@ -52,6 +76,7 @@ function CoachesDirectory() {
       return data;
     },
   });
+
 
   if (loading) {
     return (
