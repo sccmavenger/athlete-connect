@@ -32,6 +32,7 @@ const MAX_PHOTOS = 6;
 
 type AthleteForm = {
   id?: string;
+  owner_user_id?: string;
   full_name: string;
   hometown: string;
   state: string;
@@ -50,8 +51,12 @@ type AthleteForm = {
   bio: string;
   profile_photo_url: string;
   zip_code: string;
+  ncaa_id: string;
+  date_of_birth: string;
+  guardian_consent_name: string;
+  guardian_consent_email: string;
+  guardian_consent_at: string | null;
   is_published: boolean;
-
 };
 
 const empty: AthleteForm = {
@@ -73,9 +78,14 @@ const empty: AthleteForm = {
   bio: "",
   profile_photo_url: "",
   zip_code: "",
+  ncaa_id: "",
+  date_of_birth: "",
+  guardian_consent_name: "",
+  guardian_consent_email: "",
+  guardian_consent_at: null,
   is_published: false,
-
 };
+
 
 type ContactForm = {
   athlete_email: string;
