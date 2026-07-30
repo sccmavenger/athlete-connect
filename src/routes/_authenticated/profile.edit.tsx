@@ -675,6 +675,50 @@ function ProfileEdit() {
         )}
       </Card>
 
+      {/* Eligibility & consent */}
+      <Card className="mt-6 space-y-4 p-4 sm:p-6">
+        <h2 className="font-display text-xl font-bold">Eligibility &amp; consent</h2>
+        <p className="text-sm text-muted-foreground">
+          Your NCAA Eligibility Center ID and date of birth help coaches confirm your recruiting class. Athletes under
+          18 need a parent or guardian on record before the profile can be published.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="NCAA Eligibility Center ID" error={errors.ncaa_id}>
+            <Input
+              value={form.ncaa_id}
+              onChange={(e) => update("ncaa_id", e.target.value)}
+              placeholder="2411234567"
+            />
+          </Field>
+          <Field label="Date of birth" error={errors.date_of_birth}>
+            <Input
+              type="date"
+              value={form.date_of_birth}
+              onChange={(e) => update("date_of_birth", e.target.value)}
+            />
+          </Field>
+          <Field label="Parent / guardian name" error={errors.guardian_consent_name}>
+            <Input
+              value={form.guardian_consent_name}
+              onChange={(e) => update("guardian_consent_name", e.target.value)}
+            />
+          </Field>
+          <Field label="Parent / guardian email" error={errors.guardian_consent_email}>
+            <Input
+              type="email"
+              value={form.guardian_consent_email}
+              onChange={(e) => update("guardian_consent_email", e.target.value)}
+            />
+          </Field>
+        </div>
+        {form.guardian_consent_at && (
+          <p className="text-xs text-muted-foreground">
+            Consent recorded {new Date(form.guardian_consent_at).toLocaleDateString()}.
+          </p>
+        )}
+      </Card>
+
+
       {/* Academics */}
       <Card className="mt-6 space-y-4 p-4 sm:p-6">
         <h2 className="font-display text-xl font-bold">Academics</h2>
