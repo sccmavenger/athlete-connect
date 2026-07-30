@@ -344,8 +344,12 @@ function ProfileEdit() {
         if (!coords) toast.warning("We couldn't locate that ZIP code — distance search may not find you.");
       }
 
+      const consentName = form.guardian_consent_name.trim();
+      const consentEmail = form.guardian_consent_email.trim();
+      const hasConsent = !!(consentName && consentEmail);
+
       const payload = {
-        user_id: user.id,
+        user_id: form.owner_user_id ?? user.id,
         full_name: form.full_name.trim(),
         hometown: form.hometown.trim() || null,
         state: form.state.trim().toUpperCase() || null,
@@ -364,10 +368,18 @@ function ProfileEdit() {
         bio: form.bio.trim() || null,
         profile_photo_url: form.profile_photo_url || null,
         zip_code: zip || null,
+        ncaa_id: form.ncaa_id.trim() || null,
+        date_of_birth: form.date_of_birth || null,
+        guardian_consent_name: consentName || null,
+        guardian_consent_email: consentEmail || null,
+        guardian_consent_at: hasConsent
+          ? (form.guardian_consent_at ?? new Date().toISOString())
+          : null,
         ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
         ...(zip ? {} : { latitude: null, longitude: null }),
         is_published: form.is_published,
       };
+
 
 
       let athleteId = form.id;
