@@ -101,12 +101,11 @@ function Landing() {
 
       {/* CTA band */}
       <section className="bg-card text-card-foreground border-t">
-        <div className="container mx-auto flex flex-col items-center gap-6 px-4 py-16 text-center">
-          <h2 className="font-display text-4xl font-bold md:text-5xl">
+        <div className="container mx-auto flex flex-col items-center gap-5 px-4 py-14 text-center sm:gap-6 sm:py-16">
+          <h2 className="font-display text-3xl font-bold sm:text-4xl md:text-5xl">
             Playing Summit Hoops this season? Get on the map.
           </h2>
           <p className="max-w-2xl text-card-foreground/85">
-
             Free to start. Build your profile in minutes and share your link with coaches, family, and scouts.
           </p>
           <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
