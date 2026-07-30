@@ -779,14 +779,19 @@ function ProfileEdit() {
             size="sm"
             variant="outline"
             className="shrink-0"
-            disabled={videos.length >= 5}
+            disabled={videos.length >= 8}
             onClick={() => setVideos((v) => [...v, { url: "", title: "" }])}
           >
             <Plus className="mr-1 h-4 w-4" /> Add
           </Button>
         </div>
+        <p className="text-sm text-muted-foreground">
+          Paste links from Hudl, YouTube (including Shorts), Vimeo, TikTok or Instagram — they play right on your
+          profile.
+        </p>
         {videos.length === 0 && (
-          <p className="text-sm text-muted-foreground">No videos yet. YouTube, Hudl, Vimeo links work great.</p>
+          <p className="text-sm text-muted-foreground">No videos yet.</p>
+
         )}
         {videos.map((v, i) => (
           <div key={i} className="space-y-2">
