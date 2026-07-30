@@ -24,6 +24,7 @@ import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
+import { Route as AuthenticatedCoachesMessagesRouteImport } from './routes/_authenticated/coaches.messages'
 import { Route as AuthenticatedAdminCoachRequestsRouteImport } from './routes/_authenticated/admin.coach-requests'
 
 const TermsRoute = TermsRouteImport.update({
@@ -103,6 +104,12 @@ const AuthenticatedCoachesSavedRoute =
     path: '/coaches/saved',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoachesMessagesRoute =
+  AuthenticatedCoachesMessagesRouteImport.update({
+    id: '/coaches/messages',
+    path: '/coaches/messages',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminCoachRequestsRoute =
   AuthenticatedAdminCoachRequestsRouteImport.update({
     id: '/admin/coach-requests',
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/coaches/': typeof AuthenticatedCoachesIndexRoute
@@ -140,6 +148,7 @@ export interface FileRoutesByTo {
   '/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/coaches': typeof AuthenticatedCoachesIndexRoute
@@ -159,6 +168,7 @@ export interface FileRoutesById {
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/a/$athleteId': typeof AAthleteIdRoute
   '/_authenticated/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
+  '/_authenticated/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/coaches/': typeof AuthenticatedCoachesIndexRoute
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/messages'
     | '/a/$athleteId'
     | '/admin/coach-requests'
+    | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
     | '/coaches/'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/messages'
     | '/a/$athleteId'
     | '/admin/coach-requests'
+    | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
     | '/coaches'
@@ -213,6 +225,7 @@ export interface FileRouteTypes {
     | '/_authenticated/messages'
     | '/a/$athleteId'
     | '/_authenticated/admin/coach-requests'
+    | '/_authenticated/coaches/messages'
     | '/_authenticated/coaches/saved'
     | '/_authenticated/profile/edit'
     | '/_authenticated/coaches/'
@@ -335,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoachesSavedRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/coaches/messages': {
+      id: '/_authenticated/coaches/messages'
+      path: '/coaches/messages'
+      fullPath: '/coaches/messages'
+      preLoaderRoute: typeof AuthenticatedCoachesMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/coach-requests': {
       id: '/_authenticated/admin/coach-requests'
       path: '/admin/coach-requests'
@@ -352,6 +372,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedAdminCoachRequestsRoute: typeof AuthenticatedAdminCoachRequestsRoute
+  AuthenticatedCoachesMessagesRoute: typeof AuthenticatedCoachesMessagesRoute
   AuthenticatedCoachesSavedRoute: typeof AuthenticatedCoachesSavedRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedCoachesIndexRoute: typeof AuthenticatedCoachesIndexRoute
@@ -364,6 +385,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedAdminCoachRequestsRoute: AuthenticatedAdminCoachRequestsRoute,
+  AuthenticatedCoachesMessagesRoute: AuthenticatedCoachesMessagesRoute,
   AuthenticatedCoachesSavedRoute: AuthenticatedCoachesSavedRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedCoachesIndexRoute: AuthenticatedCoachesIndexRoute,
