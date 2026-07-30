@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      athlete_contacts: {
+        Row: {
+          athlete_email: string | null
+          athlete_id: string
+          athlete_phone: string | null
+          club_coach_name: string | null
+          club_coach_phone: string | null
+          created_at: string
+          guardian_email: string | null
+          guardian_name: string | null
+          guardian_phone: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          athlete_email?: string | null
+          athlete_id: string
+          athlete_phone?: string | null
+          club_coach_name?: string | null
+          club_coach_phone?: string | null
+          created_at?: string
+          guardian_email?: string | null
+          guardian_name?: string | null
+          guardian_phone?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          athlete_email?: string | null
+          athlete_id?: string
+          athlete_phone?: string | null
+          club_coach_name?: string | null
+          club_coach_phone?: string | null
+          created_at?: string
+          guardian_email?: string | null
+          guardian_name?: string | null
+          guardian_phone?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "athlete_contacts_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: true
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       athlete_events: {
         Row: {
           athlete_id: string
