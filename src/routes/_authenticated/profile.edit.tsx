@@ -107,7 +107,9 @@ type Event = {
 
 function ProfileEdit() {
   const { user, loading: authLoading } = useAuth();
+  const geocode = useServerFn(geocodeZip);
   const navigate = useNavigate();
+
   const [form, setForm] = useState<AthleteForm>(empty);
   const [contact, setContact] = useState<ContactForm>(emptyContact);
   const [videos, setVideos] = useState<Video[]>([]);
