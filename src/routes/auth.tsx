@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
-  role: z.enum(["athlete", "coach"]).optional(),
+  role: z.enum(["athlete", "coach", "parent"]).optional(),
 });
 
 export const Route = createFileRoute("/auth")({
@@ -31,7 +31,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<"signin" | "signup">("signup");
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState<"athlete" | "coach">(roleParam ?? "athlete");
+  const [role, setRole] = useState<"athlete" | "coach" | "parent">(roleParam ?? "athlete");
 
   // Sign in state
   const [siEmail, setSiEmail] = useState("");
