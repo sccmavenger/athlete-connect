@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 import { MOCK_USER } from "@/lib/mock-data";
 
-export type AppRole = "admin" | "coach" | "athlete";
+export type AppRole = "admin" | "coach" | "athlete" | "parent";
 
 export interface AuthState {
   loading: boolean;
@@ -19,6 +19,7 @@ function getMockRoles(): AppRole[] | null {
   if (p === "athlete") return ["athlete"];
   if (p === "coach") return ["coach"];
   if (p === "admin") return ["admin"];
+  if (p === "parent") return ["parent"];
   if (p === "pending") return [];
   return null;
 }
