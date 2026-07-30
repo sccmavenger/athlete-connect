@@ -188,6 +188,8 @@ export type Database = {
           intended_major: string | null
           is_published: boolean
           jersey_number: string | null
+          latitude: number | null
+          longitude: number | null
           position: string | null
           profile_photo_url: string | null
           sat_score: number | null
@@ -196,6 +198,7 @@ export type Database = {
           updated_at: string
           user_id: string
           weight_lbs: number | null
+          zip_code: string | null
         }
         Insert: {
           act_score?: number | null
@@ -212,6 +215,8 @@ export type Database = {
           intended_major?: string | null
           is_published?: boolean
           jersey_number?: string | null
+          latitude?: number | null
+          longitude?: number | null
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
@@ -220,6 +225,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           weight_lbs?: number | null
+          zip_code?: string | null
         }
         Update: {
           act_score?: number | null
@@ -236,6 +242,8 @@ export type Database = {
           intended_major?: string | null
           is_published?: boolean
           jersey_number?: string | null
+          latitude?: number | null
+          longitude?: number | null
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
@@ -244,6 +252,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           weight_lbs?: number | null
+          zip_code?: string | null
         }
         Relationships: []
       }
@@ -320,6 +329,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
