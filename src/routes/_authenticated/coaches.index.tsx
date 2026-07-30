@@ -170,8 +170,44 @@ function CoachesDirectory() {
             <Label className="text-xs">Min GPA</Label>
             <Input type="number" step="0.01" inputMode="decimal" value={minGpa} onChange={(e) => setMinGpa(e.target.value)} />
           </div>
+          <div>
+            <Label className="text-xs">Near ZIP</Label>
+            <Input
+              value={zip}
+              inputMode="numeric"
+              maxLength={5}
+              placeholder="67207"
+              onChange={(e) => setZip(e.target.value.replace(/[^0-9]/g, ""))}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">Within</Label>
+            <Select value={radius} onValueChange={setRadius}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {RADIUS_OPTIONS.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {r} miles
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        {isValidZip(zip) && (
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 text-primary" />
+            {origin.isPending
+              ? "Looking up that ZIP…"
+              : origin.data
+                ? `Showing athletes within ${radius} miles of ${origin.data.place}. Athletes without a ZIP on file are hidden.`
+                : "We couldn't find that ZIP code."}
+          </p>
+        )}
         {hasFilters && (
+
           <Button variant="ghost" size="sm" className="mt-3" onClick={clearFilters}>
             Clear filters
           </Button>
