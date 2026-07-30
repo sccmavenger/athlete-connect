@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.notify_athlete_on_save() FROM PUBLIC, anon, authenticated;
