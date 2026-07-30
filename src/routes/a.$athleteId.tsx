@@ -232,11 +232,17 @@ function AthleteView() {
               )}
             </Button>
           )}
+          {isCoach && (
+            <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => setShowThread((v) => !v)}>
+              <MessageSquare className="mr-1 h-4 w-4" /> Message
+            </Button>
+          )}
           {user?.id === a.user_id && (
             <Button asChild variant="outline" className="flex-1 sm:flex-none">
               <Link to="/profile/edit">Edit</Link>
             </Button>
           )}
+
         </div>
       </div>
 
