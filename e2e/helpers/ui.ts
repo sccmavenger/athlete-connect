@@ -25,9 +25,11 @@ export async function signOut(page: Page) {
   await page.context().clearCookies();
 }
 
-/** Fills a labelled field inside the profile editor. */
+/** Fills a labelled field inside the profile editor (label text sits in the first span). */
 export async function fillField(page: Page, label: string, value: string) {
-  const field = page.getByText(label, { exact: true }).locator("xpath=ancestor::label[1]");
+  const field = page.locator(
+    `xpath=//label[span[1][normalize-space(.)='${label}' or normalize-space(.)='${label} *']]`,
+  );
   await field.locator("input, textarea").first().fill(value);
 }
 
