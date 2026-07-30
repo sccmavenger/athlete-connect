@@ -229,13 +229,13 @@ function CoachesDirectory() {
             }
           />
         </div>
-      ) : q.data && q.data.length === 0 ? (
+      ) : results.length === 0 ? (
         <div className="mt-6">
           {hasFilters ? (
             <EmptyState
               icon={SearchX}
               title="No athletes match your filters"
-              description="Try widening the grad year, height or GPA range."
+              description="Try widening the distance, grad year, height or GPA range."
               action={
                 <Button variant="outline" onClick={clearFilters}>
                   Clear filters
@@ -252,7 +252,8 @@ function CoachesDirectory() {
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {q.data?.map((a: any) => (
+          {results.map((a: any) => (
+
             <Link
               key={a.id}
               to="/a/$athleteId"
