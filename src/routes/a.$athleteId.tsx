@@ -73,6 +73,21 @@ function AthleteView() {
   const isCoach = roles.includes("coach");
   const isAdmin = roles.includes("admin");
   const qc = useQueryClient();
+  const { loading: authLoading } = useAuth();
+  const [showThread, setShowThread] = useState(false);
+  const trackAuthed = useServerFn(recordProfileView);
+  const trackPublic = useServerFn(recordPublicProfileView);
+  const tracked = useRef(false);
+
+  // Record the view once per mount, attributed when the viewer is signed in.
+  useEffect(() => {
+    if (tracked.current || authLoading || isMockMode()) return;
+    tracked.current = true;
+    const fn = user ? trackAuthed({ data: { athleteId } }) : trackPublic({ data: { athleteId } });
+    Promise.resolve(fn).catch(() => undefined);
+  }, [athleteId, user, authLoading, trackAuthed, trackPublic]);
+
+
 
   const q = useQuery({
     queryKey: ["athlete-view", athleteId, user?.id ?? "anon"],
