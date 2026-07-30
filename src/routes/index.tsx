@@ -38,19 +38,19 @@ function Landing() {
           width={1600}
           height={1000}
         />
-        <div className="relative container mx-auto px-4 py-24 md:py-32">
+        <div className="relative container mx-auto px-4 py-16 sm:py-24 md:py-32">
           <div className="max-w-3xl">
             <span className="inline-block rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent-foreground">
               Midwest youth basketball
             </span>
-            <h1 className="mt-6 font-display text-5xl font-bold leading-tight md:text-7xl">
+            <h1 className="mt-6 font-display text-4xl font-bold leading-tight sm:text-5xl md:text-7xl">
               Get seen by the coaches who matter.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-foreground/85">
+            <p className="mt-5 max-w-xl text-base text-foreground/85 sm:mt-6 sm:text-lg">
               Recruiting Hub is a regional recruiting database built for Summit Hoops athletes.
               Build your profile, share your highlights, and let college coaches find you.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
                 <Link to="/auth" search={{ role: "athlete" }}>
                   Create athlete profile
