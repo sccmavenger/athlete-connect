@@ -121,21 +121,31 @@ function Dashboard() {
       {/* Athlete profile completeness */}
       {isAthlete && (
         <div className="mt-6 space-y-6">
-          {!athleteQuery.data ? (
+          {athleteQuery.isPending ? (
+            <Card className="space-y-3 p-6">
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-4 w-64 max-w-full" />
+              <div className="space-y-2 pt-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-40" />
+                ))}
+              </div>
+            </Card>
+          ) : !athleteQuery.data ? (
             <Card className="p-6">
               <h2 className="font-display text-2xl font-bold">Build your profile</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Add your basics, academics, videos, and schedule so coaches can find you.
               </p>
-              <Button asChild className="mt-4">
+              <Button asChild className="mt-4 w-full sm:w-auto">
                 <Link to="/profile/edit">Create profile</Link>
               </Button>
             </Card>
           ) : (
             <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-display text-2xl font-bold">
+              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                <div className="min-w-0">
+                  <h2 className="truncate font-display text-2xl font-bold">
                     {athleteQuery.data.full_name}
                   </h2>
                   <p className="text-sm text-muted-foreground">
@@ -143,17 +153,18 @@ function Dashboard() {
                     {athleteQuery.data.grad_year ? ` • Class of ${athleteQuery.data.grad_year}` : ""}
                   </p>
                 </div>
-                <div className="flex gap-2">
-                  <Button asChild variant="outline" size="sm">
+                <div className="flex shrink-0 gap-2">
+                  <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
                     <Link to="/a/$athleteId" params={{ athleteId: athleteQuery.data.id }}>
                       View
                     </Link>
                   </Button>
-                  <Button asChild size="sm">
+                  <Button asChild size="sm" className="flex-1 sm:flex-none">
                     <Link to="/profile/edit">Edit</Link>
                   </Button>
                 </div>
               </div>
+
 
               <div className="mt-6 grid gap-2">
                 <Row done={!!athleteQuery.data.full_name} label="Name" />
