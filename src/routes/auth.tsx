@@ -147,30 +147,33 @@ function AuthPage() {
 
           <TabsContent value="signup">
             <form onSubmit={handleSignUp} className="mt-4 space-y-4">
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setRole("athlete")}
-                  className={`flex-1 rounded-lg border p-3 text-sm font-medium ${
-                    role === "athlete"
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "bg-background"
-                  }`}
-                >
-                  I'm an athlete
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole("coach")}
-                  className={`flex-1 rounded-lg border p-3 text-sm font-medium ${
-                    role === "coach"
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "bg-background"
-                  }`}
-                >
-                  I'm a coach
-                </button>
+              <div className="grid grid-cols-3 gap-2">
+                {(
+                  [
+                    ["athlete", "Athlete"],
+                    ["parent", "Parent"],
+                    ["coach", "Coach"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setRole(value)}
+                    className={`rounded-lg border p-3 text-sm font-medium ${
+                      role === value ? "border-primary bg-primary text-primary-foreground" : "bg-background"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
+              {role === "parent" && (
+                <p className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
+                  Parents link to their athlete with an invite code after signing up — your athlete creates it from
+                  the Family page.
+                </p>
+              )}
+
 
               <div className="space-y-1.5">
                 <Label htmlFor="su-name">Full name</Label>
