@@ -39,8 +39,10 @@ test.afterAll(async () => {
 
 /** Fills one of the coach-directory filter inputs (label sits above the input). */
 async function setFilter(page: Page, label: string, value: string) {
-  const group = page.locator("div").filter({ hasText: new RegExp(`^${label}$`) }).last();
-  await group.locator("xpath=..").locator("input").first().fill(value);
+  await page
+    .locator(`xpath=//label[normalize-space(.)='${label}']/following-sibling::input`)
+    .first()
+    .fill(value);
 }
 
 test("athlete completes and publishes a profile", async ({ page }) => {
