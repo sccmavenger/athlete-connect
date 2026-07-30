@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockMyAthlete } from "@/lib/mock-helpers";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CardListSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { CheckCircle2, Circle, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
