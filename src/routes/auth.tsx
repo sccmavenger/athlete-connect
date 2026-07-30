@@ -172,24 +172,32 @@ function AuthPage() {
                 </button>
               </div>
 
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-name">Full name</Label>
-                <Input id="su-name" value={suFullName} onChange={(e) => setSuFullName(e.target.value)} required maxLength={100} />
+                <Input id="su-name" value={suFullName} onChange={(e) => setSuFullName(e.target.value)} maxLength={100} aria-invalid={!!errors.full_name} />
+                {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
               </div>
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-email">Email</Label>
-                <Input id="su-email" type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} required maxLength={255} />
+                <Input id="su-email" type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} maxLength={255} aria-invalid={!!errors.email} />
+                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-pass">Password</Label>
-                <Input id="su-pass" type="password" value={suPass} onChange={(e) => setSuPass(e.target.value)} required minLength={8} />
+                <Input id="su-pass" type="password" value={suPass} onChange={(e) => setSuPass(e.target.value)} aria-invalid={!!errors.password} />
+                {errors.password ? (
+                  <p className="text-xs text-destructive">{errors.password}</p>
+                ) : (
+                  <p className="text-xs text-muted-foreground">At least 8 characters.</p>
+                )}
               </div>
 
               {role === "coach" && (
                 <>
-                  <div>
+                  <div className="space-y-1.5">
                     <Label htmlFor="su-college">College / program</Label>
-                    <Input id="su-college" value={suCollege} onChange={(e) => setSuCollege(e.target.value)} required maxLength={150} />
+                    <Input id="su-college" value={suCollege} onChange={(e) => setSuCollege(e.target.value)} maxLength={150} aria-invalid={!!errors.college} />
+                    {errors.college && <p className="text-xs text-destructive">{errors.college}</p>}
                   </div>
                   <div>
                     <Label htmlFor="su-title">Your title</Label>
