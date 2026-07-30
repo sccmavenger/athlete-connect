@@ -409,9 +409,33 @@ function AthleteView() {
 
       {q.data && q.data.events.length > 0 && (
         <Card className="mt-6 p-5">
-          <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-            <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
-          </h2>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold">
+              <Calendar className="h-5 w-5 text-primary" /> Upcoming schedule
+            </h2>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const events: IcsEvent[] = (q.data?.events ?? []).map((ev: any) => ({
+                  uid: ev.id,
+                  date: ev.event_date,
+                  time: ev.event_time,
+                  title: `${a.full_name}${ev.opponent ? ` vs ${ev.opponent}` : ""}`,
+                  location: ev.location,
+                  description: a.high_school ?? undefined,
+                }));
+                downloadFile(
+                  `${a.full_name.replace(/\s+/g, "-").toLowerCase()}-schedule.ics`,
+                  buildIcs(events, `${a.full_name} — games`),
+                  "text/calendar",
+                );
+              }}
+            >
+              <Download className="mr-1.5 h-4 w-4" /> Add to calendar
+            </Button>
+          </div>
+
           <ul className="divide-y">
             {q.data.events.map((ev: any) => (
               <li key={ev.id} className="flex items-start justify-between gap-3 py-2 text-sm">
