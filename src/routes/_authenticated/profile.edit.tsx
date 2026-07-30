@@ -306,6 +306,17 @@ function ProfileEdit() {
     if (!validate()) return;
     setSaving(true);
     try {
+      const zip = form.zip_code.trim();
+      let coords: { latitude: number; longitude: number } | null = null;
+      if (zip) {
+        try {
+          coords = await geocode({ data: { zip } });
+        } catch {
+          coords = null;
+        }
+        if (!coords) toast.warning("We couldn't locate that ZIP code — distance search may not find you.");
+      }
+
       const payload = {
         user_id: user.id,
         full_name: form.full_name.trim(),
@@ -325,8 +336,12 @@ function ProfileEdit() {
         tiktok_handle: form.tiktok_handle.trim() || null,
         bio: form.bio.trim() || null,
         profile_photo_url: form.profile_photo_url || null,
+        zip_code: zip || null,
+        ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
+        ...(zip ? {} : { latitude: null, longitude: null }),
         is_published: form.is_published,
       };
+
 
       let athleteId = form.id;
       if (athleteId) {
