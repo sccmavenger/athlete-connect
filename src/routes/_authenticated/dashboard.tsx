@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockMyAthlete } from "@/lib/mock-helpers";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CardListSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { CheckCircle2, Circle, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -48,13 +50,19 @@ function Dashboard() {
   });
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-12 text-muted-foreground">Loading...</div>;
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
+        <PageHeaderSkeleton />
+        <CardListSkeleton count={2} />
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-10">
-      <h1 className="font-display text-4xl font-bold">Dashboard</h1>
-      <p className="mt-1 text-muted-foreground">{user?.email}</p>
+    <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
+      <h1 className="font-display text-3xl font-bold sm:text-4xl">Dashboard</h1>
+      <p className="mt-1 break-all text-muted-foreground">{user?.email}</p>
+
 
       {/* Pending coach */}
       {!isAthlete && !isCoach && !isAdmin && (
@@ -113,21 +121,31 @@ function Dashboard() {
       {/* Athlete profile completeness */}
       {isAthlete && (
         <div className="mt-6 space-y-6">
-          {!athleteQuery.data ? (
+          {athleteQuery.isPending ? (
+            <Card className="space-y-3 p-6">
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-4 w-64 max-w-full" />
+              <div className="space-y-2 pt-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-40" />
+                ))}
+              </div>
+            </Card>
+          ) : !athleteQuery.data ? (
             <Card className="p-6">
               <h2 className="font-display text-2xl font-bold">Build your profile</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Add your basics, academics, videos, and schedule so coaches can find you.
               </p>
-              <Button asChild className="mt-4">
+              <Button asChild className="mt-4 w-full sm:w-auto">
                 <Link to="/profile/edit">Create profile</Link>
               </Button>
             </Card>
           ) : (
             <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-display text-2xl font-bold">
+              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                <div className="min-w-0">
+                  <h2 className="truncate font-display text-2xl font-bold">
                     {athleteQuery.data.full_name}
                   </h2>
                   <p className="text-sm text-muted-foreground">
@@ -135,17 +153,18 @@ function Dashboard() {
                     {athleteQuery.data.grad_year ? ` • Class of ${athleteQuery.data.grad_year}` : ""}
                   </p>
                 </div>
-                <div className="flex gap-2">
-                  <Button asChild variant="outline" size="sm">
+                <div className="flex shrink-0 gap-2">
+                  <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
                     <Link to="/a/$athleteId" params={{ athleteId: athleteQuery.data.id }}>
                       View
                     </Link>
                   </Button>
-                  <Button asChild size="sm">
+                  <Button asChild size="sm" className="flex-1 sm:flex-none">
                     <Link to="/profile/edit">Edit</Link>
                   </Button>
                 </div>
               </div>
+
 
               <div className="mt-6 grid gap-2">
                 <Row done={!!athleteQuery.data.full_name} label="Name" />

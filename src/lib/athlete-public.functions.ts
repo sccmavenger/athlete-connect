@@ -21,12 +21,13 @@ export const getPublicAthlete = createServerFn({ method: "GET" })
       .eq("is_published", true)
       .maybeSingle();
 
-    if (!athlete) return { athlete: null, videos: [], events: [] };
+    if (!athlete) return { athlete: null, videos: [], events: [], photos: [] };
 
-    const [{ data: videos }, { data: events }] = await Promise.all([
+    const [{ data: videos }, { data: events }, { data: photos }] = await Promise.all([
       supabasePublic.from("athlete_videos").select("*").eq("athlete_id", data.athleteId),
       supabasePublic.from("athlete_events").select("*").eq("athlete_id", data.athleteId).order("event_date"),
+      supabasePublic.from("athlete_photos").select("*").eq("athlete_id", data.athleteId).order("created_at"),
     ]);
 
-    return { athlete, videos: videos ?? [], events: events ?? [] };
+    return { athlete, videos: videos ?? [], events: events ?? [], photos: photos ?? [] };
   });

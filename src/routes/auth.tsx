@@ -69,26 +69,51 @@ function AuthPage() {
     }
   }
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    const schema = z.object({
+      full_name: z.string().trim().min(2, "Enter your full name").max(100),
+      email: z.string().trim().email("Enter a valid email").max(255),
+      password: z.string().min(8, "Password must be at least 8 characters").max(72),
+      college: role === "coach" ? z.string().trim().min(2, "College or program is required").max(150) : z.string().optional(),
+    });
+    const parsed = schema.safeParse({
+      full_name: suFullName,
+      email: suEmail,
+      password: suPass,
+      college: suCollege,
+    });
+    if (!parsed.success) {
+      const next: Record<string, string> = {};
+      for (const issue of parsed.error.issues) next[String(issue.path[0])] = issue.message;
+      setErrors(next);
+      return;
+    }
+    setErrors({});
     setLoading(true);
     try {
       const { error } = await supabase.auth.signUp({
-        email: suEmail.trim(),
-        password: suPass,
+        email: parsed.data.email,
+        password: parsed.data.password,
         options: {
           emailRedirectTo: window.location.origin,
           data: {
             role_intent: role,
-            full_name: suFullName,
-            display_name: suFullName,
-            college: suCollege || undefined,
-            title: suTitle || undefined,
+            full_name: parsed.data.full_name,
+            display_name: parsed.data.full_name,
+            college: suCollege.trim() || undefined,
+            title: suTitle.trim() || undefined,
           },
         },
       });
       if (error) {
-        toast.error(error.message);
+        toast.error(
+          error.message.toLowerCase().includes("already registered")
+            ? "That email already has an account — try signing in instead."
+            : error.message,
+        );
         return;
       }
       if (role === "coach") {
@@ -147,24 +172,32 @@ function AuthPage() {
                 </button>
               </div>
 
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-name">Full name</Label>
-                <Input id="su-name" value={suFullName} onChange={(e) => setSuFullName(e.target.value)} required maxLength={100} />
+                <Input id="su-name" value={suFullName} onChange={(e) => setSuFullName(e.target.value)} maxLength={100} aria-invalid={!!errors.full_name} />
+                {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
               </div>
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-email">Email</Label>
-                <Input id="su-email" type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} required maxLength={255} />
+                <Input id="su-email" type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} maxLength={255} aria-invalid={!!errors.email} />
+                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
-              <div>
+              <div className="space-y-1.5">
                 <Label htmlFor="su-pass">Password</Label>
-                <Input id="su-pass" type="password" value={suPass} onChange={(e) => setSuPass(e.target.value)} required minLength={8} />
+                <Input id="su-pass" type="password" value={suPass} onChange={(e) => setSuPass(e.target.value)} aria-invalid={!!errors.password} />
+                {errors.password ? (
+                  <p className="text-xs text-destructive">{errors.password}</p>
+                ) : (
+                  <p className="text-xs text-muted-foreground">At least 8 characters.</p>
+                )}
               </div>
 
               {role === "coach" && (
                 <>
-                  <div>
+                  <div className="space-y-1.5">
                     <Label htmlFor="su-college">College / program</Label>
-                    <Input id="su-college" value={suCollege} onChange={(e) => setSuCollege(e.target.value)} required maxLength={150} />
+                    <Input id="su-college" value={suCollege} onChange={(e) => setSuCollege(e.target.value)} maxLength={150} aria-invalid={!!errors.college} />
+                    {errors.college && <p className="text-xs text-destructive">{errors.college}</p>}
                   </div>
                   <div>
                     <Label htmlFor="su-title">Your title</Label>
