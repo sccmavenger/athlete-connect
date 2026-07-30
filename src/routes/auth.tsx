@@ -69,26 +69,51 @@ function AuthPage() {
     }
   }
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    const schema = z.object({
+      full_name: z.string().trim().min(2, "Enter your full name").max(100),
+      email: z.string().trim().email("Enter a valid email").max(255),
+      password: z.string().min(8, "Password must be at least 8 characters").max(72),
+      college: role === "coach" ? z.string().trim().min(2, "College or program is required").max(150) : z.string().optional(),
+    });
+    const parsed = schema.safeParse({
+      full_name: suFullName,
+      email: suEmail,
+      password: suPass,
+      college: suCollege,
+    });
+    if (!parsed.success) {
+      const next: Record<string, string> = {};
+      for (const issue of parsed.error.issues) next[String(issue.path[0])] = issue.message;
+      setErrors(next);
+      return;
+    }
+    setErrors({});
     setLoading(true);
     try {
       const { error } = await supabase.auth.signUp({
-        email: suEmail.trim(),
-        password: suPass,
+        email: parsed.data.email,
+        password: parsed.data.password,
         options: {
           emailRedirectTo: window.location.origin,
           data: {
             role_intent: role,
-            full_name: suFullName,
-            display_name: suFullName,
-            college: suCollege || undefined,
-            title: suTitle || undefined,
+            full_name: parsed.data.full_name,
+            display_name: parsed.data.full_name,
+            college: suCollege.trim() || undefined,
+            title: suTitle.trim() || undefined,
           },
         },
       });
       if (error) {
-        toast.error(error.message);
+        toast.error(
+          error.message.toLowerCase().includes("already registered")
+            ? "That email already has an account — try signing in instead."
+            : error.message,
+        );
         return;
       }
       if (role === "coach") {
