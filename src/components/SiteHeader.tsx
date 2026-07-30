@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NotificationsBell } from "@/components/NotificationsBell";
+
 import { Menu } from "lucide-react";
 import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
