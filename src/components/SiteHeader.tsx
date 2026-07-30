@@ -97,11 +97,16 @@ export function SiteHeader() {
               </SheetContent>
             </Sheet>
           ) : (
-            !loading && (
-              <Button asChild variant="secondary" size="sm" className="md:hidden">
-                <Link to={user ? "/dashboard" : "/auth"}>{user ? "Dashboard" : "Sign in"}</Link>
+            !loading &&
+            (user ? (
+              <Button variant="secondary" size="sm" className="md:hidden" onClick={signOut}>
+                Sign out
               </Button>
-            )
+            ) : (
+              <Button asChild variant="secondary" size="sm" className="md:hidden">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            ))
           )}
         </div>
       </div>
