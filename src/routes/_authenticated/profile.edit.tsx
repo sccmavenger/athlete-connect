@@ -147,7 +147,9 @@ function ProfileEdit() {
           tiktok_handle: athlete.tiktok_handle ?? "",
           bio: athlete.bio ?? "",
           profile_photo_url: athlete.profile_photo_url ?? "",
+          zip_code: athlete.zip_code ?? "",
           is_published: athlete.is_published ?? false,
+
         });
         const [{ data: v }, { data: ev }, { data: ph }, { data: c }] = await Promise.all([
           supabase.from("athlete_videos").select("*").eq("athlete_id", athlete.id),
