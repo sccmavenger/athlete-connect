@@ -285,6 +285,12 @@ function CoachesDirectory() {
                   </span>
                 )}
                 {a.gpa && <span className="rounded-full bg-secondary px-2 py-0.5">GPA {a.gpa}</span>}
+                {a._miles != null && (
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-primary">
+                    {formatMiles(a._miles)} away
+                  </span>
+                )}
+
               </div>
             </Link>
           ))}
