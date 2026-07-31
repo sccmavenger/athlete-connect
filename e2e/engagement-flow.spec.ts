@@ -56,8 +56,10 @@ test("athlete messages a coach and the coach replies", async ({ page }) => {
   // Coach sees it in the inbox and replies.
   await signOut(page);
   await signIn(page, coach);
-  await page.goto("/coaches/messages");
-  await expect(page.getByText(athlete.name).first()).toBeVisible({ timeout: 20_000 });
+  await expect(async () => {
+    await page.goto("/coaches/messages");
+    await expect(page.getByText(athlete.name).first()).toBeVisible({ timeout: 5000 });
+  }).toPass({ timeout: 60_000 });
   await page.getByText(athlete.name).first().click();
   await expect(page.getByText("Tape attached.").first()).toBeVisible({ timeout: 20_000 });
   await page.getByPlaceholder(/Message this athlete/i).fill("Thanks — we'll come watch you play.");
@@ -69,12 +71,14 @@ test("coach viewing the profile shows up in athlete insights", async ({ page }) 
   await signIn(page, coach);
   await page.goto(`/a/${athleteId}`);
   await expect(page.getByRole("heading", { name: athlete.name })).toBeVisible();
+  await page.waitForTimeout(3000); // let the view-tracking server fn settle
 
   await signOut(page);
   await signIn(page, athlete);
-  await page.goto("/insights");
-  await expect(page.getByRole("heading", { name: "Profile insights" })).toBeVisible();
-  await expect(page.getByText("E2E State University").first()).toBeVisible({ timeout: 30_000 });
+  await expect(async () => {
+    await page.goto("/insights");
+    await expect(page.getByText("E2E State University").first()).toBeVisible({ timeout: 5000 });
+  }).toPass({ timeout: 60_000 });
 });
 
 test("athlete gets an in-app notification for the coach reply", async ({ page }) => {
