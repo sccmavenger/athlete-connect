@@ -6,5 +6,4 @@ const ath=await mk('athlete','DBG Player '+st); const co=await mk('coach','DBG R
 await s.from('user_roles').upsert({user_id:co.id,role:'coach'},{onConflict:'user_id,role'});
 await s.from('coach_requests').update({status:'approved'}).eq('user_id',co.id);
 const {data:a}=await s.from('athletes').insert({user_id:ath.id,full_name:'DBG Player '+st,is_published:true,position:'Guard',grad_year:2027,gpa:3.9,state:'KS',zip_code:'67202'}).select('id').single();
-await s.from('messages').insert({athlete_id:a.id,coach_user_id:co.id,sender_user_id:ath.id,body:'Tape attached.'});
-console.log(JSON.stringify({coachEmail:`dbg-coach-${st}@example.com`,athleteId:a.id,coachId:co.id}));
+console.log(JSON.stringify({athleteEmail:`dbg-athlete-${st}@example.com`,coachName:'DBG Recruiter '+st,athleteId:a.id,coachId:co.id}));
