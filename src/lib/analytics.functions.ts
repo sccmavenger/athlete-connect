@@ -19,10 +19,12 @@ export const recordPublicProfileView = createServerFn({ method: "POST" })
       .eq("id", data.athleteId)
       .eq("is_published", true)
       .maybeSingle();
+    console.log("[pv] lookup", data.athleteId, JSON.stringify(athlete));
     if (!athlete) return { ok: false };
-    await supabaseAdmin
+    const ins = await supabaseAdmin
       .from("profile_views")
       .insert({ athlete_id: data.athleteId, viewer_role: "public" });
+    console.log("[pv] insert", JSON.stringify(ins.error));
     return { ok: true };
   });
 
