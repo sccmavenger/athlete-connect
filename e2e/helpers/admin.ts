@@ -24,7 +24,7 @@ const PASSWORD = "E2ePassw0rd!123";
 
 export async function createUser(opts: {
   name: string;
-  role: "athlete" | "coach";
+  role: "athlete" | "coach" | "parent";
   slug: string;
 }): Promise<TestUser> {
   const admin = adminClient();

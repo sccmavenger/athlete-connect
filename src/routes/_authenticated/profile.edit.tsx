@@ -142,12 +142,26 @@ function ProfileEdit() {
         typeof window !== "undefined"
           ? new URLSearchParams(window.location.search).get("athleteId")
           : null;
-      // RLS scopes this to profiles the user owns or manages as a guardian.
-      const { data: rows } = await supabase.from("athletes").select("*").order("created_at");
+      // Published athletes are world-readable, so scope this explicitly to
+      // profiles the user owns or manages as a guardian.
+      const { data: links } = await supabase
+        .from("athlete_guardians")
+        .select("athlete_id")
+        .eq("user_id", user.id);
+      const managedIds = (links ?? []).map((l) => l.athlete_id);
+      const { data: own } = await supabase
+        .from("athletes")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at");
+      const { data: linked } = managedIds.length
+        ? await supabase.from("athletes").select("*").in("id", managedIds).order("created_at")
+        : { data: [] as NonNullable<typeof own> };
+      const rows = [...(own ?? []), ...(linked ?? []).filter((l) => !(own ?? []).some((o) => o.id === l.id))];
       const athlete =
-        (wanted ? rows?.find((r) => r.id === wanted) : null) ??
-        rows?.find((r) => r.user_id === user.id) ??
-        rows?.[0] ??
+        (wanted ? rows.find((r) => r.id === wanted) : null) ??
+        rows.find((r) => r.user_id === user.id) ??
+        rows[0] ??
         null;
       if (athlete) {
         setForm({
