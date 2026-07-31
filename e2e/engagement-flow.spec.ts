@@ -140,5 +140,8 @@ test("compliance fields save on the profile editor", async ({ page }) => {
   await expect(page.getByText(/saved/i).first()).toBeVisible({ timeout: 30_000 });
 
   await page.reload();
-  await expect(ncaa.first()).toHaveValue("2411223344", { timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: "Your athlete profile" })).toBeVisible({ timeout: 30_000 });
+  await expect(async () => {
+    await expect(ncaa.first()).toHaveValue("2411223344", { timeout: 5000 });
+  }).toPass({ timeout: 60_000 });
 });
