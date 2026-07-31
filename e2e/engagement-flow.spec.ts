@@ -51,7 +51,7 @@ test("athlete messages a coach and the coach replies", async ({ page }) => {
   await pickSelect(page, "Start a conversation", new RegExp(coach.name, "i"));
   await page.getByPlaceholder(/Introduce yourself/i).fill("Hi coach — PG, 2027, 3.9 GPA. Tape attached.");
   await page.getByRole("button", { name: /^Send$/ }).click();
-  await expect(page.getByText("Tape attached.")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("Tape attached.").first()).toBeVisible({ timeout: 20_000 });
 
   // Coach sees it in the inbox and replies.
   await signOut(page);
@@ -59,10 +59,10 @@ test("athlete messages a coach and the coach replies", async ({ page }) => {
   await page.goto("/coaches/messages");
   await expect(page.getByText(athlete.name).first()).toBeVisible({ timeout: 20_000 });
   await page.getByText(athlete.name).first().click();
-  await expect(page.getByText("Tape attached.")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("Tape attached.").first()).toBeVisible({ timeout: 20_000 });
   await page.getByPlaceholder(/Message this athlete/i).fill("Thanks — we'll come watch you play.");
   await page.getByRole("button", { name: /^Send$/ }).click();
-  await expect(page.getByText("come watch you play")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("come watch you play").first()).toBeVisible({ timeout: 20_000 });
 });
 
 test("coach viewing the profile shows up in athlete insights", async ({ page }) => {
