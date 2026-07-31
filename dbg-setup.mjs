@@ -1,9 +1,0 @@
-import {createClient} from '@supabase/supabase-js';
-const s=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false}});
-const st=Date.now();
-const mk=async(role,name)=>{const{data,error}=await s.auth.admin.createUser({email:`dbg-${role}-${st}@example.com`,password:'E2ePassw0rd!123',email_confirm:true,user_metadata:{role_intent:role,full_name:name,display_name:name,college:role==='coach'?'E2E State University':undefined}});if(error)throw error;return data.user;};
-const ath=await mk('athlete','DBG Player '+st); const co=await mk('coach','DBG Recruiter '+st);
-await s.from('user_roles').upsert({user_id:co.id,role:'coach'},{onConflict:'user_id,role'});
-await s.from('coach_requests').update({status:'approved'}).eq('user_id',co.id);
-const {data:a}=await s.from('athletes').insert({user_id:ath.id,full_name:'DBG Player '+st,is_published:true,position:'Guard',grad_year:2027,gpa:3.9,state:'KS',zip_code:'67202'}).select('id').single();
-console.log(JSON.stringify({athleteEmail:`dbg-athlete-${st}@example.com`,coachName:'DBG Recruiter '+st,athleteId:a.id,coachId:co.id}));

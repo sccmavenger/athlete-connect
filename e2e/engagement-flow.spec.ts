@@ -52,11 +52,6 @@ test("athlete messages a coach and the coach replies", async ({ page }) => {
   await page.getByPlaceholder(/Introduce yourself/i).fill("Hi coach — PG, 2027, 3.9 GPA. Tape attached.");
   await page.getByRole("button", { name: /^Send$/ }).click();
   await expect(page.getByText("Tape attached.").first()).toBeVisible({ timeout: 20_000 });
-  {
-    const { adminClient } = await import("./helpers/admin");
-    const { data } = await adminClient().from("messages").select("*").eq("athlete_id", athleteId);
-    console.log("DEBUG messages", JSON.stringify(data), "expected coach", coach.id);
-  }
 
   // Coach sees it in the inbox and replies.
   await signOut(page);
