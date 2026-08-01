@@ -20,9 +20,12 @@ import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 import {
   ATHLETE_OUTREACH_NOTE,
+  COMPLIANCE_DISCLAIMER,
   contactWindows,
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
+  NCAA_SOURCES,
+
 } from "@/lib/compliance";
 import { COLLEGE_DIVISIONS, MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
@@ -205,17 +208,27 @@ function CollegeList() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">
-              Informational summary of the published NCAA basketball calendar — not compliance advice. Confirm with{" "}
-              <a className="text-primary hover:underline" href={NCAA_RECRUITING_CALENDAR_URL} target="_blank" rel="noreferrer">
-                the NCAA calendar
-              </a>{" "}
-              and register at the{" "}
-              <a className="text-primary hover:underline" href={NCAA_ELIGIBILITY_CENTER_URL} target="_blank" rel="noreferrer">
-                Eligibility Center <ExternalLink className="inline h-3 w-3" />
-              </a>
-              .
-            </p>
+            <p className="mt-3 text-[11px] text-muted-foreground">{COMPLIANCE_DISCLAIMER}</p>
+            <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
+              {NCAA_SOURCES.map((s) => (
+                <li key={s.url}>
+                  <a className="text-primary hover:underline" href={s.url} target="_blank" rel="noreferrer">
+                    {s.label} <ExternalLink className="inline h-3 w-3" />
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a className="text-primary hover:underline" href={NCAA_RECRUITING_CALENDAR_URL} target="_blank" rel="noreferrer">
+                  All NCAA recruiting calendars <ExternalLink className="inline h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a className="text-primary hover:underline" href={NCAA_ELIGIBILITY_CENTER_URL} target="_blank" rel="noreferrer">
+                  NCAA Eligibility Center (register here) <ExternalLink className="inline h-3 w-3" />
+                </a>
+              </li>
+            </ul>
+
           </div>
         </div>
       </Card>
