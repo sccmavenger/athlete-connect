@@ -75,15 +75,16 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {loading ? null : user ? (
-            <Button variant="secondary" size="sm" className="hidden md:inline-flex" onClick={signOut}>
+          {user ? (
+            <Button variant="secondary" size="sm" onClick={signOut}>
               Sign out
             </Button>
-          ) : (
-            <Button asChild variant="secondary" size="sm" className="hidden md:inline-flex">
+          ) : loading ? null : (
+            <Button asChild variant="secondary" size="sm">
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
+
 
           {/* Mobile */}
           {links.length > 0 ? (
