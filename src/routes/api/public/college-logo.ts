@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { COLLEGE_DOMAINS } from "@/lib/college-domains";
+import { COLLEGE_LOGO_IDS } from "@/lib/college-logo-ids";
 
 const QuerySchema = z.object({
   name: z.string().trim().min(2).max(120).optional(),
