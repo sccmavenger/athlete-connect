@@ -19,8 +19,10 @@ import {
   type FieldErrors,
 } from "@/lib/validation";
 import { isUnder18 } from "@/lib/compliance";
+import { MAX_COLLEGE_INTERESTS } from "@/lib/colleges";
 import { toast } from "sonner";
-import { Trash2, Plus, Upload } from "lucide-react";
+import { Trash2, Plus, Upload, GraduationCap } from "lucide-react";
+
 
 export const Route = createFileRoute("/_authenticated/profile/edit")({
   head: () => ({
