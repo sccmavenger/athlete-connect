@@ -11,6 +11,29 @@ export const NCAA_ELIGIBILITY_CENTER_URL = "https://web3.ncaa.org/ecwr3/";
 export const NCAA_RECRUITING_CALENDAR_URL =
   "https://www.ncaa.org/sports/2013/11/14/recruiting-calendars.aspx";
 
+/** Primary published sources behind the summaries in this file. */
+export const NCAA_SOURCES: { label: string; url: string }[] = [
+  {
+    label: "D1 men's basketball recruiting calendar (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar/2026-27/2026-27D1Rec_MBBRecruitingCalendar.pdf",
+  },
+  {
+    label: "D1 women's basketball recruiting calendar (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar/2026-27/2026-27D1Rec_WBBRecruitingCalendar.pdf",
+  },
+  {
+    label: "D2 off-campus recruiting guide (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar/2026-27/2026-27D2REC_RecGuide.pdf",
+  },
+  {
+    label: "D1 contacts & evaluations basics (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/d1/D1Comp_ContactsEvals.pdf",
+  },
+  { label: "NAIA recruiting rules", url: "https://www.playnaia.org/" },
+  { label: "NJCAA (junior college) recruiting", url: "https://www.njcaa.org/" },
+];
+
+
 export type Division = "D1" | "D2" | "D3" | "NAIA" | "JUCO";
 
 export const DIVISIONS: Division[] = ["D1", "D2", "D3", "NAIA", "JUCO"];
