@@ -36,6 +36,47 @@ export const NCAA_SOURCES: { label: string; url: string }[] = [
 
 export type Division = "D1" | "D2" | "D3" | "NAIA" | "JUCO";
 
+/** Which basketball calendar applies to this athlete. */
+export type SportGender = "mens" | "womens";
+
+export const SPORT_GENDER_LABEL: Record<SportGender, string> = {
+  mens: "boys / men's basketball",
+  womens: "girls / women's basketball",
+};
+
+const D1_CALENDARS: Record<SportGender, { label: string; url: string }> = {
+  mens: {
+    label: "D1 men's basketball recruiting calendar (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar/2026-27/2026-27D1Rec_MBBRecruitingCalendar.pdf",
+  },
+  womens: {
+    label: "D1 women's basketball recruiting calendar (NCAA)",
+    url: "https://ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar/2026-27/2026-27D1Rec_WBBRecruitingCalendar.pdf",
+  },
+};
+
+/**
+ * Official sources to show an athlete. When we know which basketball calendar
+ * applies, we only show that one so nobody reads the wrong set of dates.
+ */
+export function sourcesFor(gender: SportGender | null | undefined) {
+  if (!gender) return NCAA_SOURCES;
+  const drop = gender === "mens" ? D1_CALENDARS.womens.url : D1_CALENDARS.mens.url;
+  return NCAA_SOURCES.filter((s) => s.url !== drop);
+}
+
+/** Direct link to the calendar that governs this athlete's contact periods. */
+export function calendarFor(gender: SportGender | null | undefined) {
+  return gender ? D1_CALENDARS[gender] : null;
+}
+
+/** Disclaimer text, tightened when we know the athlete's basketball calendar. */
+export function complianceDisclaimer(gender: SportGender | null | undefined) {
+  return gender
+    ? `Plain-language summary of publicly published recruiting rules for ${SPORT_GENDER_LABEL[gender]}, based on grad year only. It does not account for dead/quiet periods, visits, transfers or state rules, and rules change each year. Always confirm with the official sources below or your school's compliance office.`
+    : COMPLIANCE_DISCLAIMER;
+}
+
 export const DIVISIONS: Division[] = ["D1", "D2", "D3", "NAIA", "JUCO"];
 
 /** Age in whole years on a given date (defaults to today). */
@@ -85,7 +126,11 @@ export type ContactWindow = {
   summary: string;
 };
 
-export function contactWindows(gradYear: number | null, now = new Date()): ContactWindow[] {
+export function contactWindows(
+  gradYear: number | null,
+  gender: SportGender | null = null,
+  now = new Date(),
+): ContactWindow[] {
   return DIVISIONS.map((division) => {
     const opensOn = contactOpensOn(gradYear, division);
     if (!opensOn) {
@@ -113,8 +158,12 @@ export function contactWindows(gradYear: number | null, now = new Date()): Conta
       opensOn,
       open,
       summary: open
-        ? `Calls, texts, emails and recruiting materials have been allowed since ${when} (June 15 before junior year). In-person contact, visits and evaluations follow separate dated periods.`
-        : `Calls, texts, emails and recruiting materials may start ${when} (June 15 before junior year). You can still reach out to coaches before then.`,
+        ? `Calls, texts, emails and recruiting materials have been allowed since ${when} (June 15 before junior year). In-person contact, visits and evaluations follow separate dated periods${
+            gender ? ` on the ${SPORT_GENDER_LABEL[gender]} calendar` : " that differ between men's and women's basketball"
+          }.`
+        : `Calls, texts, emails and recruiting materials may start ${when} (June 15 before junior year). You can still reach out to coaches before then.${
+            gender ? ` Contact and evaluation periods follow the ${SPORT_GENDER_LABEL[gender]} calendar.` : ""
+          }`,
     };
   });
 }
