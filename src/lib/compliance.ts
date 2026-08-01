@@ -60,11 +60,16 @@ export function isUnder18(dob: string | null | undefined): boolean {
 }
 
 /**
- * Date a college coach in a given division may first initiate recruiting
- * contact with a prospect graduating in `gradYear`.
+ * Earliest date a college coach in a given division may begin recruiting
+ * contact (phone calls, texts, emails, recruiting materials) with a prospect
+ * graduating in `gradYear`.
  *
- * Basketball: D1/D2 contact opens June 15 after sophomore year.
- * D3 / NAIA / JUCO have no equivalent date-based restriction.
+ * Basketball: for D1 and D2 this is June 15 immediately preceding junior year
+ * (i.e. after sophomore year). Off-campus contacts, official/unofficial visits
+ * and evaluation windows have their own dates that differ between men's and
+ * women's basketball and change every year — we do not attempt to state those.
+ * D3 has no national date; NAIA and junior college (NJCAA) are separate
+ * associations with their own, far less restrictive rules.
  */
 export function contactOpensOn(gradYear: number | null, division: Division): Date | null {
   if (!gradYear) return null;
@@ -90,8 +95,10 @@ export function contactWindows(gradYear: number | null, now = new Date()): Conta
         open: true,
         summary:
           division === "D3"
-            ? "No date-based contact restriction — coaches may contact you at any time."
-            : "Recruiting contact is not restricted by a national calendar date.",
+            ? "NCAA D3 has no national start date for coach contact. Off-campus contact is still limited by NCAA rules, so ask the coach."
+            : division === "NAIA"
+              ? "The NAIA is a separate association and does not use the NCAA calendar; contact is not limited by a national start date."
+              : "Junior colleges are governed by the NJCAA, not the NCAA, and have no national start date for contact.",
       };
     }
     const open = now >= opensOn;
@@ -106,8 +113,8 @@ export function contactWindows(gradYear: number | null, now = new Date()): Conta
       opensOn,
       open,
       summary: open
-        ? `Coaches have been able to contact you directly since ${when}.`
-        : `Coaches may begin contacting you on ${when}. Until then you can still reach out to them.`,
+        ? `Calls, texts, emails and recruiting materials have been allowed since ${when} (June 15 before junior year). In-person contact, visits and evaluations follow separate dated periods.`
+        : `Calls, texts, emails and recruiting materials may start ${when} (June 15 before junior year). You can still reach out to coaches before then.`,
     };
   });
 }
@@ -118,6 +125,10 @@ export function contactWindows(gradYear: number | null, now = new Date()): Conta
  */
 export const ATHLETE_OUTREACH_NOTE =
   "You may contact college coaches at any age or grade. The NCAA calendar limits when coaches may contact you — not when you may contact them.";
+
+/** Shown next to every calendar summary so nobody treats this as compliance advice. */
+export const COMPLIANCE_DISCLAIMER =
+  "Plain-language summary of publicly published recruiting rules, based on grad year only. It does not account for sport, gender, dead/quiet periods, visits, transfers or state rules, and rules change each year. Always confirm with the official sources below or your school's compliance office.";
 
 export type ComplianceCheck = {
   key: string;
@@ -135,6 +146,7 @@ export function complianceChecks(a: {
   is_published?: boolean | null;
   guardianCount?: number;
 }): ComplianceCheck[] {
+
   const under13 = isUnder13(a.date_of_birth);
   const under18 = isUnder18(a.date_of_birth);
   const checks: ComplianceCheck[] = [
