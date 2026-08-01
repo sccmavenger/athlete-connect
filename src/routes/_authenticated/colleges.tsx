@@ -24,7 +24,9 @@ import {
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
 } from "@/lib/compliance";
+import { MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
+
 
 export const Route = createFileRoute("/_authenticated/colleges")({
   head: () => ({
@@ -64,6 +66,7 @@ function CollegeList() {
   const [division, setDivision] = useState("D1");
   const [state, setState] = useState("");
   const [adding, setAdding] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const active = useMemo(() => {
     const list = athletes.data ?? [];
@@ -84,14 +87,32 @@ function CollegeList() {
     },
   });
 
+  const count = (q.data ?? []).length;
+  const atLimit = count >= MAX_COLLEGE_INTERESTS;
+  const suggestions = useMemo(() => searchColleges(name), [name]);
+
   const windows = contactWindows(active?.grad_year ?? null);
+
+  function pick(c: { name: string; state: string; division: string }) {
+    setName(c.name);
+    setState(c.state);
+    setDivision(c.division);
+    setShowSuggestions(false);
+  }
 
   async function add() {
     if (!active || !name.trim()) return;
+    if (atLimit) {
+      return toast.error(`You can track up to ${MAX_COLLEGE_INTERESTS} colleges. Remove one first.`);
+    }
+    const trimmed = name.trim().slice(0, 120);
+    if ((q.data ?? []).some((r) => r.college_name.toLowerCase() === trimmed.toLowerCase())) {
+      return toast.error("That school is already on your list.");
+    }
     setAdding(true);
     const { error } = await supabase.from("athlete_college_interests").insert({
       athlete_id: active.id,
-      college_name: name.trim().slice(0, 120),
+      college_name: trimmed,
       division,
       state: state.trim().toUpperCase().slice(0, 2) || null,
     });
@@ -100,8 +121,13 @@ function CollegeList() {
     setName("");
     setState("");
     qc.invalidateQueries({ queryKey: ["college-interests", active.id] });
-    toast.success("Added to your list");
+    toast.success(
+      active.is_published
+        ? "Added — coaches from that program get notified."
+        : "Added. Publish your profile so coaches from that program get notified.",
+    );
   }
+
 
   async function patch(id: string, fields: Partial<Interest>) {
     const { error } = await supabase.from("athlete_college_interests").update(fields).eq("id", id);
@@ -196,11 +222,51 @@ function CollegeList() {
       </Card>
 
       <Card className="mt-6 p-4 sm:p-6">
-        <h2 className="font-display text-lg font-bold">Add a college</h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-display text-lg font-bold">Add a target school</h2>
+          <span className={`text-xs ${atLimit ? "text-accent" : "text-muted-foreground"}`}>
+            {count} of {MAX_COLLEGE_INTERESTS} picked
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Pick up to {MAX_COLLEGE_INTERESTS} schools you'd love to play for. If a coach from that program is
+          registered here, they get notified that you're interested.
+        </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_120px_100px_auto]">
-          <div>
+          <div className="relative">
             <Label className="text-xs">College</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Wichita State" maxLength={120} />
+            <Input
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => window.setTimeout(() => setShowSuggestions(false), 120)}
+              placeholder="Start typing — e.g. Wichita State"
+              maxLength={120}
+              autoComplete="off"
+              disabled={atLimit}
+            />
+            {showSuggestions && !atLimit && suggestions.length > 0 && (
+              <ul className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-border bg-popover p-1 shadow-lg">
+                {suggestions.map((c) => (
+                  <li key={c.name}>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => pick(c)}
+                    >
+                      <span className="truncate">{c.name}</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {c.division} • {c.state}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div>
             <Label className="text-xs">Division</Label>
@@ -222,13 +288,19 @@ function CollegeList() {
             <Input value={state} onChange={(e) => setState(e.target.value)} maxLength={2} placeholder="KS" />
           </div>
           <div className="flex items-end">
-            <Button onClick={add} disabled={adding || !name.trim()} className="w-full sm:w-auto">
+            <Button onClick={add} disabled={adding || atLimit || !name.trim()} className="w-full sm:w-auto">
               <Plus className="mr-1.5 h-4 w-4" />
               Add
             </Button>
           </div>
         </div>
+        {atLimit && (
+          <p className="mt-2 text-xs text-accent">
+            You've hit the {MAX_COLLEGE_INTERESTS}-school limit. Remove one below to add another.
+          </p>
+        )}
       </Card>
+
 
       <div className="mt-6 space-y-3">
         {q.isPending ? (

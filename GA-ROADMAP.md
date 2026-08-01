@@ -62,3 +62,7 @@ Each day we check this file and answer:
 - Add new tasks to the bottom of the appropriate section.
 - If a task grows, open a sub-checklist under it.
 - Keep the file checked into GitHub so the customer and team can see the same state.
+
+## Target schools (shipped)
+- Athletes pick up to 10 target colleges (searchable program list, DB-enforced cap).
+- Approved coaches whose program matches get an in-app notification when an athlete lists their school, and when a profile is first published.
