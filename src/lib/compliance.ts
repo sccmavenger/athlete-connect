@@ -180,9 +180,10 @@ export function complianceChecks(a: {
       label: "NCAA Eligibility Center ID",
       ok: !!a.ncaa_id,
       detail:
-        "Required before you can be recruited or receive an official visit at a Division I or II school. Register in your sophomore/junior year.",
+        "A Certification Account at the NCAA Eligibility Center is needed to take an official visit and to be certified eligible at a Division I or II school. Many families register during sophomore or junior year.",
       blocking: false,
     },
+
   ];
   return checks;
 }
