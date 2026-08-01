@@ -20,12 +20,12 @@ import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 import {
   ATHLETE_OUTREACH_NOTE,
-  COMPLIANCE_DISCLAIMER,
+  calendarFor,
+  complianceDisclaimer,
   contactWindows,
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
-  NCAA_SOURCES,
-
+  sourcesFor,
 } from "@/lib/compliance";
 import { COLLEGE_DIVISIONS, MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
@@ -92,7 +92,10 @@ function CollegeList() {
 
   const effectiveDivision = division || (levelFilter !== "all" ? levelFilter : "D1");
 
-  const windows = contactWindows(active?.grad_year ?? null);
+  const gender = active?.sport_gender ?? null;
+  const windows = contactWindows(active?.grad_year ?? null, gender);
+  const sources = sourcesFor(gender);
+  const calendar = calendarFor(gender);
 
   function pick(c: { name: string; state: string; division: string }) {
     setName(c.name);
@@ -195,6 +198,23 @@ function CollegeList() {
           <div className="min-w-0">
             <h2 className="font-display text-lg font-bold">When can coaches contact you?</h2>
             <p className="mt-1 text-xs text-muted-foreground">{ATHLETE_OUTREACH_NOTE}</p>
+            {gender ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Showing the{" "}
+                <a className="text-primary hover:underline" href={calendar!.url} target="_blank" rel="noreferrer">
+                  {gender === "mens" ? "men's" : "women's"} basketball calendar
+                </a>{" "}
+                based on your profile.
+              </p>
+            ) : (
+              <p className="mt-2 text-xs text-accent">
+                Tell us whether you play boys or girls basketball and we'll show the correct NCAA
+                calendar — the dates differ.{" "}
+                <Link className="text-primary hover:underline" to="/profile/edit">
+                  Update my profile
+                </Link>
+              </p>
+            )}
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {windows.map((w) => (
                 <div key={w.division} className="rounded-lg border border-border/70 p-3">
@@ -208,9 +228,9 @@ function CollegeList() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">{COMPLIANCE_DISCLAIMER}</p>
+            <p className="mt-3 text-[11px] text-muted-foreground">{complianceDisclaimer(gender)}</p>
             <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
-              {NCAA_SOURCES.map((s) => (
+              {sources.map((s) => (
                 <li key={s.url}>
                   <a className="text-primary hover:underline" href={s.url} target="_blank" rel="noreferrer">
                     {s.label} <ExternalLink className="inline h-3 w-3" />
