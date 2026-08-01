@@ -75,18 +75,19 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {loading ? null : user ? (
-            <Button variant="secondary" size="sm" className="hidden md:inline-flex" onClick={signOut}>
+          {user ? (
+            <Button variant="secondary" size="sm" onClick={signOut}>
               Sign out
             </Button>
-          ) : (
-            <Button asChild variant="secondary" size="sm" className="hidden md:inline-flex">
+          ) : loading ? null : (
+            <Button asChild variant="secondary" size="sm">
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
 
+
           {/* Mobile */}
-          {links.length > 0 ? (
+          {links.length > 0 && (
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
@@ -114,18 +115,8 @@ export function SiteHeader() {
                 </Button>
               </SheetContent>
             </Sheet>
-          ) : (
-            !loading &&
-            (user ? (
-              <Button variant="secondary" size="sm" className="md:hidden" onClick={signOut}>
-                Sign out
-              </Button>
-            ) : (
-              <Button asChild variant="secondary" size="sm" className="md:hidden">
-                <Link to="/auth">Sign in</Link>
-              </Button>
-            ))
           )}
+
         </div>
       </div>
     </header>
