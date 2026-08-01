@@ -351,19 +351,6 @@ function CollegeList() {
 }
 
 /** Initials crest used when no school mark is available. */
-function crestInitials(name: string) {
-  const skip = new Set(["of", "at", "the", "and", "in", "for", "a", "university", "college"]);
-  const words = name
-    .replace(/[^A-Za-z\s-]/g, " ")
-    .split(/[\s-]+/)
-    .filter((w) => w && !skip.has(w.toLowerCase()));
-  const src = words.length ? words : name.split(/\s+/);
-  return src
-    .slice(0, 3)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-}
-
 function CollegeTile({
   row,
   onStatus,
@@ -381,12 +368,7 @@ function CollegeTile({
   return (
     <Card className="flex flex-col p-4">
       <div className="flex items-start gap-3">
-        <span
-          aria-hidden
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-br from-primary/25 to-secondary font-display text-base font-bold tracking-tight text-primary"
-        >
-          {crestInitials(row.college_name)}
-        </span>
+        <CollegeCrest name={row.college_name} />
         <div className="min-w-0 flex-1">
           <h3 className="font-display text-base font-bold leading-snug">{row.college_name}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">
