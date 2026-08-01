@@ -65,14 +65,17 @@ export function searchColleges(query: string, options: CollegeSearchOptions = {}
   if (!q) return pool.slice(0, limit).map((e) => e.c);
 
   const exact: CollegeOption[] = [];
+  const acroExact: CollegeOption[] = [];
   const starts: CollegeOption[] = [];
   const contains: CollegeOption[] = [];
   for (const e of pool) {
-    if (e.acro === q || e.alt === q || e.name === q) exact.push(e.c);
+    if (e.alt === q || e.name === q) exact.push(e.c);
+    else if (e.acro === q) acroExact.push(e.c);
     else if (e.name.startsWith(q) || e.alt.startsWith(q) || e.acro.startsWith(q)) starts.push(e.c);
     else if (e.name.includes(q) || e.alt.includes(q) || (q.length === 2 && e.c.state.toLowerCase() === q))
       contains.push(e.c);
-    if (exact.length + starts.length + contains.length > limit * 6) break;
+    if (exact.length + acroExact.length + starts.length + contains.length > limit * 6) break;
   }
-  return [...exact, ...starts, ...contains].slice(0, limit);
+  return [...exact, ...acroExact, ...starts, ...contains].slice(0, limit);
 }
+
