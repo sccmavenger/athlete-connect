@@ -698,6 +698,22 @@ function ProfileEdit() {
         )}
       </Card>
 
+      {/* Target schools */}
+      <Card className="mt-6 space-y-3 p-4 sm:p-6">
+        <h2 className="font-display text-xl font-bold">Schools you're interested in</h2>
+        <p className="text-sm text-muted-foreground">
+          Pick up to {MAX_COLLEGE_INTERESTS} programs you'd love to play for. When a coach from one of those schools is
+          registered here, they're notified that you're interested — one of the fastest ways to get seen.
+        </p>
+        <Button asChild variant="secondary">
+          <Link to="/colleges">
+            <GraduationCap className="mr-1.5 h-4 w-4" />
+            Pick my target schools
+          </Link>
+        </Button>
+      </Card>
+
+
       {/* Eligibility & consent */}
       <Card className="mt-6 space-y-4 p-4 sm:p-6">
         <h2 className="font-display text-xl font-bold">Eligibility &amp; consent</h2>
