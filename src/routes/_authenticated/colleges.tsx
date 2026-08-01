@@ -353,17 +353,14 @@ function CollegeList() {
 /** Initials crest used when no school mark is available. */
 function CollegeTile({
   row,
-  onStatus,
   onNotes,
   onRemove,
 }: {
   row: Interest;
-  onStatus: (v: string) => void;
   onNotes: (v: string | null) => void;
   onRemove: () => void;
 }) {
   const [showNotes, setShowNotes] = useState(!!row.notes);
-  const statusLabel = STATUSES.find((s) => s.value === row.status)?.label ?? row.status;
 
   return (
     <Card className="flex flex-col p-4">
