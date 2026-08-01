@@ -242,7 +242,9 @@ function Dashboard() {
                   videoCount: a.athlete_videos?.length ?? 0,
                   photoCount: a.athlete_photos?.length ?? 0,
                   eventCount: a.athlete_events?.length ?? 0,
-                  hasContact: (a.athlete_contacts?.length ?? 0) > 0,
+                  hasContact: Array.isArray(a.athlete_contacts)
+                    ? a.athlete_contacts.length > 0
+                    : !!a.athlete_contacts,
                 }}
               />
             </>
