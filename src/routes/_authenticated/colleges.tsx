@@ -323,7 +323,7 @@ function CollegeList() {
       </Card>
 
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-6">
         {q.isPending ? (
           <p className="text-sm text-muted-foreground">Loading your list…</p>
         ) : (q.data ?? []).length === 0 ? (
@@ -333,49 +333,118 @@ function CollegeList() {
             description="Add the programs you'd love to play for. Coaches on the platform can see this list, which tells them you're genuinely interested."
           />
         ) : (
-          (q.data ?? []).map((row) => (
-            <Card key={row.id} className="p-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="truncate font-display text-lg font-bold">{row.college_name}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {row.division ?? "—"}
-                    {row.state ? ` • ${row.state}` : ""}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Select value={row.status} onValueChange={(v) => patch(row.id, { status: v })}>
-                    <SelectTrigger className="h-9 w-44">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUSES.map((s) => (
-                        <SelectItem key={s.value} value={s.value}>
-                          {s.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button variant="ghost" size="icon" aria-label="Remove college" onClick={() => remove(row.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <Textarea
-                className="mt-3"
-                rows={2}
-                defaultValue={row.notes ?? ""}
-                maxLength={1000}
-                placeholder="Notes — who you spoke to, camp dates, next step…"
-                onBlur={(e) => {
-                  const v = e.target.value.trim();
-                  if (v !== (row.notes ?? "")) patch(row.id, { notes: v || null });
-                }}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {(q.data ?? []).map((row) => (
+              <CollegeTile
+                key={row.id}
+                row={row}
+                onStatus={(v) => patch(row.id, { status: v })}
+                onNotes={(v) => patch(row.id, { notes: v })}
+                onRemove={() => remove(row.id)}
               />
-            </Card>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>
   );
 }
+
+/** Initials crest used when no school mark is available. */
+function crestInitials(name: string) {
+  const skip = new Set(["of", "at", "the", "and", "in", "for", "a", "university", "college"]);
+  const words = name
+    .replace(/[^A-Za-z\s-]/g, " ")
+    .split(/[\s-]+/)
+    .filter((w) => w && !skip.has(w.toLowerCase()));
+  const src = words.length ? words : name.split(/\s+/);
+  return src
+    .slice(0, 3)
+    .map((w) => w[0]!.toUpperCase())
+    .join("");
+}
+
+function CollegeTile({
+  row,
+  onStatus,
+  onNotes,
+  onRemove,
+}: {
+  row: Interest;
+  onStatus: (v: string) => void;
+  onNotes: (v: string | null) => void;
+  onRemove: () => void;
+}) {
+  const [showNotes, setShowNotes] = useState(!!row.notes);
+  const statusLabel = STATUSES.find((s) => s.value === row.status)?.label ?? row.status;
+
+  return (
+    <Card className="flex flex-col p-4">
+      <div className="flex items-start gap-3">
+        <span
+          aria-hidden
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-gradient-to-br from-primary/25 to-secondary font-display text-base font-bold tracking-tight text-primary"
+        >
+          {crestInitials(row.college_name)}
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-display text-base font-bold leading-snug">{row.college_name}</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {row.division ?? "—"}
+            {row.state ? ` • ${row.state}` : ""}
+          </p>
+          <p className="mt-1 inline-flex rounded-full bg-secondary px-2 py-0.5 text-[11px] font-medium text-foreground">
+            {statusLabel}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="-mr-1 -mt-1 shrink-0"
+          aria-label={`Remove ${row.college_name}`}
+          onClick={onRemove}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="mt-3">
+        <Select value={row.status} onValueChange={onStatus}>
+          <SelectTrigger className="h-9 w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {STATUSES.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {showNotes ? (
+        <Textarea
+          className="mt-2"
+          rows={2}
+          defaultValue={row.notes ?? ""}
+          maxLength={1000}
+          placeholder="Notes — who you spoke to, camp dates, next step…"
+          onBlur={(e) => {
+            const v = e.target.value.trim();
+            if (v !== (row.notes ?? "")) onNotes(v || null);
+          }}
+        />
+      ) : (
+        <button
+          type="button"
+          className="mt-2 self-start text-xs text-primary hover:underline"
+          onClick={() => setShowNotes(true)}
+        >
+          + Add notes
+        </button>
+      )}
+    </Card>
+  );
+}
+
