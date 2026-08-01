@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function collegeLogoUrl(name: string, size = 128) {
+export function collegeLogoUrl(name: string, size = 256) {
   return `/api/public/college-logo?name=${encodeURIComponent(name)}&size=${size}`;
 }
 
