@@ -281,7 +281,7 @@ function AthleteView() {
               )}
             </p>
             <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-              {contactWindows(a.grad_year).map((w) => (
+              {contactWindows(a.grad_year, (a.sport_gender as "mens" | "womens" | null) ?? null).map((w) => (
                 <li key={w.division} className="flex items-start gap-2">
                   <span className={`font-semibold ${w.open ? "text-primary" : ""}`}>{w.division}</span>
                   <span>{w.summary}</span>
