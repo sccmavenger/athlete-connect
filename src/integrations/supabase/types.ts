@@ -318,6 +318,7 @@ export type Database = {
           position: string | null
           profile_photo_url: string | null
           sat_score: number | null
+          sport_gender: string | null
           state: string | null
           tiktok_handle: string | null
           updated_at: string
@@ -350,6 +351,7 @@ export type Database = {
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
+          sport_gender?: string | null
           state?: string | null
           tiktok_handle?: string | null
           updated_at?: string
@@ -382,6 +384,7 @@ export type Database = {
           position?: string | null
           profile_photo_url?: string | null
           sat_score?: number | null
+          sport_gender?: string | null
           state?: string | null
           tiktok_handle?: string | null
           updated_at?: string
