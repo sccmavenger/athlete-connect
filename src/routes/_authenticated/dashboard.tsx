@@ -86,7 +86,8 @@ function Dashboard() {
         athlete_videos?: unknown[];
         athlete_photos?: unknown[];
         athlete_events?: unknown[];
-        athlete_contacts?: unknown[];
+        /** One-to-one embed: Supabase returns an object (or null), not an array. */
+        athlete_contacts?: unknown[] | Record<string, unknown> | null;
       })
     | null
     | undefined;
@@ -241,7 +242,9 @@ function Dashboard() {
                   videoCount: a.athlete_videos?.length ?? 0,
                   photoCount: a.athlete_photos?.length ?? 0,
                   eventCount: a.athlete_events?.length ?? 0,
-                  hasContact: (a.athlete_contacts?.length ?? 0) > 0,
+                  hasContact: Array.isArray(a.athlete_contacts)
+                    ? a.athlete_contacts.length > 0
+                    : !!a.athlete_contacts,
                 }}
               />
             </>
