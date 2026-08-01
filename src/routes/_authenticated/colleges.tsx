@@ -372,9 +372,6 @@ function CollegeTile({
             {row.division ?? "—"}
             {row.state ? ` • ${row.state}` : ""}
           </p>
-          <p className="mt-1 inline-flex rounded-full bg-secondary px-2 py-0.5 text-[11px] font-medium text-foreground">
-            {statusLabel}
-          </p>
         </div>
         <Button
           variant="ghost"
@@ -387,24 +384,9 @@ function CollegeTile({
         </Button>
       </div>
 
-      <div className="mt-3">
-        <Select value={row.status} onValueChange={onStatus}>
-          <SelectTrigger className="h-9 w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUSES.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
-                {s.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       {showNotes ? (
         <Textarea
-          className="mt-2"
+          className="mt-3"
           rows={2}
           defaultValue={row.notes ?? ""}
           maxLength={1000}
@@ -417,7 +399,7 @@ function CollegeTile({
       ) : (
         <button
           type="button"
-          className="mt-2 self-start text-xs text-primary hover:underline"
+          className="mt-3 self-start text-xs text-primary hover:underline"
           onClick={() => setShowNotes(true)}
         >
           + Add notes
