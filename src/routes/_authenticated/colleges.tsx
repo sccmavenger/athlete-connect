@@ -39,14 +39,6 @@ export const Route = createFileRoute("/_authenticated/colleges")({
   component: CollegeList,
 });
 
-const STATUSES = [
-  { value: "interested", label: "Interested" },
-  { value: "contacted", label: "I reached out" },
-  { value: "replied", label: "They replied" },
-  { value: "visit", label: "Visit scheduled" },
-  { value: "offer", label: "Offer" },
-  { value: "closed", label: "No longer a fit" },
-];
 
 type Interest = {
   id: string;
@@ -335,15 +327,14 @@ function CollegeList() {
           />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {(q.data ?? []).map((row) => (
-              <CollegeTile
-                key={row.id}
-                row={row}
-                onStatus={(v) => patch(row.id, { status: v })}
-                onNotes={(v) => patch(row.id, { notes: v })}
-                onRemove={() => remove(row.id)}
-              />
-            ))}
+          {(q.data ?? []).map((row) => (
+            <CollegeTile
+              key={row.id}
+              row={row}
+              onNotes={(v) => patch(row.id, { notes: v })}
+              onRemove={() => remove(row.id)}
+            />
+          ))}
           </div>
         )}
       </div>
@@ -354,17 +345,14 @@ function CollegeList() {
 /** Initials crest used when no school mark is available. */
 function CollegeTile({
   row,
-  onStatus,
   onNotes,
   onRemove,
 }: {
   row: Interest;
-  onStatus: (v: string) => void;
   onNotes: (v: string | null) => void;
   onRemove: () => void;
 }) {
   const [showNotes, setShowNotes] = useState(!!row.notes);
-  const statusLabel = STATUSES.find((s) => s.value === row.status)?.label ?? row.status;
 
   return (
     <Card className="flex flex-col p-4">
@@ -375,9 +363,6 @@ function CollegeTile({
           <p className="mt-0.5 text-xs text-muted-foreground">
             {row.division ?? "—"}
             {row.state ? ` • ${row.state}` : ""}
-          </p>
-          <p className="mt-1 inline-flex rounded-full bg-secondary px-2 py-0.5 text-[11px] font-medium text-foreground">
-            {statusLabel}
           </p>
         </div>
         <Button
@@ -391,24 +376,9 @@ function CollegeTile({
         </Button>
       </div>
 
-      <div className="mt-3">
-        <Select value={row.status} onValueChange={onStatus}>
-          <SelectTrigger className="h-9 w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUSES.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
-                {s.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       {showNotes ? (
         <Textarea
-          className="mt-2"
+          className="mt-3"
           rows={2}
           defaultValue={row.notes ?? ""}
           maxLength={1000}
@@ -421,7 +391,7 @@ function CollegeTile({
       ) : (
         <button
           type="button"
-          className="mt-2 self-start text-xs text-primary hover:underline"
+          className="mt-3 self-start text-xs text-primary hover:underline"
           onClick={() => setShowNotes(true)}
         >
           + Add notes
