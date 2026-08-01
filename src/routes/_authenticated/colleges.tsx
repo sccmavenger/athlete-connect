@@ -19,12 +19,11 @@ import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 import {
   ATHLETE_OUTREACH_NOTE,
-  DIVISIONS,
   contactWindows,
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
 } from "@/lib/compliance";
-import { MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
+import { COLLEGE_DIVISIONS, MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
 
 
@@ -63,7 +62,8 @@ function CollegeList() {
   const qc = useQueryClient();
   const [athleteId, setAthleteId] = useState("");
   const [name, setName] = useState("");
-  const [division, setDivision] = useState("D1");
+  const [division, setDivision] = useState("");
+  const [levelFilter, setLevelFilter] = useState("all");
   const [state, setState] = useState("");
   const [adding, setAdding] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -89,7 +89,12 @@ function CollegeList() {
 
   const count = (q.data ?? []).length;
   const atLimit = count >= MAX_COLLEGE_INTERESTS;
-  const suggestions = useMemo(() => searchColleges(name), [name]);
+  const suggestions = useMemo(
+    () => searchColleges(name, { division: levelFilter, limit: 12 }),
+    [name, levelFilter],
+  );
+
+  const effectiveDivision = division || (levelFilter !== "all" ? levelFilter : "D1");
 
   const windows = contactWindows(active?.grad_year ?? null);
 
@@ -99,6 +104,7 @@ function CollegeList() {
     setDivision(c.division);
     setShowSuggestions(false);
   }
+
 
   async function add() {
     if (!active || !name.trim()) return;
@@ -113,7 +119,7 @@ function CollegeList() {
     const { error } = await supabase.from("athlete_college_interests").insert({
       athlete_id: active.id,
       college_name: trimmed,
-      division,
+      division: effectiveDivision,
       state: state.trim().toUpperCase().slice(0, 2) || null,
     });
     setAdding(false);
@@ -229,36 +235,58 @@ function CollegeList() {
           </span>
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
-          Pick up to {MAX_COLLEGE_INTERESTS} schools you'd love to play for. If a coach from that program is
-          registered here, they get notified that you're interested.
+          Pick up to {MAX_COLLEGE_INTERESTS} schools anywhere in the country — every NCAA D1, D2, D3, NAIA and
+          Midwest JUCO program is searchable. Type a full name, a short name or an acronym (LSU, UNC). If a coach
+          from that program is registered here, they get notified that you're interested.
         </p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_120px_100px_auto]">
+        <div className="mt-3 grid gap-3 sm:grid-cols-[130px_minmax(0,1fr)_auto]">
+          <div>
+            <Label className="text-xs">Level</Label>
+            <Select value={levelFilter} onValueChange={setLevelFilter}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All levels</SelectItem>
+                {COLLEGE_DIVISIONS.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="relative">
             <Label className="text-xs">College</Label>
             <Input
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
+                setDivision("");
+                setState("");
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
               onBlur={() => window.setTimeout(() => setShowSuggestions(false), 120)}
-              placeholder="Start typing — e.g. Wichita State"
+              placeholder="Search any school in the U.S. — e.g. LSU, Duke, Wichita State"
               maxLength={120}
               autoComplete="off"
               disabled={atLimit}
             />
             {showSuggestions && !atLimit && suggestions.length > 0 && (
-              <ul className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-border bg-popover p-1 shadow-lg">
+              <ul className="absolute z-30 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-border bg-popover p-1 shadow-lg">
                 {suggestions.map((c) => (
-                  <li key={c.name}>
+                  <li key={`${c.name}-${c.state}`}>
                     <button
                       type="button"
                       className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => pick(c)}
                     >
-                      <span className="truncate">{c.name}</span>
+                      <span className="truncate">
+                        {c.name}
+                        {c.alt ? <span className="text-muted-foreground"> ({c.alt})</span> : null}
+                      </span>
                       <span className="shrink-0 text-xs text-muted-foreground">
                         {c.division} • {c.state}
                       </span>
@@ -267,26 +295,19 @@ function CollegeList() {
                 ))}
               </ul>
             )}
+            {name.trim().length > 1 && suggestions.length === 0 && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                No match at this level — switch to "All levels", or just add the school as typed.
+              </p>
+            )}
+            {name.trim() && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Adding as <span className="text-foreground">{effectiveDivision}</span>
+                {state ? ` • ${state.toUpperCase()}` : ""}
+              </p>
+            )}
           </div>
-          <div>
-            <Label className="text-xs">Division</Label>
-            <Select value={division} onValueChange={setDivision}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DIVISIONS.map((d) => (
-                  <SelectItem key={d} value={d}>
-                    {d}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs">State</Label>
-            <Input value={state} onChange={(e) => setState(e.target.value)} maxLength={2} placeholder="KS" />
-          </div>
+
           <div className="flex items-end">
             <Button onClick={add} disabled={adding || atLimit || !name.trim()} className="w-full sm:w-auto">
               <Plus className="mr-1.5 h-4 w-4" />
