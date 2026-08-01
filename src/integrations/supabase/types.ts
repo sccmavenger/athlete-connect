@@ -677,6 +677,11 @@ export type Database = {
         Args: { _athlete_id: string; _user_id: string }
         Returns: boolean
       }
+      normalize_college: { Args: { _name: string }; Returns: string }
+      notify_coaches_of_interest: {
+        Args: { _athlete_id: string; _college_name: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "coach" | "athlete" | "parent"
