@@ -39,14 +39,6 @@ export const Route = createFileRoute("/_authenticated/colleges")({
   component: CollegeList,
 });
 
-const STATUSES = [
-  { value: "interested", label: "Interested" },
-  { value: "contacted", label: "I reached out" },
-  { value: "replied", label: "They replied" },
-  { value: "visit", label: "Visit scheduled" },
-  { value: "offer", label: "Offer" },
-  { value: "closed", label: "No longer a fit" },
-];
 
 type Interest = {
   id: string;
