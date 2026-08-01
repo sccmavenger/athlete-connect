@@ -24,7 +24,9 @@ import {
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
 } from "@/lib/compliance";
+import { MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
+
 
 export const Route = createFileRoute("/_authenticated/colleges")({
   head: () => ({
