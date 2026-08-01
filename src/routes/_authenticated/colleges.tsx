@@ -64,6 +64,7 @@ function CollegeList() {
   const [division, setDivision] = useState("D1");
   const [state, setState] = useState("");
   const [adding, setAdding] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const active = useMemo(() => {
     const list = athletes.data ?? [];
@@ -84,14 +85,32 @@ function CollegeList() {
     },
   });
 
+  const count = (q.data ?? []).length;
+  const atLimit = count >= MAX_COLLEGE_INTERESTS;
+  const suggestions = useMemo(() => searchColleges(name), [name]);
+
   const windows = contactWindows(active?.grad_year ?? null);
+
+  function pick(c: { name: string; state: string; division: string }) {
+    setName(c.name);
+    setState(c.state);
+    setDivision(c.division);
+    setShowSuggestions(false);
+  }
 
   async function add() {
     if (!active || !name.trim()) return;
+    if (atLimit) {
+      return toast.error(`You can track up to ${MAX_COLLEGE_INTERESTS} colleges. Remove one first.`);
+    }
+    const trimmed = name.trim().slice(0, 120);
+    if ((q.data ?? []).some((r) => r.college_name.toLowerCase() === trimmed.toLowerCase())) {
+      return toast.error("That school is already on your list.");
+    }
     setAdding(true);
     const { error } = await supabase.from("athlete_college_interests").insert({
       athlete_id: active.id,
-      college_name: name.trim().slice(0, 120),
+      college_name: trimmed,
       division,
       state: state.trim().toUpperCase().slice(0, 2) || null,
     });
@@ -100,8 +119,13 @@ function CollegeList() {
     setName("");
     setState("");
     qc.invalidateQueries({ queryKey: ["college-interests", active.id] });
-    toast.success("Added to your list");
+    toast.success(
+      active.is_published
+        ? "Added — coaches from that program get notified."
+        : "Added. Publish your profile so coaches from that program get notified.",
+    );
   }
+
 
   async function patch(id: string, fields: Partial<Interest>) {
     const { error } = await supabase.from("athlete_college_interests").update(fields).eq("id", id);
