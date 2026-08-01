@@ -9,13 +9,14 @@ export type ManagedAthlete = {
   high_school: string | null;
   state: string | null;
   grad_year: number | null;
+  sport_gender: "mens" | "womens" | null;
   position: string | null;
   profile_photo_url: string | null;
   is_published: boolean;
 };
 
 const COLUMNS =
-  "id, user_id, full_name, high_school, state, grad_year, position, profile_photo_url, is_published";
+  "id, user_id, full_name, high_school, state, grad_year, sport_gender, position, profile_photo_url, is_published";
 
 /**
  * Athlete profiles the signed-in user can manage: their own profile plus any

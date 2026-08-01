@@ -9,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { FormSkeleton } from "@/components/Skeletons";
 import {
@@ -41,6 +48,7 @@ type AthleteForm = {
   state: string;
   high_school: string;
   grad_year: string;
+  sport_gender: string;
   position: string;
   height_inches: string;
   weight_lbs: string;
@@ -68,6 +76,7 @@ const empty: AthleteForm = {
   state: "",
   high_school: "",
   grad_year: "",
+  sport_gender: "",
   position: "",
   height_inches: "",
   weight_lbs: "",
@@ -174,6 +183,7 @@ function ProfileEdit() {
           state: athlete.state ?? "",
           high_school: athlete.high_school ?? "",
           grad_year: athlete.grad_year?.toString() ?? "",
+          sport_gender: athlete.sport_gender ?? "",
           position: athlete.position ?? "",
           height_inches: athlete.height_inches?.toString() ?? "",
           weight_lbs: athlete.weight_lbs?.toString() ?? "",
@@ -380,6 +390,7 @@ function ProfileEdit() {
         state: form.state.trim().toUpperCase() || null,
         high_school: form.high_school.trim() || null,
         grad_year: form.grad_year ? parseInt(form.grad_year) : null,
+        sport_gender: form.sport_gender || null,
         position: form.position.trim() || null,
         height_inches: form.height_inches ? parseInt(form.height_inches) : null,
         weight_lbs: form.weight_lbs ? parseInt(form.weight_lbs) : null,
@@ -573,6 +584,24 @@ function ProfileEdit() {
               onChange={(e) => update("grad_year", e.target.value)}
               placeholder="2027"
             />
+          </Field>
+          <Field label="Boys / girls basketball" error={errors.sport_gender}>
+            <Select
+              value={form.sport_gender}
+              onValueChange={(v) => update("sport_gender", v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mens">Boys / men's basketball</SelectItem>
+                <SelectItem value="womens">Girls / women's basketball</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Used to show you the correct NCAA recruiting calendar — the dates differ between
+              men's and women's basketball.
+            </p>
           </Field>
           <Field label="Position" error={errors.position}>
             <Input
