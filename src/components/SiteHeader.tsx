@@ -89,7 +89,30 @@ export function SiteHeader() {
           {/* Mobile */}
           {links.length > 0 && (
             <Sheet open={open} onOpenChange={setOpen}>
-...
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72">
+                <SheetTitle className="font-display text-lg">Menu</SheetTitle>
+                <nav className="mt-6 flex flex-col">
+                  {links.map((l) => (
+                    <Link
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      className={`border-b border-border/60 py-3 text-base ${
+                        pathname === l.to ? "text-primary" : "hover:text-accent"
+                      }`}
+                    >
+                      {l.label}
+                    </Link>
+                  ))}
+                </nav>
+                <Button variant="secondary" className="mt-6 w-full" onClick={signOut}>
+                  Sign out
+                </Button>
               </SheetContent>
             </Sheet>
           )}
