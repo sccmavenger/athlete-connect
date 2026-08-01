@@ -100,7 +100,7 @@ export const Route = createFileRoute("/api/public/college-logo")({
           });
         }
 
-        for (const candidate of providerUrls(domain, size)) {
+        for (const candidate of providerUrls(logoId, domain, size)) {
           try {
             const res = await fetch(candidate, {
               headers: { Accept: "image/*" },
