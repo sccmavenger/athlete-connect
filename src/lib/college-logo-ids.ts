@@ -1,5 +1,5 @@
-// AUTO-GENERATED: official athletics brand logo IDs (ESPN CDN, 500px transparent PNG).
-// Maps institution name -> team logo id.
+// AUTO-GENERATED — official athletics brand marks (500px transparent PNG, ESPN team-logo CDN).
+// Maps institution name -> athletics logo id. Regenerate from the public NCAA team directory.
 export const COLLEGE_LOGO_IDS: Record<string, string> = {
 "Abilene Christian University": "2000",
 "Alabama Agricultural and Mechanical University": "2010",
@@ -17,7 +17,7 @@ export const COLLEGE_LOGO_IDS: Record<string, string> = {
 "Bethune\u2013Cookman University": "2065",
 "Boise State University": "68",
 "Boston College": "103",
-"Boston University": "103",
+"Boston University": "104",
 "Bowling Green State University": "189",
 "Bradley University": "71",
 "Brigham Young University": "252",
@@ -132,7 +132,7 @@ export const COLLEGE_LOGO_IDS: Record<string, string> = {
 "Mercer University": "2382",
 "Mercyhurst University": "2385",
 "Merrimack College": "2771",
-"Miami University": "2390",
+"Miami University": "193",
 "Michigan State University": "127",
 "Middle Tennessee State University": "2393",
 "Mississippi State University": "344",
