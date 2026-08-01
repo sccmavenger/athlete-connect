@@ -86,7 +86,8 @@ function Dashboard() {
         athlete_videos?: unknown[];
         athlete_photos?: unknown[];
         athlete_events?: unknown[];
-        athlete_contacts?: unknown[];
+        /** One-to-one embed: Supabase returns an object (or null), not an array. */
+        athlete_contacts?: unknown[] | Record<string, unknown> | null;
       })
     | null
     | undefined;
