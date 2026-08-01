@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { COLLEGE_DOMAINS } from "@/lib/college-domains";
+import { COLLEGE_LOGO_IDS } from "@/lib/college-logo-ids";
 
 const QuerySchema = z.object({
   name: z.string().trim().min(2).max(120).optional(),
@@ -34,13 +35,39 @@ function resolveDomain(name?: string, domain?: string): string | null {
   return hit ? DOMAIN_BY_NORM[hit]! : null;
 }
 
-/** Providers tried in order; all are keyless public logo/favicon services. */
-function providerUrls(domain: string, size: number): string[] {
-  return [
-    `https://logo.clearbit.com/${domain}?size=${size}`,
-    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
-    `https://www.google.com/s2/favicons?sz=${size}&domain=${domain}`,
-  ];
+const LOGO_ID_BY_NORM: Record<string, string> = Object.fromEntries(
+  Object.entries(COLLEGE_LOGO_IDS).map(([name, id]) => [norm(name), id]),
+);
+
+/** Official athletics brand mark for a school, when we have one on file. */
+function resolveLogoId(name?: string): string | null {
+  if (!name) return null;
+  const key = norm(name);
+  if (LOGO_ID_BY_NORM[key]) return LOGO_ID_BY_NORM[key]!;
+  const hit = Object.keys(LOGO_ID_BY_NORM).find((c) => c.startsWith(key) || key.startsWith(c));
+  return hit ? LOGO_ID_BY_NORM[hit]! : null;
+}
+
+/**
+ * Providers tried in order. Official athletics marks first (crisp, transparent,
+ * brand-accurate), then keyless favicon services as a last resort.
+ */
+function providerUrls(logoId: string | null, domain: string | null, size: number): string[] {
+  const urls: string[] = [];
+  if (logoId) {
+    urls.push(
+      `https://a.espncdn.com/i/teamlogos/ncaa/500-dark/${logoId}.png`,
+      `https://a.espncdn.com/i/teamlogos/ncaa/500/${logoId}.png`,
+    );
+  }
+  if (domain) {
+    urls.push(
+      `https://logo.clearbit.com/${domain}?size=${size}`,
+      `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+      `https://www.google.com/s2/favicons?sz=${size}&domain=${domain}`,
+    );
+  }
+  return urls;
 }
 
 // Warm, per-isolate memo so repeat tiles don't re-hit upstream providers.
@@ -56,12 +83,13 @@ export const Route = createFileRoute("/api/public/college-logo")({
           return Response.json({ error: "Invalid request" }, { status: 400 });
         }
         const { name, domain: rawDomain, size } = parsed.data;
+        const logoId = resolveLogoId(name);
         const domain = resolveDomain(name, rawDomain);
-        if (!domain) {
+        if (!logoId && !domain) {
           return Response.json({ error: "No logo source for that school" }, { status: 404 });
         }
 
-        const cacheKey = `${domain}:${size}`;
+        const cacheKey = `${logoId ?? ""}|${domain ?? ""}:${size}`;
         const cached = memo.get(cacheKey);
         if (cached) {
           return new Response(cached.body, {
@@ -72,7 +100,7 @@ export const Route = createFileRoute("/api/public/college-logo")({
           });
         }
 
-        for (const candidate of providerUrls(domain, size)) {
+        for (const candidate of providerUrls(logoId, domain, size)) {
           try {
             const res = await fetch(candidate, {
               headers: { Accept: "image/*" },
