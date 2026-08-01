@@ -335,15 +335,14 @@ function CollegeList() {
           />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {(q.data ?? []).map((row) => (
-              <CollegeTile
-                key={row.id}
-                row={row}
-                onStatus={(v) => patch(row.id, { status: v })}
-                onNotes={(v) => patch(row.id, { notes: v })}
-                onRemove={() => remove(row.id)}
-              />
-            ))}
+          {(q.data ?? []).map((row) => (
+            <CollegeTile
+              key={row.id}
+              row={row}
+              onNotes={(v) => patch(row.id, { notes: v })}
+              onRemove={() => remove(row.id)}
+            />
+          ))}
           </div>
         )}
       </div>
