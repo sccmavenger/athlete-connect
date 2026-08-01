@@ -20,9 +20,12 @@ import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 import {
   ATHLETE_OUTREACH_NOTE,
+  COMPLIANCE_DISCLAIMER,
   contactWindows,
   NCAA_ELIGIBILITY_CENTER_URL,
   NCAA_RECRUITING_CALENDAR_URL,
+  NCAA_SOURCES,
+
 } from "@/lib/compliance";
 import { COLLEGE_DIVISIONS, MAX_COLLEGE_INTERESTS, searchColleges } from "@/lib/colleges";
 import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
