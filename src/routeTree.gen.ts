@@ -22,6 +22,7 @@ import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticated/colleges'
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
+import { Route as ApiPublicCollegeLogoRouteImport } from './routes/api/public/college-logo'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
 import { Route as AuthenticatedCoachesMessagesRouteImport } from './routes/_authenticated/coaches.messages'
@@ -93,6 +94,11 @@ const AuthenticatedCoachesIndexRoute =
     path: '/coaches/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicCollegeLogoRoute = ApiPublicCollegeLogoRouteImport.update({
+  id: '/api/public/college-logo',
+  path: '/api/public/college-logo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProfileEditRoute =
   AuthenticatedProfileEditRouteImport.update({
     id: '/profile/edit',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
   '/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
   '/coaches': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesById {
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/_authenticated/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
   '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
   '/_authenticated/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRouteTypes {
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
+    | '/api/public/college-logo'
     | '/coaches/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/coaches/messages'
     | '/coaches/saved'
     | '/profile/edit'
+    | '/api/public/college-logo'
     | '/coaches'
   id:
     | '__root__'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/_authenticated/coaches/messages'
     | '/_authenticated/coaches/saved'
     | '/_authenticated/profile/edit'
+    | '/api/public/college-logo'
     | '/_authenticated/coaches/'
   fileRoutesById: FileRoutesById
 }
@@ -252,6 +264,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
   AAthleteIdRoute: typeof AAthleteIdRoute
+  ApiPublicCollegeLogoRoute: typeof ApiPublicCollegeLogoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -347,6 +360,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoachesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/college-logo': {
+      id: '/api/public/college-logo'
+      path: '/api/public/college-logo'
+      fullPath: '/api/public/college-logo'
+      preLoaderRoute: typeof ApiPublicCollegeLogoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/profile/edit': {
       id: '/_authenticated/profile/edit'
       path: '/profile/edit'
@@ -424,6 +444,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
   AAthleteIdRoute: AAthleteIdRoute,
+  ApiPublicCollegeLogoRoute: ApiPublicCollegeLogoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
