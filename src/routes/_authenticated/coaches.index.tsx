@@ -115,9 +115,10 @@ function CoachesDirectory() {
   const [whereDraft, setWhereDraft] = useState(s.where);
   const [savingIds, setSavingIds] = useState<string[]>([]);
 
-  function set(patch: Partial<typeof s>) {
-    navigate({ search: (prev) => ({ ...prev, ...patch }) });
+  function set(patch: Partial<DirectorySearch>) {
+    navigate({ search: (prev: DirectorySearch) => ({ ...prev, ...patch }) });
   }
+
 
   const place = useQuery({
     enabled: s.where.trim().length >= 2,
