@@ -199,7 +199,9 @@ function CoachesDirectory() {
         .map((a) => ({ ...a, _game: map.get(a.id) }));
     }
 
-    const center = place.data?.kind === "point" ? place.data : null;
+    const pd = place.data as PlaceResult | undefined;
+    const center = pd && pd.kind === "point" ? pd : null;
+
     if (center) {
       rows = rows
         .map((a) => ({
