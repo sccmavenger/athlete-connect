@@ -22,6 +22,7 @@ import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticated/colleges'
 import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicCollegeLogoRouteImport } from './routes/api/public/college-logo'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
@@ -94,6 +95,11 @@ const AuthenticatedCoachesIndexRoute =
     path: '/coaches/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicCollegeLogoRoute = ApiPublicCollegeLogoRouteImport.update({
   id: '/api/public/college-logo',
   path: '/api/public/college-logo',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/coaches': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesById {
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRouteTypes {
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/coaches/saved'
     | '/profile/edit'
     | '/api/public/college-logo'
+    | '/admin/'
     | '/coaches/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/coaches/saved'
     | '/profile/edit'
     | '/api/public/college-logo'
+    | '/admin'
     | '/coaches'
   id:
     | '__root__'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/_authenticated/coaches/saved'
     | '/_authenticated/profile/edit'
     | '/api/public/college-logo'
+    | '/_authenticated/admin/'
     | '/_authenticated/coaches/'
   fileRoutesById: FileRoutesById
 }
@@ -360,6 +372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoachesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/college-logo': {
       id: '/api/public/college-logo'
       path: '/api/public/college-logo'
@@ -416,6 +435,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCoachesMessagesRoute: typeof AuthenticatedCoachesMessagesRoute
   AuthenticatedCoachesSavedRoute: typeof AuthenticatedCoachesSavedRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedCoachesIndexRoute: typeof AuthenticatedCoachesIndexRoute
 }
 
@@ -430,6 +450,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCoachesMessagesRoute: AuthenticatedCoachesMessagesRoute,
   AuthenticatedCoachesSavedRoute: AuthenticatedCoachesSavedRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedCoachesIndexRoute: AuthenticatedCoachesIndexRoute,
 }
 
@@ -449,13 +470,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
