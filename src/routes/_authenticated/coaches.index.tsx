@@ -305,10 +305,11 @@ function CoachesDirectory() {
   }
 
   function togglePosition(code: PositionCode) {
-    const current = s.pos ? s.pos.split(",") : [];
+    const current: string[] = s.pos ? String(s.pos).split(",") : [];
     const next = current.includes(code)
-      ? current.filter((c) => c !== code)
+      ? current.filter((c: string) => c !== code)
       : [...current, code];
+
     set({ pos: next.join(","), group: "" });
   }
 
