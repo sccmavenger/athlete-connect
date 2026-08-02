@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/coaches/messages")({
 
 function CoachInbox() {
   const { user, roles, loading } = useAuth();
-  const isCoach = roles.includes("coach");
+  const isCoach = roles.includes("coach") || roles.includes("admin");
   const [athleteId, setAthleteId] = useState("");
   const names = useServerFn(getCoachDirectoryNames);
 

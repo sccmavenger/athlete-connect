@@ -55,7 +55,7 @@ type SavedRow = {
 
 function SavedList() {
   const { user, roles, loading } = useAuth();
-  const isCoach = roles.includes("coach");
+  const isCoach = roles.includes("coach") || roles.includes("admin");
   const qc = useQueryClient();
   const [filter, setFilter] = useState("all");
   const [editing, setEditing] = useState<string | null>(null);
