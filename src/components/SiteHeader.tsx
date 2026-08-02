@@ -50,8 +50,9 @@ export function SiteHeader() {
     );
   }
   if (user && isAdmin) {
-    links.push({ to: "/admin/coach-requests", label: "Coach Requests" });
+    links.push({ to: "/admin", label: "Admin" });
   }
+
 
 
   return (
