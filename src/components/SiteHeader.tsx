@@ -41,7 +41,7 @@ export function SiteHeader() {
       { to: "/family", label: "Family" },
     );
   }
-  if (user && isCoach) {
+  if (user && (isCoach || isAdmin)) {
     links.push(
       { to: "/coaches", label: "Athletes" },
       { to: "/coaches/games", label: "Games" },
