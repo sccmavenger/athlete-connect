@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { isMockMode, mockAthletesList } from "@/lib/mock-helpers";
-import { geocodePlace } from "@/lib/geocode.functions";
+import { geocodePlace, type PlaceResult } from "@/lib/geocode.functions";
 import { formatMiles, milesBetween } from "@/lib/geo";
 import {
   POSITION_GROUPS,
