@@ -132,9 +132,12 @@ function CoachesDirectory() {
 
   const wantedCodes: PositionCode[] = useMemo(() => {
     if (s.group) return codesForGroup(s.group as any);
-    if (s.pos) return s.pos.split(",").filter((p): p is PositionCode => ALL_POSITIONS.includes(p as PositionCode));
-    return [];
+    const parts: string[] = s.pos ? String(s.pos).split(",") : [];
+    return parts.filter((p: string): p is PositionCode =>
+      ALL_POSITIONS.includes(p as PositionCode),
+    );
   }, [s.group, s.pos]);
+
 
   const q = useQuery({
     enabled: !loading && canSearch,
