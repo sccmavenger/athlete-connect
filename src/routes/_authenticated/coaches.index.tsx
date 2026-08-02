@@ -23,20 +23,40 @@ import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons"
 import { EmptyState } from "@/components/EmptyState";
 import { AlertCircle, Bookmark, CalendarDays, MapPin, SearchX, Star, Users } from "lucide-react";
 
-const searchSchema = z.object({
-  where: fallback(z.string(), "").default(""),
-  radius: fallback(z.number(), 30).default(30),
-  group: fallback(z.string(), "").default(""),
-  pos: fallback(z.string(), "").default(""),
-  when: fallback(z.string(), "any").default("any"),
-  grad: fallback(z.string(), "").default(""),
-  minHeight: fallback(z.string(), "").default(""),
-  minGpa: fallback(z.string(), "").default(""),
-  q: fallback(z.string(), "").default(""),
-});
+type DirectorySearch = {
+  where: string;
+  radius: number;
+  group: string;
+  pos: string;
+  when: string;
+  grad: string;
+  minHeight: string;
+  minGpa: string;
+  q: string;
+};
+
+function str(v: unknown, fb = ""): string {
+  return typeof v === "string" ? v : fb;
+}
+
+function validateSearch(input: Record<string, unknown>): DirectorySearch {
+  const radius = Number(input.radius);
+  return {
+    where: str(input.where),
+    radius: Number.isFinite(radius) && radius > 0 ? radius : 30,
+    group: str(input.group),
+    pos: str(input.pos),
+    when: str(input.when, "any") || "any",
+    grad: str(input.grad),
+    minHeight: str(input.minHeight),
+    minGpa: str(input.minGpa),
+    q: str(input.q),
+  };
+}
 
 export const Route = createFileRoute("/_authenticated/coaches/")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch,
+
   head: () => ({
     meta: [
       { title: "Athlete search — Recruiting Hub" },
