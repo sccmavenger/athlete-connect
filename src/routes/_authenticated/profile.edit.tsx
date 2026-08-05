@@ -27,6 +27,7 @@ import {
 } from "@/lib/validation";
 import { isUnder18 } from "@/lib/compliance";
 import { MAX_COLLEGE_INTERESTS } from "@/lib/colleges";
+import { prepareImageForUpload, MAX_SOURCE_BYTES } from "@/lib/image-upload";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload, GraduationCap } from "lucide-react";
 
