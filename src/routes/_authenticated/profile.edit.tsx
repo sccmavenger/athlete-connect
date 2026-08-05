@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { geocodeZip } from "@/lib/geocode.functions";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
@@ -27,6 +27,7 @@ import {
 } from "@/lib/validation";
 import { isUnder18 } from "@/lib/compliance";
 import { MAX_COLLEGE_INTERESTS } from "@/lib/colleges";
+import { prepareImageForUpload, MAX_SOURCE_BYTES } from "@/lib/image-upload";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload, GraduationCap } from "lucide-react";
 
@@ -139,6 +140,7 @@ function ProfileEdit() {
   const [contact, setContact] = useState<ContactForm>(emptyContact);
   const [videos, setVideos] = useState<Video[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(true);
@@ -277,6 +279,7 @@ function ProfileEdit() {
     const path = `${user!.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
     const { error } = await supabase.storage.from("athlete-media").upload(path, file, {
       upsert: true,
+      contentType: file.type || "image/jpeg",
     });
     if (error) throw error;
     const { data: signed } = await supabase.storage
@@ -287,14 +290,19 @@ function ProfileEdit() {
 
   async function uploadPhoto(file: File) {
     if (!user) return;
-    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file");
-    if (file.size > 8 * 1024 * 1024) return toast.error("Images must be under 8 MB");
+    if (file.size > MAX_SOURCE_BYTES) return toast.error("That photo is too large (40 MB max)");
     setUploading(true);
     try {
-      const url = await uploadToStorage(file, "profile");
-      if (url) update("profile_photo_url", url);
+      // Resized + converted to JPEG in the browser so big phone photos and HEIC
+      // files upload on the first try.
+      const prepared = await prepareImageForUpload(file, { maxDimension: 1200 });
+      const url = await uploadToStorage(prepared, "profile");
+      if (url) {
+        update("profile_photo_url", url);
+        toast.success("Profile photo added — remember to save your profile");
+      }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Upload failed");
+      toast.error(e instanceof Error ? e.message : "Upload failed, please try again");
     } finally {
       setUploading(false);
     }
@@ -309,25 +317,30 @@ function ProfileEdit() {
       toast.warning(`Only ${remaining} more photo${remaining === 1 ? "" : "s"} can be added`);
     }
     setUploadingPhotos(true);
+    let added = 0;
     try {
       for (const file of chosen) {
-        if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} is not an image`);
+        if (file.size > MAX_SOURCE_BYTES) {
+          toast.error(`${file.name} is too large (40 MB max)`);
           continue;
         }
-        if (file.size > 8 * 1024 * 1024) {
-          toast.error(`${file.name} is over 8 MB`);
-          continue;
+        try {
+          const prepared = await prepareImageForUpload(file, { maxDimension: 1600 });
+          const url = await uploadToStorage(prepared, "action");
+          if (url) {
+            setPhotos((p) => [...p, { url, caption: "" }]);
+            added++;
+          }
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : `Couldn't upload ${file.name}`);
         }
-        const url = await uploadToStorage(file, "action");
-        if (url) setPhotos((p) => [...p, { url, caption: "" }]);
       }
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Upload failed");
+      if (added > 0) toast.success(`${added} photo${added === 1 ? "" : "s"} added`);
     } finally {
       setUploadingPhotos(false);
     }
   }
+
 
   function validate(): boolean {
     const next: FieldErrors = {
@@ -528,25 +541,50 @@ function ProfileEdit() {
           </Field>
           <Field label="Profile photo">
             <div className="flex items-center gap-3">
-              {form.profile_photo_url && (
+              {form.profile_photo_url ? (
                 <img
                   src={form.profile_photo_url}
                   alt=""
-                  className="h-14 w-14 shrink-0 rounded-full object-cover"
+                  className="h-14 w-14 shrink-0 rounded-full border border-border object-cover"
                 />
+              ) : (
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-dashed border-border text-muted-foreground">
+                  <Upload className="h-5 w-5" />
+                </div>
               )}
-              <Input
-                type="file"
-                accept="image/*"
-                className="min-w-0"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) uploadPhoto(f);
-                }}
-                disabled={uploading}
-              />
+              <div className="min-w-0">
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    // Clear the value so re-picking the same file still fires onChange.
+                    e.target.value = "";
+                    if (f) uploadPhoto(f);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={uploading}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  {uploading
+                    ? "Uploading..."
+                    : form.profile_photo_url
+                      ? "Change photo"
+                      : "Choose photo"}
+                </Button>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Any phone photo works — we resize it for you.
+                </p>
+              </div>
             </div>
           </Field>
+
           <Field label="Hometown" error={errors.hometown}>
             <Input value={form.hometown} onChange={(e) => update("hometown", e.target.value)} maxLength={100} />
           </Field>
