@@ -5,7 +5,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { useManagedAthletes } from "@/lib/athlete-hooks";
-import { createGuardianInvite, redeemGuardianInvite } from "@/lib/guardian.functions";
+import { createGuardianInvite, redeemGuardianInvite, createChildAthlete } from "@/lib/guardian.functions";
+import { ageFromDob } from "@/lib/compliance";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,8 +45,59 @@ function Family() {
   const [relationship, setRelationship] = useState("Parent");
   const [busy, setBusy] = useState(false);
 
+  const addChild = useServerFn(createChildAthlete);
+  const [child, setChild] = useState({
+    fullName: "",
+    dateOfBirth: "",
+    gradYear: "",
+    state: "",
+    highSchool: "",
+    sportGender: null as "mens" | "womens" | null,
+    guardianName: "",
+    guardianEmail: "",
+    consent: false,
+  });
+  const childAge = ageFromDob(child.dateOfBirth || null);
+
+  async function createChild() {
+    setBusy(true);
+    try {
+      const res = await addChild({
+        data: {
+          fullName: child.fullName,
+          dateOfBirth: child.dateOfBirth,
+          gradYear: child.gradYear ? Number(child.gradYear) : null,
+          state: child.state || null,
+          highSchool: child.highSchool || null,
+          sportGender: child.sportGender,
+          guardianName: child.guardianName,
+          guardianEmail: child.guardianEmail,
+          consent: child.consent,
+        },
+      });
+      setChild({
+        fullName: "",
+        dateOfBirth: "",
+        gradYear: "",
+        state: "",
+        highSchool: "",
+        sportGender: null,
+        guardianName: child.guardianName,
+        guardianEmail: child.guardianEmail,
+        consent: false,
+      });
+      qc.invalidateQueries({ queryKey: ["managed-athletes"] });
+      toast.success(`${res.name}'s profile created — add stats and video next`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not create the profile");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const owned = (athletes.data ?? []).filter((a) => a.user_id === user?.id);
-  const guarded = (athletes.data ?? []).filter((a) => a.user_id !== user?.id);
+  
+
 
   const links = useQuery({
     enabled: !!user?.id,
@@ -124,18 +177,20 @@ function Family() {
         <h2 className="font-display text-xl font-bold">Athletes I manage</h2>
         {athletes.isPending ? (
           <p className="mt-2 text-sm text-muted-foreground">Loading…</p>
-        ) : guarded.length === 0 ? (
+        ) : (athletes.data ?? []).length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">
-            You aren't linked to another athlete's profile yet. Enter an invite code below to join one.
+            No athletes yet. Create a profile for your child below, or enter an invite code to join one that already
+            exists.
           </p>
         ) : (
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {guarded.map((a) => (
+            {(athletes.data ?? []).map((a) => (
               <div key={a.id} className="rounded-lg border p-3">
                 <p className="font-display text-lg font-bold">{a.full_name}</p>
                 <p className="text-xs text-muted-foreground">
                   {a.high_school ?? "—"}
                   {a.grad_year ? ` • Class of ${a.grad_year}` : ""}
+                  {a.user_id === user?.id ? "" : " • linked as guardian"}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Button asChild size="sm" variant="outline">
@@ -157,6 +212,7 @@ function Family() {
           </div>
         )}
 
+
         <div className="mt-5 grid gap-3 border-t pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div>
             <Label className="text-xs">Have an invite code?</Label>
@@ -173,6 +229,101 @@ function Family() {
           </Button>
         </div>
       </Card>
+
+      {/* Parent side: create a profile for my child */}
+      <Card className="mt-6 p-4 sm:p-6">
+        <h2 className="font-display text-xl font-bold">Create a profile for my child</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          You'll own and manage this profile. Nothing is visible to coaches until you publish it.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div>
+            <Label className="text-xs">Child's full name</Label>
+            <Input value={child.fullName} onChange={(e) => setChild({ ...child, fullName: e.target.value })} maxLength={100} />
+          </div>
+          <div>
+            <Label className="text-xs">Date of birth</Label>
+            <Input type="date" value={child.dateOfBirth} onChange={(e) => setChild({ ...child, dateOfBirth: e.target.value })} />
+          </div>
+          <div>
+            <Label className="text-xs">Graduation year (optional)</Label>
+            <Input
+              inputMode="numeric"
+              value={child.gradYear}
+              onChange={(e) => setChild({ ...child, gradYear: e.target.value.replace(/\D/g, "").slice(0, 4) })}
+              placeholder="2030"
+            />
+          </div>
+          <div>
+            <Label className="text-xs">State (optional)</Label>
+            <Input
+              value={child.state}
+              onChange={(e) => setChild({ ...child, state: e.target.value.toUpperCase().slice(0, 2) })}
+              placeholder="MO"
+            />
+          </div>
+          <div>
+            <Label className="text-xs">High school / club (optional)</Label>
+            <Input value={child.highSchool} onChange={(e) => setChild({ ...child, highSchool: e.target.value })} maxLength={150} />
+          </div>
+          <div>
+            <Label className="text-xs">Basketball</Label>
+            <div className="mt-1 flex gap-2">
+              {(
+                [
+                  ["mens", "Boys"],
+                  ["womens", "Girls"],
+                ] as const
+              ).map(([value, label]) => (
+                <Button
+                  key={value}
+                  type="button"
+                  size="sm"
+                  variant={child.sportGender === value ? "default" : "outline"}
+                  onClick={() => setChild({ ...child, sportGender: value })}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs">Your name (parent/guardian)</Label>
+            <Input value={child.guardianName} onChange={(e) => setChild({ ...child, guardianName: e.target.value })} maxLength={100} />
+          </div>
+          <div>
+            <Label className="text-xs">Your email</Label>
+            <Input type="email" value={child.guardianEmail} onChange={(e) => setChild({ ...child, guardianEmail: e.target.value })} maxLength={255} />
+          </div>
+        </div>
+
+        {childAge != null && (
+          <p className="mt-3 rounded-md bg-muted p-3 text-xs text-muted-foreground">
+            {childAge < 13
+              ? `Age ${childAge}: under-13 profiles can only be created and published by a parent or guardian, with your consent recorded below. Contact details stay hidden from coaches.`
+              : `Age ${childAge}: once the profile exists you can send your athlete an invite code so they can help manage it.`}
+          </p>
+        )}
+
+        <label className="mt-3 flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={child.consent}
+            onChange={(e) => setChild({ ...child, consent: e.target.checked })}
+          />
+          <span className="text-muted-foreground">
+            I am this athlete's parent or legal guardian and I consent to creating this recruiting profile.
+          </span>
+        </label>
+
+        <Button className="mt-4" onClick={createChild} disabled={busy}>
+          <UserPlus className="mr-1.5 h-4 w-4" />
+          Create profile
+        </Button>
+      </Card>
+
+
 
       {/* Athlete side: invite my parent */}
       {owned.length > 0 ? (

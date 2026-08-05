@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { ageFromDob } from "@/lib/compliance";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +44,9 @@ function AuthPage() {
   const [suPass, setSuPass] = useState("");
   const [suCollege, setSuCollege] = useState("");
   const [suTitle, setSuTitle] = useState("");
+  const [suDob, setSuDob] = useState("");
+  const suAge = ageFromDob(suDob || null);
+  const under13 = role === "athlete" && suAge != null && suAge < 13;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -91,6 +95,23 @@ function AuthPage() {
       setErrors(next);
       return;
     }
+    if (role === "athlete") {
+      if (!suDob) {
+        setErrors({ date_of_birth: "Enter your date of birth" });
+        return;
+      }
+      if (suAge == null || suAge > 100) {
+        setErrors({ date_of_birth: "Enter a valid date of birth" });
+        return;
+      }
+      if (suAge < 13) {
+        setErrors({
+          date_of_birth:
+            "Athletes under 13 can't create their own account. A parent or guardian can sign up and create the profile for you.",
+        });
+        return;
+      }
+    }
     setErrors({});
     setLoading(true);
     try {
@@ -103,6 +124,7 @@ function AuthPage() {
             role_intent: role,
             full_name: parsed.data.full_name,
             display_name: parsed.data.full_name,
+            date_of_birth: role === "athlete" ? suDob : undefined,
             college: suCollege.trim() || undefined,
             title: suTitle.trim() || undefined,
           },
@@ -169,8 +191,8 @@ function AuthPage() {
               </div>
               {role === "parent" && (
                 <p className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
-                  Parents link to their athlete with an invite code after signing up — your athlete creates it from
-                  the Family page.
+                  After signing up you can create a profile for your child from the Family page, or link to an
+                  existing athlete with an invite code.
                 </p>
               )}
 
@@ -195,6 +217,44 @@ function AuthPage() {
                 )}
               </div>
 
+              {role === "athlete" && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="su-dob">Date of birth</Label>
+                  <Input
+                    id="su-dob"
+                    type="date"
+                    value={suDob}
+                    onChange={(e) => setSuDob(e.target.value)}
+                    aria-invalid={!!errors.date_of_birth}
+                  />
+                  {errors.date_of_birth ? (
+                    <p className="text-xs text-destructive">{errors.date_of_birth}</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Used for age-appropriate privacy and NCAA recruiting rules.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {under13 && (
+                <div className="rounded-md border border-primary/40 bg-muted p-3 text-xs">
+                  <p className="text-muted-foreground">
+                    You must be 13 or older to have your own account. Ask a parent or guardian to sign up — they can
+                    create and manage your profile.
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="mt-2"
+                    onClick={() => setRole("parent")}
+                  >
+                    Sign up as a parent instead
+                  </Button>
+                </div>
+              )}
+
               {role === "coach" && (
                 <>
                   <div className="space-y-1.5">
@@ -212,7 +272,7 @@ function AuthPage() {
                 </>
               )}
 
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" disabled={loading || under13} className="w-full">
                 {loading ? "Creating account..." : "Create account"}
               </Button>
             </form>
