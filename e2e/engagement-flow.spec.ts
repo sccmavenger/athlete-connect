@@ -93,7 +93,6 @@ test("athlete builds a college interest list", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "My college list" })).toBeVisible();
 
   await page.getByPlaceholder("Wichita State").fill("Summit State University");
-  await page.getByPlaceholder("KS").fill("KS");
   await page.getByRole("button", { name: /^Add$/ }).click();
   await expect(page.getByRole("heading", { name: "Summit State University" })).toBeVisible({
     timeout: 20_000,

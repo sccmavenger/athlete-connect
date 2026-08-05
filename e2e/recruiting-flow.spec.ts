@@ -40,7 +40,9 @@ test.afterAll(async () => {
 /** Fills one of the coach-directory filter inputs (label sits above the input). */
 async function setFilter(page: Page, label: string, value: string) {
   await page
-    .locator(`xpath=//label[normalize-space(.)='${label}']/following-sibling::input`)
+    .locator(
+      `xpath=//label[normalize-space(.)='${label}']/following-sibling::input | //label[normalize-space(.)='${label}']/following-sibling::*//input`,
+    )
     .first()
     .fill(value);
 }
@@ -81,11 +83,12 @@ test("published profile is publicly viewable when signed out", async ({ page }) 
 test("coach finds the athlete by position, GPA and radius, then bookmarks", async ({ page }) => {
   await signIn(page, coach);
   await page.goto("/coaches");
-  await expect(page.getByRole("heading", { name: "Athletes" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Athlete search" })).toBeVisible();
 
-  await setFilter(page, "Position", "PG");
+  await page.getByRole("button", { name: "PG", exact: true }).click();
   await setFilter(page, "Min GPA", "3.5");
-  await setFilter(page, "Near ZIP", COACH_ZIP);
+  await setFilter(page, "Where", COACH_ZIP);
+  await page.getByRole("button", { name: "Go" }).click();
 
   const card = page.getByRole("link", { name: new RegExp(athlete.name, "i") });
   await expect(card).toBeVisible({ timeout: 45_000 });
