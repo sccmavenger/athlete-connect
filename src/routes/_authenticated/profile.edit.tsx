@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { geocodeZip } from "@/lib/geocode.functions";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
@@ -140,6 +140,7 @@ function ProfileEdit() {
   const [contact, setContact] = useState<ContactForm>(emptyContact);
   const [videos, setVideos] = useState<Video[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(true);
