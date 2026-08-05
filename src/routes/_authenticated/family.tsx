@@ -96,7 +96,7 @@ function Family() {
   }
 
   const owned = (athletes.data ?? []).filter((a) => a.user_id === user?.id);
-  const guarded = (athletes.data ?? []).filter((a) => a.user_id !== user?.id);
+  
 
 
   const links = useQuery({
