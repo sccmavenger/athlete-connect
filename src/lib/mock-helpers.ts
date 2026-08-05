@@ -1,10 +1,11 @@
-// Temporary mockup helper. Removed after screenshots.
+// Screenshot fixtures. The `?mockRole=` URL bypass has been removed for security:
+// mock mode is permanently disabled and every route requires a real session.
 import { MOCK_ATHLETES, MOCK_VIDEOS, MOCK_EVENTS, MOCK_COACH_REQUESTS } from "./mock-data";
 
 export function isMockMode() {
-  if (typeof window === "undefined") return false;
-  return !!new URLSearchParams(window.location.search).get("mockRole");
+  return false;
 }
+
 
 export function mockAthletesList(): any { return MOCK_ATHLETES; }
 export function mockMyAthlete(): any {

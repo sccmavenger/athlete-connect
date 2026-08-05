@@ -4,13 +4,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async ({ location }) => {
-    const search = new URLSearchParams(location.searchStr);
-    if (search.get("mockRole")) return {};
+  beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth" });
     return { user: data.user };
   },
+
   component: AuthedLayout,
 });
 

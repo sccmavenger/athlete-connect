@@ -14,12 +14,17 @@ export const getPublicAthlete = createServerFn({ method: "GET" })
       { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
     );
 
+    // Only recruiting-safe columns: no date of birth, guardian consent details,
+    // NCAA ID or standardized test scores are exposed publicly.
     const { data: athlete } = await supabasePublic
       .from("athletes")
-      .select("*")
+      .select(
+        "id, full_name, hometown, state, high_school, grad_year, position, height_inches, weight_lbs, jersey_number, gpa, intended_major, instagram_handle, tiktok_handle, profile_photo_url, bio, created_at, updated_at, is_published, zip_code, latitude, longitude, sport_gender",
+      )
       .eq("id", data.athleteId)
       .eq("is_published", true)
       .maybeSingle();
+
 
     if (!athlete) return { athlete: null, videos: [], events: [], photos: [] };
 
