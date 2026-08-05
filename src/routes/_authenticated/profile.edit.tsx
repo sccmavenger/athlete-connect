@@ -540,25 +540,50 @@ function ProfileEdit() {
           </Field>
           <Field label="Profile photo">
             <div className="flex items-center gap-3">
-              {form.profile_photo_url && (
+              {form.profile_photo_url ? (
                 <img
                   src={form.profile_photo_url}
                   alt=""
-                  className="h-14 w-14 shrink-0 rounded-full object-cover"
+                  className="h-14 w-14 shrink-0 rounded-full border border-border object-cover"
                 />
+              ) : (
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-dashed border-border text-muted-foreground">
+                  <Upload className="h-5 w-5" />
+                </div>
               )}
-              <Input
-                type="file"
-                accept="image/*"
-                className="min-w-0"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) uploadPhoto(f);
-                }}
-                disabled={uploading}
-              />
+              <div className="min-w-0">
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    // Clear the value so re-picking the same file still fires onChange.
+                    e.target.value = "";
+                    if (f) uploadPhoto(f);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={uploading}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  {uploading
+                    ? "Uploading..."
+                    : form.profile_photo_url
+                      ? "Change photo"
+                      : "Choose photo"}
+                </Button>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Any phone photo works — we resize it for you.
+                </p>
+              </div>
             </div>
           </Field>
+
           <Field label="Hometown" error={errors.hometown}>
             <Input value={form.hometown} onChange={(e) => update("hometown", e.target.value)} maxLength={100} />
           </Field>
