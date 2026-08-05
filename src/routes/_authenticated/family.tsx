@@ -5,7 +5,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { useManagedAthletes } from "@/lib/athlete-hooks";
-import { createGuardianInvite, redeemGuardianInvite } from "@/lib/guardian.functions";
+import { createGuardianInvite, redeemGuardianInvite, createChildAthlete } from "@/lib/guardian.functions";
+import { ageFromDob } from "@/lib/compliance";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
