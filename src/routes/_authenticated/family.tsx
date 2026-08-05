@@ -124,18 +124,20 @@ function Family() {
         <h2 className="font-display text-xl font-bold">Athletes I manage</h2>
         {athletes.isPending ? (
           <p className="mt-2 text-sm text-muted-foreground">Loading…</p>
-        ) : guarded.length === 0 ? (
+        ) : (athletes.data ?? []).length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">
-            You aren't linked to another athlete's profile yet. Enter an invite code below to join one.
+            No athletes yet. Create a profile for your child below, or enter an invite code to join one that already
+            exists.
           </p>
         ) : (
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {guarded.map((a) => (
+            {(athletes.data ?? []).map((a) => (
               <div key={a.id} className="rounded-lg border p-3">
                 <p className="font-display text-lg font-bold">{a.full_name}</p>
                 <p className="text-xs text-muted-foreground">
                   {a.high_school ?? "—"}
                   {a.grad_year ? ` • Class of ${a.grad_year}` : ""}
+                  {a.user_id === user?.id ? "" : " • linked as guardian"}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Button asChild size="sm" variant="outline">
@@ -156,6 +158,7 @@ function Family() {
             ))}
           </div>
         )}
+
 
         <div className="mt-5 grid gap-3 border-t pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div>
