@@ -45,8 +45,59 @@ function Family() {
   const [relationship, setRelationship] = useState("Parent");
   const [busy, setBusy] = useState(false);
 
+  const addChild = useServerFn(createChildAthlete);
+  const [child, setChild] = useState({
+    fullName: "",
+    dateOfBirth: "",
+    gradYear: "",
+    state: "",
+    highSchool: "",
+    sportGender: null as "mens" | "womens" | null,
+    guardianName: "",
+    guardianEmail: "",
+    consent: false,
+  });
+  const childAge = ageFromDob(child.dateOfBirth || null);
+
+  async function createChild() {
+    setBusy(true);
+    try {
+      const res = await addChild({
+        data: {
+          fullName: child.fullName,
+          dateOfBirth: child.dateOfBirth,
+          gradYear: child.gradYear ? Number(child.gradYear) : null,
+          state: child.state || null,
+          highSchool: child.highSchool || null,
+          sportGender: child.sportGender,
+          guardianName: child.guardianName,
+          guardianEmail: child.guardianEmail,
+          consent: child.consent,
+        },
+      });
+      setChild({
+        fullName: "",
+        dateOfBirth: "",
+        gradYear: "",
+        state: "",
+        highSchool: "",
+        sportGender: null,
+        guardianName: child.guardianName,
+        guardianEmail: child.guardianEmail,
+        consent: false,
+      });
+      qc.invalidateQueries({ queryKey: ["managed-athletes"] });
+      toast.success(`${res.name}'s profile created — add stats and video next`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not create the profile");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const owned = (athletes.data ?? []).filter((a) => a.user_id === user?.id);
   const guarded = (athletes.data ?? []).filter((a) => a.user_id !== user?.id);
+
 
   const links = useQuery({
     enabled: !!user?.id,
