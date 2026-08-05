@@ -30,6 +30,7 @@ let athleteA: TestUser;
 let athleteB: TestUser;
 let coach: TestUser;
 let parent: TestUser;
+let drafter: TestUser;
 let athleteAId: string;
 let athleteBId: string;
 let draftId: string;
@@ -41,6 +42,7 @@ test.beforeAll(async () => {
   athleteB = await createUser({ name: "Abuse Athlete B", role: "athlete", slug: "abuse-b" });
   coach = await createUser({ name: "Abuse Coach", role: "coach", slug: "abuse-coach" });
   parent = await createUser({ name: "Abuse Parent", role: "parent", slug: "abuse-parent" });
+  drafter = await createUser({ name: "Abuse Drafter", role: "athlete", slug: "abuse-draft" });
   await approveCoach(coach.id);
 
   athleteAId = await seedAthlete({ userId: athleteA.id, name: athleteA.name });
@@ -50,7 +52,7 @@ test.beforeAll(async () => {
   // A draft (unpublished) profile plus private contact rows to probe.
   const { data: draft, error } = await admin
     .from("athletes")
-    .insert({ user_id: athleteB.id, full_name: "Abuse Draft", is_published: false })
+    .insert({ user_id: drafter.id, full_name: "Abuse Draft", is_published: false })
     .select("id")
     .single();
   if (error) throw error;
@@ -67,7 +69,7 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  for (const u of [athleteA, athleteB, coach, parent]) if (u) await deleteUser(u.id);
+  for (const u of [athleteA, athleteB, coach, parent, drafter]) if (u) await deleteUser(u.id);
 });
 
 test("signed-out visitors cannot read sensitive athlete columns", async () => {
