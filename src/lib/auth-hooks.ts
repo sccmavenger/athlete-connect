@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
-import { MOCK_USER } from "@/lib/mock-data";
+
 
 export type AppRole = "admin" | "coach" | "athlete" | "parent";
 
