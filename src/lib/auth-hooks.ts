@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
-import { MOCK_USER } from "@/lib/mock-data";
+
 
 export type AppRole = "admin" | "coach" | "athlete" | "parent";
 
@@ -10,18 +10,6 @@ export interface AuthState {
   session: Session | null;
   user: User | null;
   roles: AppRole[];
-}
-
-function getMockRoles(): AppRole[] | null {
-  if (typeof window === "undefined") return null;
-  const p = new URLSearchParams(window.location.search).get("mockRole");
-  if (!p) return null;
-  if (p === "athlete") return ["athlete"];
-  if (p === "coach") return ["coach"];
-  if (p === "admin") return ["admin"];
-  if (p === "parent") return ["parent"];
-  if (p === "pending") return [];
-  return null;
 }
 
 export function useAuth(): AuthState {
@@ -33,17 +21,8 @@ export function useAuth(): AuthState {
   });
 
   useEffect(() => {
-    const mock = getMockRoles();
-    if (mock !== null) {
-      setState({
-        loading: false,
-        session: null,
-        user: { ...MOCK_USER } as unknown as User,
-        roles: mock,
-      });
-      return;
-    }
     let mounted = true;
+
 
     async function loadRoles(userId: string): Promise<AppRole[]> {
       const { data } = await supabase
