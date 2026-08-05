@@ -277,6 +277,7 @@ function ProfileEdit() {
     const path = `${user!.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
     const { error } = await supabase.storage.from("athlete-media").upload(path, file, {
       upsert: true,
+      contentType: file.type || "image/jpeg",
     });
     if (error) throw error;
     const { data: signed } = await supabase.storage
@@ -287,14 +288,19 @@ function ProfileEdit() {
 
   async function uploadPhoto(file: File) {
     if (!user) return;
-    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file");
-    if (file.size > 8 * 1024 * 1024) return toast.error("Images must be under 8 MB");
+    if (file.size > MAX_SOURCE_BYTES) return toast.error("That photo is too large (40 MB max)");
     setUploading(true);
     try {
-      const url = await uploadToStorage(file, "profile");
-      if (url) update("profile_photo_url", url);
+      // Resized + converted to JPEG in the browser so big phone photos and HEIC
+      // files upload on the first try.
+      const prepared = await prepareImageForUpload(file, { maxDimension: 1200 });
+      const url = await uploadToStorage(prepared, "profile");
+      if (url) {
+        update("profile_photo_url", url);
+        toast.success("Profile photo added — remember to save your profile");
+      }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Upload failed");
+      toast.error(e instanceof Error ? e.message : "Upload failed, please try again");
     } finally {
       setUploading(false);
     }
@@ -309,25 +315,30 @@ function ProfileEdit() {
       toast.warning(`Only ${remaining} more photo${remaining === 1 ? "" : "s"} can be added`);
     }
     setUploadingPhotos(true);
+    let added = 0;
     try {
       for (const file of chosen) {
-        if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} is not an image`);
+        if (file.size > MAX_SOURCE_BYTES) {
+          toast.error(`${file.name} is too large (40 MB max)`);
           continue;
         }
-        if (file.size > 8 * 1024 * 1024) {
-          toast.error(`${file.name} is over 8 MB`);
-          continue;
+        try {
+          const prepared = await prepareImageForUpload(file, { maxDimension: 1600 });
+          const url = await uploadToStorage(prepared, "action");
+          if (url) {
+            setPhotos((p) => [...p, { url, caption: "" }]);
+            added++;
+          }
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : `Couldn't upload ${file.name}`);
         }
-        const url = await uploadToStorage(file, "action");
-        if (url) setPhotos((p) => [...p, { url, caption: "" }]);
       }
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Upload failed");
+      if (added > 0) toast.success(`${added} photo${added === 1 ? "" : "s"} added`);
     } finally {
       setUploadingPhotos(false);
     }
   }
+
 
   function validate(): boolean {
     const next: FieldErrors = {
