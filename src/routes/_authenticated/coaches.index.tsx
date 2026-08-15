@@ -478,7 +478,51 @@ function CoachesDirectory() {
             Clear filters
           </Button>
         )}
-      </Card>
+    </div>
+  );
+
+  return (
+    <div className="container mx-auto px-4 pt-5 pb-8 sm:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="font-display text-[2rem] font-bold leading-none sm:text-4xl">
+            Athlete search
+          </h1>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Search anywhere in the country — city, metro, state or ZIP — then draw a radius.
+          </p>
+        </div>
+        <Button variant="outline" className="hidden sm:inline-flex" onClick={saveSearch} disabled={!hasFilters}>
+          <Star className="mr-1.5 h-4 w-4" />
+          Save this search
+        </Button>
+      </div>
+
+      {/* Mobile: filters live in a sheet */}
+      <div className="mt-4 flex gap-2 md:hidden">
+        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <SheetTrigger asChild>
+            <Button variant="secondary" className="h-12 flex-1">
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              Filters{hasFilters ? " • on" : ""}
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
+            <SheetTitle className="font-display text-lg">Filters</SheetTitle>
+            <div className="mt-4">{filtersContent}</div>
+            <Button className="mt-5 h-12 w-full" onClick={() => setFiltersOpen(false)}>
+              Show {results.length} athlete{results.length === 1 ? "" : "s"}
+            </Button>
+          </SheetContent>
+        </Sheet>
+        <Button variant="outline" className="h-12" onClick={saveSearch} disabled={!hasFilters} aria-label="Save this search">
+          <Star className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Desktop: inline filter card */}
+      <Card className="mt-6 hidden p-4 md:block">{filtersContent}</Card>
+
 
       {q.isPending || (!!range && games.isPending) ? (
         <AthleteGridSkeleton />
