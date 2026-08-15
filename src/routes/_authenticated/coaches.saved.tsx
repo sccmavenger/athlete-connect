@@ -204,7 +204,7 @@ function SavedList() {
             description="Tap Save on any athlete profile and they'll show up here for quick follow-up."
             action={
               <Button asChild variant="outline">
-                <Link to="/coaches">Browse athletes</Link>
+                <Link to="/coaches" search={{}}>Browse athletes</Link>
               </Button>
             }
           />

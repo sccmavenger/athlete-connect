@@ -92,7 +92,7 @@ function CoachInbox() {
             description="Open an athlete profile and tap Message to start one — athletes can also message you first."
             action={
               <Button asChild variant="outline">
-                <Link to="/coaches">Browse athletes</Link>
+                <Link to="/coaches" search={{}}>Browse athletes</Link>
               </Button>
             }
           />

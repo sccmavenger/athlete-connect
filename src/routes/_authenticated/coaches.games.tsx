@@ -243,7 +243,7 @@ function CoachGames() {
             description="Try a wider date range or a bigger radius — athletes add their schedules from their profile editor."
             action={
               <Button asChild variant="outline">
-                <Link to="/coaches">Browse athletes</Link>
+                <Link to="/coaches" search={{}}>Browse athletes</Link>
               </Button>
             }
           />
