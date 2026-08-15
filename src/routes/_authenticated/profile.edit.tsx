@@ -1106,13 +1106,29 @@ function ProfileEdit() {
         ))}
       </Card>
 
-      <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate({ to: "/dashboard" })}>
-          Cancel
-        </Button>
-        <Button className="w-full sm:w-auto" onClick={save} disabled={saving || !form.full_name.trim()}>
-          {saving ? "Saving..." : "Save profile"}
-        </Button>
+      {/* Spacer so content clears the sticky save bar on mobile */}
+      <div className="h-24 md:hidden" />
+
+      <div
+        className="fixed inset-x-0 z-30 border-t border-border/70 bg-card/95 px-4 py-3 backdrop-blur md:static md:mt-6 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
+        style={{ bottom: "calc(4.5rem + env(safe-area-inset-bottom))" }}
+      >
+        <div className="container mx-auto flex gap-2 px-0 md:justify-end">
+          <Button
+            variant="outline"
+            className="h-12 flex-1 md:w-auto md:flex-none"
+            onClick={() => navigate({ to: "/dashboard" })}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="h-12 flex-[2] md:w-auto md:flex-none"
+            onClick={save}
+            disabled={saving || !form.full_name.trim()}
+          >
+            {saving ? "Saving..." : "Save profile"}
+          </Button>
+        </div>
       </div>
     </div>
   );
