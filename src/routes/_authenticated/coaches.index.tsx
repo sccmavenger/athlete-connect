@@ -124,6 +124,7 @@ function CoachesDirectory() {
   const s = Route.useSearch();
   const [whereDraft, setWhereDraft] = useState(s.where);
   const [savingIds, setSavingIds] = useState<string[]>([]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   function set(patch: Partial<DirectorySearch>) {
     navigate({ search: (prev: DirectorySearch) => ({ ...prev, ...patch }) });
