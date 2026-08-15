@@ -19,9 +19,19 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { EmptyState } from "@/components/EmptyState";
-import { AlertCircle, Bookmark, CalendarDays, MapPin, SearchX, Star, Users } from "lucide-react";
+import {
+  AlertCircle,
+  Bookmark,
+  CalendarDays,
+  MapPin,
+  SearchX,
+  SlidersHorizontal,
+  Star,
+  Users,
+} from "lucide-react";
 
 type DirectorySearch = {
   where: string;
@@ -114,6 +124,7 @@ function CoachesDirectory() {
   const s = Route.useSearch();
   const [whereDraft, setWhereDraft] = useState(s.where);
   const [savingIds, setSavingIds] = useState<string[]>([]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   function set(patch: Partial<DirectorySearch>) {
     navigate({ search: (prev: DirectorySearch) => ({ ...prev, ...patch }) });
@@ -313,22 +324,8 @@ function CoachesDirectory() {
     set({ pos: next.join(","), group: "" });
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8 sm:py-10">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-3xl font-bold sm:text-4xl">Athlete search</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Search anywhere in the country — city, metro, state or ZIP — then draw a radius.
-          </p>
-        </div>
-        <Button variant="outline" onClick={saveSearch} disabled={!hasFilters}>
-          <Star className="mr-1.5 h-4 w-4" />
-          Save this search
-        </Button>
-      </div>
-
-      <Card className="mt-6 space-y-4 p-4">
+  const filtersContent = (
+    <div className="space-y-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
             <Label className="text-xs" htmlFor="where">
@@ -478,7 +475,51 @@ function CoachesDirectory() {
             Clear filters
           </Button>
         )}
-      </Card>
+    </div>
+  );
+
+  return (
+    <div className="container mx-auto px-4 pt-5 pb-8 sm:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="font-display text-[2rem] font-bold leading-none sm:text-4xl">
+            Athlete search
+          </h1>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Search anywhere in the country — city, metro, state or ZIP — then draw a radius.
+          </p>
+        </div>
+        <Button variant="outline" className="hidden sm:inline-flex" onClick={saveSearch} disabled={!hasFilters}>
+          <Star className="mr-1.5 h-4 w-4" />
+          Save this search
+        </Button>
+      </div>
+
+      {/* Mobile: filters live in a sheet */}
+      <div className="mt-4 flex gap-2 md:hidden">
+        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <SheetTrigger asChild>
+            <Button variant="secondary" className="h-12 flex-1">
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              Filters{hasFilters ? " • on" : ""}
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
+            <SheetTitle className="font-display text-lg">Filters</SheetTitle>
+            <div className="mt-4">{filtersContent}</div>
+            <Button className="mt-5 h-12 w-full" onClick={() => setFiltersOpen(false)}>
+              Show {results.length} athlete{results.length === 1 ? "" : "s"}
+            </Button>
+          </SheetContent>
+        </Sheet>
+        <Button variant="outline" className="h-12" onClick={saveSearch} disabled={!hasFilters} aria-label="Save this search">
+          <Star className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Desktop: inline filter card */}
+      <Card className="mt-6 hidden p-4 md:block">{filtersContent}</Card>
+
 
       {q.isPending || (!!range && games.isPending) ? (
         <AthleteGridSkeleton />

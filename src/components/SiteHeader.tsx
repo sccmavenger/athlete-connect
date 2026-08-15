@@ -1,24 +1,27 @@
-import { useState } from "react";
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-hooks";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { NotificationsBell } from "@/components/NotificationsBell";
 
-import { Menu } from "lucide-react";
+import { LogOut, UserRound } from "lucide-react";
 import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
 export function SiteHeader() {
   const { user, roles, loading } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [open, setOpen] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   async function signOut() {
-    setOpen(false);
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
@@ -53,22 +56,27 @@ export function SiteHeader() {
     links.push({ to: "/admin", label: "Admin" });
   }
 
-
+  /** Destinations that don't have a bottom tab, surfaced in the account menu. */
+  const secondary = links.filter(
+    (l) => !["/dashboard", "/messages", "/colleges", "/insights", "/profile/edit", "/coaches", "/coaches/games", "/coaches/saved", "/coaches/messages", "/admin"].includes(l.to),
+  );
 
   return (
-    <header className="border-b bg-card text-card-foreground">
-      <div className="container mx-auto grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
+    <header
+      className="border-b bg-card text-card-foreground"
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+    >
+      <div className="container mx-auto grid h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-16">
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <img src={summitLogo.url} alt="Summit Hoops" className="h-9 w-auto shrink-0 sm:h-10" />
+          <img src={summitLogo.url} alt="Summit Hoops" className="h-8 w-auto shrink-0 sm:h-10" />
           <span className="truncate font-display text-base font-bold tracking-wide sm:text-xl">
             RECRUITING HUB
           </span>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           {user && <NotificationsBell />}
           <nav className="hidden items-center gap-6 md:flex">
-
             {links.map((l) => (
               <Link key={l.to} to={l.to} className="text-sm hover:text-accent">
                 {l.label}
@@ -77,47 +85,36 @@ export function SiteHeader() {
           </nav>
 
           {user ? (
-            <Button variant="secondary" size="sm" onClick={signOut}>
-              Sign out
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-10 w-10" aria-label="Account menu">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
+                    <UserRound className="h-4 w-4" />
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
+                  {user.email}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {secondary.map((l) => (
+                  <DropdownMenuItem key={l.to} asChild>
+                    <Link to={l.to}>{l.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+                {secondary.length > 0 && <DropdownMenuSeparator />}
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : loading ? null : (
             <Button asChild variant="secondary" size="sm">
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
-
-
-          {/* Mobile */}
-          {links.length > 0 && (
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-72">
-                <SheetTitle className="font-display text-lg">Menu</SheetTitle>
-                <nav className="mt-6 flex flex-col">
-                  {links.map((l) => (
-                    <Link
-                      key={l.to}
-                      to={l.to}
-                      onClick={() => setOpen(false)}
-                      className={`border-b border-border/60 py-3 text-base ${
-                        pathname === l.to ? "text-primary" : "hover:text-accent"
-                      }`}
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
-                </nav>
-                <Button variant="secondary" className="mt-6 w-full" onClick={signOut}>
-                  Sign out
-                </Button>
-              </SheetContent>
-            </Sheet>
-          )}
-
         </div>
       </div>
     </header>
