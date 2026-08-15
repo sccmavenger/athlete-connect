@@ -9,7 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CardListSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
-import { Clock } from "lucide-react";
+import {
+  BarChart3,
+  Bookmark,
+  Clock,
+  Eye,
+  GraduationCap,
+  MessageSquare,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
