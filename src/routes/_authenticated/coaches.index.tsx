@@ -19,9 +19,19 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { AthleteGridSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
 import { EmptyState } from "@/components/EmptyState";
-import { AlertCircle, Bookmark, CalendarDays, MapPin, SearchX, Star, Users } from "lucide-react";
+import {
+  AlertCircle,
+  Bookmark,
+  CalendarDays,
+  MapPin,
+  SearchX,
+  SlidersHorizontal,
+  Star,
+  Users,
+} from "lucide-react";
 
 type DirectorySearch = {
   where: string;
