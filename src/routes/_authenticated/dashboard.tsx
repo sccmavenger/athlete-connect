@@ -9,7 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CardListSkeleton, PageHeaderSkeleton } from "@/components/Skeletons";
-import { Clock } from "lucide-react";
+import {
+  BarChart3,
+  Bookmark,
+  Clock,
+  Eye,
+  GraduationCap,
+  MessageSquare,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -92,16 +101,26 @@ function Dashboard() {
     | null
     | undefined;
 
+  const firstName = (a?.full_name ?? user?.email ?? "").split(/[\s@]/)[0];
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
-      <h1 className="font-display text-3xl font-bold sm:text-4xl">Dashboard</h1>
-      <p className="mt-1 break-all text-muted-foreground">{user?.email}</p>
+    <div className="container mx-auto max-w-4xl px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:py-10">
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            {family ? "My recruiting" : isCoach ? "Recruiting desk" : "Account"}
+          </p>
+          <h1 className="mt-0.5 truncate font-display text-[2rem] font-bold leading-none sm:text-4xl">
+            {family && firstName ? `Hey, ${firstName}` : "Dashboard"}
+          </h1>
+        </div>
+      </div>
 
       {/* Pending coach */}
       {!family && !isCoach && !isAdmin && (
-        <Card className="mt-6 p-6">
+        <Card className="mt-6 p-5">
           <div className="flex items-start gap-3">
-            <Clock className="mt-1 h-5 w-5 text-accent" />
+            <Clock className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
             <div>
               <h2 className="font-display text-xl font-bold">Coach access pending</h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -116,7 +135,7 @@ function Dashboard() {
 
       {/* Coach view */}
       {isCoach && (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <ShortcutCard
             title="Browse athletes"
             body="Search the Midwest recruiting database by position, GPA and distance."
@@ -149,10 +168,10 @@ function Dashboard() {
 
       {/* Admin */}
       {isAdmin && (
-        <Card className="mt-6 p-6">
+        <Card className="mt-5 p-5">
           <h2 className="font-display text-2xl font-bold">Admin</h2>
           <p className="mt-1 text-sm text-muted-foreground">Approve or reject pending coach access requests.</p>
-          <Button asChild className="mt-4">
+          <Button asChild className="mt-4 h-11 w-full sm:w-auto">
             <Link to="/admin/coach-requests">Review coach requests</Link>
           </Button>
         </Card>
@@ -160,9 +179,9 @@ function Dashboard() {
 
       {/* Athlete / parent */}
       {family && (
-        <div className="mt-6 space-y-6">
+        <div className="mt-5 space-y-4">
           {managed.isPending || (primaryId && athleteQuery.isPending) ? (
-            <Card className="space-y-3 p-6">
+            <Card className="space-y-3 p-5">
               <Skeleton className="h-7 w-48" />
               <Skeleton className="h-4 w-64 max-w-full" />
               <div className="space-y-2 pt-4">
@@ -172,7 +191,7 @@ function Dashboard() {
               </div>
             </Card>
           ) : !a ? (
-            <Card className="p-6">
+            <Card className="p-5">
               <h2 className="font-display text-2xl font-bold">
                 {isParent && !isAthlete ? "Link your athlete" : "Build your profile"}
               </h2>
@@ -181,60 +200,81 @@ function Dashboard() {
                   ? "Enter the invite code your athlete generated, or start a profile for them."
                   : "Add your basics, academics, videos, and schedule so coaches can find you."}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild>
+              <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
+                <Button asChild className="h-12">
                   <Link to="/profile/edit">Create profile</Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="h-12">
                   <Link to="/family">Use an invite code</Link>
                 </Button>
               </div>
             </Card>
           ) : (
             <>
-              <Card className="p-6">
-                <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+              {/* Athlete identity card */}
+              <Card className="relative overflow-hidden p-5">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl"
+                />
+                <div className="relative flex items-center gap-4">
+                  {a.profile_photo_url ? (
+                    <img
+                      src={a.profile_photo_url}
+                      alt=""
+                      className="h-16 w-16 shrink-0 rounded-2xl border border-border object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-secondary font-display text-2xl font-bold">
+                      {String(a.full_name ?? "?")
+                        .split(" ")
+                        .map((n: string) => n[0])
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase()}
+                    </div>
+                  )}
                   <div className="min-w-0">
-                    <h2 className="truncate font-display text-2xl font-bold">{a.full_name}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {a.high_school ?? "No school set"}
-                      {a.grad_year ? ` • Class of ${a.grad_year}` : ""}
-                      {a.is_published ? " • Public" : " • Unpublished"}
+                    <h2 className="truncate font-display text-2xl font-bold leading-tight">{a.full_name}</h2>
+                    <p className="mt-0.5 truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                      {[a.position, a.grad_year ? `Class of ${a.grad_year}` : null].filter(Boolean).join(" • ") ||
+                        "Profile started"}
                     </p>
-                  </div>
-                  <div className="flex shrink-0 gap-2">
-                    <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
-                      <Link to="/a/$athleteId" params={{ athleteId: a.id }}>
-                        View
-                      </Link>
-                    </Button>
-                    <Button asChild size="sm" className="flex-1 sm:flex-none">
-                      <Link to="/profile/edit">Edit</Link>
-                    </Button>
+                    <span
+                      className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        a.is_published ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"
+                      }`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${a.is_published ? "bg-primary" : "bg-muted-foreground"}`}
+                      />
+                      {a.is_published ? "Visible to coaches" : "Not published"}
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-                  <Metric label="Profile views" value={activity.data?.views ?? 0} />
-                  <Metric label="Coach bookmarks" value={activity.data?.saves ?? 0} />
-                  <Metric label="Unread messages" value={activity.data?.unread ?? 0} />
-                </div>
+                <p className="relative mt-3 truncate text-xs text-muted-foreground">
+                  {a.high_school ?? "No school set"}
+                </p>
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/insights">Insights</Link>
+                <div className="relative mt-4 grid grid-cols-2 gap-3">
+                  <Button asChild variant="outline" className="h-12">
+                    <Link to="/a/$athleteId" params={{ athleteId: a.id }}>
+                      View profile
+                    </Link>
                   </Button>
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/messages">Message a coach</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/colleges">My college list</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/family">Parents &amp; guardians</Link>
+                  <Button asChild className="h-12">
+                    <Link to="/profile/edit">Edit details</Link>
                   </Button>
                 </div>
               </Card>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                <Metric label="Profile views" value={activity.data?.views ?? 0} icon={Eye} />
+                <Metric label="Bookmarks" value={activity.data?.saves ?? 0} icon={Bookmark} />
+                <Metric label="Unread" value={activity.data?.unread ?? 0} icon={MessageSquare} highlight />
+              </div>
 
               <CompletenessCard
                 athlete={{
@@ -247,6 +287,19 @@ function Dashboard() {
                     : !!a.athlete_contacts,
                 }}
               />
+
+              {/* Quick actions */}
+              <div>
+                <h3 className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Quick actions
+                </h3>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  <QuickAction to="/insights" label="Insights" icon={BarChart3} />
+                  <QuickAction to="/messages" label="Message a coach" icon={MessageSquare} />
+                  <QuickAction to="/colleges" label="My college list" icon={GraduationCap} />
+                  <QuickAction to="/family" label="Parents & guardians" icon={Users} />
+                </div>
+              </div>
             </>
           )}
         </div>
@@ -255,12 +308,38 @@ function Dashboard() {
   );
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
+function Metric({
+  label,
+  value,
+  icon: Icon,
+  highlight,
+}: {
+  label: string;
+  value: number;
+  icon: LucideIcon;
+  highlight?: boolean;
+}) {
+  const active = highlight && value > 0;
   return (
-    <div className="rounded-lg border p-3">
-      <p className="font-display text-2xl font-bold">{value}</p>
-      <p className="text-xs text-muted-foreground">{label}</p>
+    <div className="rounded-2xl border bg-card p-3">
+      <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
+      <p className={`mt-2 font-display text-2xl font-bold leading-none ${active ? "text-primary" : ""}`}>{value}</p>
+      <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
     </div>
+  );
+}
+
+function QuickAction({ to, label, icon: Icon }: { to: string; label: string; icon: LucideIcon }) {
+  return (
+    <Link
+      to={to}
+      className="flex min-h-[88px] flex-col justify-between rounded-2xl border bg-card p-4 transition-colors active:bg-secondary"
+    >
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/12 text-primary">
+        <Icon className="h-4.5 w-4.5" />
+      </span>
+      <span className="text-sm font-semibold leading-tight">{label}</span>
+    </Link>
   );
 }
 
@@ -278,12 +357,13 @@ function ShortcutCard({
   variant?: "default" | "outline";
 }) {
   return (
-    <Card className="p-6">
+    <Card className="p-5">
       <h2 className="font-display text-xl font-bold">{title}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      <Button asChild variant={variant} className="mt-4">
+      <Button asChild variant={variant} className="mt-4 h-11 w-full">
         <Link to={to}>{cta}</Link>
       </Button>
     </Card>
   );
 }
+
