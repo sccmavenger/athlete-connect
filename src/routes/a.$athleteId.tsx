@@ -17,6 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
+  ArrowLeft,
   Bookmark,
   BookmarkCheck,
   Calendar,
@@ -186,6 +187,14 @@ function AthleteView() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
+      {user && (
+        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
+          <Link to="/dashboard">
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            Back to dashboard
+          </Link>
+        </Button>
+      )}
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
         {a.profile_photo_url ? (
           <img
