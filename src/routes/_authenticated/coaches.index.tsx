@@ -313,22 +313,8 @@ function CoachesDirectory() {
     set({ pos: next.join(","), group: "" });
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8 sm:py-10">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-3xl font-bold sm:text-4xl">Athlete search</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Search anywhere in the country — city, metro, state or ZIP — then draw a radius.
-          </p>
-        </div>
-        <Button variant="outline" onClick={saveSearch} disabled={!hasFilters}>
-          <Star className="mr-1.5 h-4 w-4" />
-          Save this search
-        </Button>
-      </div>
-
-      <Card className="mt-6 space-y-4 p-4">
+  const filtersContent = (
+    <div className="space-y-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
             <Label className="text-xs" htmlFor="where">
