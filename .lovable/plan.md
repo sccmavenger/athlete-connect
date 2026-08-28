@@ -21,12 +21,14 @@ Coach side (signed in as the coach demo account):
 ## How it works
 
 - Playwright at a 414 × 896 CSS viewport with `deviceScaleFactor: 3`, which renders exactly 1242 × 2688 px — no upscaling, no letterboxing.
-- Sign in with the existing test accounts (athlete and coach demo) so real UI and real data are shown; no mock-mode bypass is used.
+- **All content is fake.** No real player, parent, or coach data appears in any screenshot. Screens are captured against dedicated demo accounts holding invented athletes (fictional names, schools, cities, GPAs, videos, games) and an invented college coach. Real accounts (including yours) are never signed into for capture, and any screen that would surface a real athlete is re-shot or replaced.
+- Demo records are created solely for the capture and are clearly fictional; I'll confirm nothing real leaked before delivering.
 - Each shot is a viewport screenshot (not full-page), scrolled so the screen's most meaningful content is framed.
 - Every image is inspected after capture for clipped text, empty states, or layout breaks, and re-shot if it doesn't look presentation-ready.
 - Status bar/notch chrome is not part of the capture — Apple accepts clean app screenshots.
 
 ## Notes
 
-- If a screen looks thin because the demo data is sparse (e.g. no messages, empty pipeline), I'll flag it and either pick a better-populated screen or note what data would need to exist first.
+- Demo data is written to be rich enough that no screen looks empty (messages, pipeline, games, college list all populated with fictional entries).
 - Delivered as individual PNGs attached in chat; the older `/mnt/documents/mockups/` set is left untouched.
+
