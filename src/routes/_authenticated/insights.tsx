@@ -166,15 +166,16 @@ function Insights() {
         <h2 className="font-display text-lg font-bold">Last 8 weeks</h2>
         <div className="mt-4 flex h-28 items-end gap-2">
           {weeks.map((w, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center gap-1">
+            <div key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
               <div
                 className="w-full rounded-t bg-primary/80"
-                style={{ height: `${Math.max(4, (w / peak) * 100)}%` }}
+                style={{ height: `${Math.max(4, (w / peak) * 88)}%` }}
                 title={`${w} views`}
               />
               <span className="text-[10px] text-muted-foreground">{w}</span>
             </div>
           ))}
+
         </div>
         {uniqueCoachPrograms.size > 0 && (
           <p className="mt-4 text-sm text-muted-foreground">
