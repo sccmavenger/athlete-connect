@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -34,6 +35,11 @@ import { Route as AuthenticatedAdminCoachRequestsRouteImport } from './routes/_a
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/colleges': typeof AuthenticatedCollegesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/_authenticated/colleges': typeof AuthenticatedCollegesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/privacy'
     | '/reset-password'
+    | '/support'
     | '/terms'
     | '/colleges'
     | '/dashboard'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/privacy'
     | '/reset-password'
+    | '/support'
     | '/terms'
     | '/colleges'
     | '/dashboard'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/privacy'
     | '/reset-password'
+    | '/support'
     | '/terms'
     | '/_authenticated/colleges'
     | '/_authenticated/dashboard'
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   AAthleteIdRoute: typeof AAthleteIdRoute
   ApiPublicCollegeLogoRoute: typeof ApiPublicCollegeLogoRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -484,6 +504,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   AAthleteIdRoute: AAthleteIdRoute,
   ApiPublicCollegeLogoRoute: ApiPublicCollegeLogoRoute,
