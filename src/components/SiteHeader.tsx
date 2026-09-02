@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NotificationsBell } from "@/components/NotificationsBell";
 
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
 export function SiteHeader() {
