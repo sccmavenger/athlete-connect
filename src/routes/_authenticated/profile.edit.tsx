@@ -321,7 +321,7 @@ function ProfileEdit() {
     try {
       for (const file of chosen) {
         if (file.size > MAX_SOURCE_BYTES) {
-          toast.error(`${file.name} is too large (40 MB max)`);
+          toast.error(`${file.name} is too large (25 MB max)`);
           continue;
         }
         try {
