@@ -103,7 +103,13 @@ export function SiteHeader() {
                     <Link to={l.to}>{l.label}</Link>
                   </DropdownMenuItem>
                 ))}
-                {secondary.length > 0 && <DropdownMenuSeparator />}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/account">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Account
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out
