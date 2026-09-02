@@ -1,50 +1,50 @@
-# Apple App Review Rejection — Response Plan
+# Fix the four App Store rejections
 
-Your screenshot uploaded at 158px wide, so Apple's body text can't be read. The four cited guidelines are legible, and I checked the app against what each one normally requires. Where the app is genuinely missing something, that's confirmed below. Where the fix depends on Apple's exact wording, that's marked as needing your paste of the text.
+Apple reviewed on an iPad Air (iPadOS 26.6.1) and flagged four items. Here is what each one means and how we clear it.
 
-## What I confirmed in the app
+## 1. Placeholder app icon (Guideline 2.3.8)
 
-- **No in-app account deletion.** There is no account/settings screen at all. The only deletion path is admin-only (`deleteAdminUser`) plus "email us" text on the Support, Privacy, and Terms pages. This is exactly what guideline 5.1.1(v) rejects for an app that supports account creation.
-- **No report or block tools.** The app has coach-to-athlete messaging and user-submitted photos, bios, and video links, but no way for a user to report content or block another user. Apple treats this as required for user-generated content and it is a common "Information Needed" follow-up.
+The web/PWA icons already use the Summit Hoops logo, but the iOS app icon inside the Xcode project is still the default Capacitor placeholder — that is the icon the reviewer saw on the iPad home screen. The web manifest also still says "Recruiting Hub", which adds to the naming/branding mismatch.
 
-## What to build
+- Produce a finalized 1024x1024 App Store icon (opaque, no transparency, no rounded corners) from the Summit Hoops logo, plus the full iOS icon size set, delivered as downloadable files.
+- Fix the manifest name/short_name/description to Summit Hoops so web, PWA, and iOS icons and names all match.
+- You then replace `AppIcon` in Xcode (Assets.xcassets) with the delivered set and rebuild.
 
-### 1. Account screen with self-service deletion (5.1.1(v))
+## 2. Crash when uploading a profile picture (Guideline 2.1(a))
 
-New authenticated route `/account`, reachable from the existing avatar account menu:
+This is not a code exception — it is the iPad web view being killed for memory. The uploader currently accepts files up to 40 MB and fully decodes the original photo at full resolution before downscaling. A 12–48 MP iPad photo becomes a very large in-memory bitmap and WebKit terminates the process, which reads as an app crash.
 
-- Shows signed-in email and role.
-- **Delete my account** with a confirmation step that requires typing DELETE.
-- Deletion removes the auth user, profile, athlete records, college interests, bookmarks, messages, notifications, and uploaded media from storage — not a soft flag.
-- Parent accounts get a clear note that deleting the parent account also removes the child profiles they manage.
-- Update the Support, Privacy, and Terms wording from "contact us to delete" to point at the in-app control.
+Fixes:
+- Decode at a reduced size instead of full resolution (request the downscale during decode, not after), and read image dimensions before allocating any canvas.
+- Lower the accepted source size and reject oversized files with a clear message rather than attempting to decode them.
+- Chunk-free, single-pass encode to JPEG with a hard pixel cap; if decoding fails or the environment cannot decode (older HEIC paths), fall back to uploading the original with a friendly error instead of crashing.
+- Wrap the whole pick-and-upload handler so any failure surfaces as a toast, never an unhandled rejection.
+- Verify with automated runs against large synthetic photos (very high megapixel JPEG and a HEIC) plus a memory-constrained web view profile.
 
-### 2. Report and block for user content (supports 1.2 / Information Needed)
+## 3. No in-app account deletion (Guideline 5.1.1(v))
 
-- Report action on public athlete profiles and inside message threads, with a reason picker, writing to a new `content_reports` table.
-- Block action in message threads that hides the thread and prevents further messages between the two users.
-- New admin queue at `/admin/reports` to review, dismiss, or act on reports.
+Required, and currently missing (support/privacy pages only tell users to email).
 
-### 3. Performance items (2.1(a) x2) — needs Apple's text
+- New `Account` screen reachable from the header account menu: shows email, role, and a destructive "Delete my account" action.
+- Confirmation step: user types DELETE to confirm, sees exactly what gets removed (profile, measurements, media, messages, bookmarks, college list, notifications).
+- Server-side deletion that removes the user's rows and the auth user itself, deletes their storage objects, signs them out, and returns them to the landing page. For a parent account, the flow also states that linked child profiles are deleted.
+- Deletion is permanent — no "deactivate only" option, no email/phone step.
 
-Two separate 2.1(a) findings were cited. The likely candidates, in order:
+## 4. Demo account with pre-populated content (Guideline 2.1(a) Information Needed)
 
-- The iPad orientation mismatch from your earlier archive (remove iPad from Supported Destinations, or declare all four iPad orientations).
-- A blank or stuck screen on first launch — reviewers hit a cold webview with no session. I'll verify launch and login on the latest iOS in a mobile viewport, and check for errors on the auth route.
-- A flow the reviewer couldn't complete with the demo account (e.g. coach directory empty because the review coach account isn't approved, or location permission never prompted).
+The reviewer could not exercise all features because the review accounts are empty and the coach account was never used.
 
-I'll confirm the review coach account is approved and that both review accounts land on populated screens.
+- Seed the two Apple review accounts with realistic fictional content: a complete published athlete profile (measurements, academics, highlight links, schedule, target schools), an approved coach account with a pipeline and bookmarks, and a two-way message thread with several messages on both sides plus notifications.
+- Confirm the coach review account is approved so coach search, bookmarking, and messaging all work on first sign-in.
+- Provide updated App Review Information text: both accounts, what each can do, and a note that the account deletion flow lives under the avatar menu > Account. You will also need to attach a screen recording of the deletion flow, which Apple explicitly requested.
 
-### 4. Accurate Metadata (2.3.8) — needs Apple's text
+## Also worth deciding
 
-Usually one of: app name/subtitle differs from what's shown in the app, screenshots show features or data the reviewer couldn't find, or the description promises something not in the build. This is fixed in App Store Connect, not in code — I'll tell you exactly which field to change once I can read the finding.
+Apple reviews on iPad because the build declares iPad support. Simplest path to a clean review is to set the target to iPhone only in Xcode (the layout is designed mobile-first anyway); otherwise we keep iPad support and must be sure every screen and the upload flow behaves there.
 
 ## Technical notes
 
-- Deletion runs as a `createServerFn` that verifies the caller owns the account, cascades child rows, empties the athlete media storage prefix, then calls `supabaseAdmin.auth.admin.deleteUser` — admin client loaded inside the handler only after the caller is verified.
-- `content_reports` and any block table get GRANTs plus RLS: reporters insert and read their own rows, admins read all via `has_role`.
-- Both new screens follow the existing mobile-first shell (bottom tabs, 44px targets, safe areas).
-
-## To finish this
-
-Paste Apple's review message text (or send 3-4 cropped screenshots instead of one tall capture) so items 3 and 4 get real fixes rather than best guesses. Items 1 and 2 are confirmed gaps and can start immediately.
+- Upload path: `src/lib/image-upload.ts` (decode/downscale) and its call site in `src/routes/_authenticated/profile.edit.tsx`.
+- Deletion: new `src/lib/account.functions.ts` server functions (authenticated; admin client used only after verifying the caller deletes themselves), new route `src/routes/_authenticated/account.tsx`, link added in `src/components/SiteHeader.tsx`.
+- Seed content applied as data for the two review accounts only; no real athlete data is used anywhere.
+- Icons delivered under `/mnt/documents/` for the Xcode drop-in; `public/manifest.webmanifest` and web icons updated in-repo.
