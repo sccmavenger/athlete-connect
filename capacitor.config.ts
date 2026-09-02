@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.recruitinghub.app',
-  appName: 'Recruiting Hub',
+  appId: 'com.summithoops.recruit',
+  appName: 'Summit Hoops',
   webDir: 'dist/client',
   server: {
     androidScheme: 'https',
