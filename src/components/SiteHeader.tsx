@@ -70,7 +70,7 @@ export function SiteHeader() {
         <Link to="/" className="flex min-w-0 items-center gap-2">
           <img src={summitLogo.url} alt="Summit Hoops" className="h-8 w-auto shrink-0 sm:h-10" />
           <span className="truncate font-display text-base font-bold tracking-wide sm:text-xl">
-            RECRUITING HUB
+            SUMMIT HOOPS
           </span>
         </Link>
 
