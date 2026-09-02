@@ -1,7 +1,7 @@
 {
-  "name": "Recruiting Hub",
-  "short_name": "Recruiting Hub",
-  "description": "Midwest youth basketball recruiting database",
+  "name": "Summit Hoops",
+  "short_name": "Summit Hoops",
+  "description": "Midwest youth basketball recruiting platform for athletes, families, and college coaches",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NotificationsBell } from "@/components/NotificationsBell";
 
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
 
 export function SiteHeader() {
@@ -70,7 +70,7 @@ export function SiteHeader() {
         <Link to="/" className="flex min-w-0 items-center gap-2">
           <img src={summitLogo.url} alt="Summit Hoops" className="h-8 w-auto shrink-0 sm:h-10" />
           <span className="truncate font-display text-base font-bold tracking-wide sm:text-xl">
-            RECRUITING HUB
+            SUMMIT HOOPS
           </span>
         </Link>
 
@@ -103,7 +103,13 @@ export function SiteHeader() {
                     <Link to={l.to}>{l.label}</Link>
                   </DropdownMenuItem>
                 ))}
-                {secondary.length > 0 && <DropdownMenuSeparator />}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/account">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Account
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out

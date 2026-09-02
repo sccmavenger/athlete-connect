@@ -290,7 +290,7 @@ function ProfileEdit() {
 
   async function uploadPhoto(file: File) {
     if (!user) return;
-    if (file.size > MAX_SOURCE_BYTES) return toast.error("That photo is too large (40 MB max)");
+    if (file.size > MAX_SOURCE_BYTES) return toast.error("That photo is too large (25 MB max)");
     setUploading(true);
     try {
       // Resized + converted to JPEG in the browser so big phone photos and HEIC
@@ -321,7 +321,7 @@ function ProfileEdit() {
     try {
       for (const file of chosen) {
         if (file.size > MAX_SOURCE_BYTES) {
-          toast.error(`${file.name} is too large (40 MB max)`);
+          toast.error(`${file.name} is too large (25 MB max)`);
           continue;
         }
         try {

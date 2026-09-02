@@ -66,3 +66,9 @@ Each day we check this file and answer:
 ## Target schools (shipped)
 - Athletes pick up to 10 target colleges (searchable program list, DB-enforced cap).
 - Approved coaches whose program matches get an in-app notification when an athlete lists their school, and when a profile is first published.
+
+## Apple App Store resubmission (round 1 rejection fixes — shipped)
+- 2.3.8 Metadata: real Summit Hoops app icon set generated (all iOS sizes + 1024 marketing) and web/PWA icons refreshed.
+- 2.1(a) Crash: profile photo upload now decodes with a downscaled `createImageBitmap` and a pixel/byte ceiling (25MB source cap) so large iPad photos no longer kill the webview.
+- 5.1.1(v) Account deletion: `/account` route with server-side cascade delete of profile, media, messages, bookmarks, notifications and the auth user.
+- 2.1(a) Information Needed: both Apple review accounts seeded with fictional demo content (published Jordan Blake profile, highlights, schedule, 5 target schools, two-way coach thread, notifications, profile views, coach pipeline).
