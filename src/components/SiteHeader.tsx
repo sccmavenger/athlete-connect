@@ -14,7 +14,7 @@ import {
 import { NotificationsBell } from "@/components/NotificationsBell";
 
 import { LogOut, Settings, UserRound } from "lucide-react";
-import summitLogo from "@/assets/summit-hoops-logo.png.asset.json";
+import hubLogo from "@/assets/hub-wordmark-white.png.asset.json";
 
 export function SiteHeader() {
   const { user, roles, loading } = useAuth();
