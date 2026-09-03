@@ -16,7 +16,7 @@ import { AlertTriangle, ShieldCheck, Trash2 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
     meta: [
-      { title: "Account settings — Summit Hoops" },
+      { title: "Account settings — The HUB" },
       {
         name: "description",
         content: "Manage your HUB account, review your data, or permanently delete your account.",
