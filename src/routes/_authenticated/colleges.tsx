@@ -34,7 +34,7 @@ import { GraduationCap, Plus, Trash2, Info, ExternalLink } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/colleges")({
   head: () => ({
     meta: [
-      { title: "My college list — Recruiting Hub" },
+      { title: "My college list — The HUB" },
       { name: "description", content: "Track the college programs you're targeting and where each stands." },
       { name: "robots", content: "noindex" },
     ],

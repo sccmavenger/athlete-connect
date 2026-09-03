@@ -17,7 +17,7 @@ import { CalendarDays, MapPin, Download } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/coaches/games")({
   head: () => ({
     meta: [
-      { title: "Games near me — Recruiting Hub" },
+      { title: "Games near me — The HUB" },
       { name: "description", content: "Find games this weekend near you and see which recruits are playing." },
       { name: "robots", content: "noindex" },
     ],

@@ -69,7 +69,7 @@ export const Route = createFileRoute("/_authenticated/coaches/")({
 
   head: () => ({
     meta: [
-      { title: "Athlete search — Recruiting Hub" },
+      { title: "Athlete search — The HUB" },
       { name: "robots", content: "noindex" },
     ],
   }),

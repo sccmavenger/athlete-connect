@@ -34,7 +34,7 @@ import { Trash2, Plus, Upload, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/profile/edit")({
   head: () => ({
-    meta: [{ title: "Edit profile — Recruiting Hub" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Edit profile — The HUB" }, { name: "robots", content: "noindex" }],
   }),
   component: ProfileEdit,
 });

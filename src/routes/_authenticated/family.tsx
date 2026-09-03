@@ -19,7 +19,7 @@ import { Users, Copy, Trash2, UserPlus } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/family")({
   head: () => ({
     meta: [
-      { title: "Parents & guardians — Recruiting Hub" },
+      { title: "Parents & guardians — The HUB" },
       {
         name: "description",
         content: "Link a parent or guardian so they can help manage an athlete profile and see coach interest.",

@@ -20,7 +20,7 @@ import { BarChart3, Eye, Bookmark, Users } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/insights")({
   head: () => ({
     meta: [
-      { title: "Profile insights — Recruiting Hub" },
+      { title: "Profile insights — The HUB" },
       { name: "description", content: "See who is viewing your recruiting profile and how strong it looks." },
       { name: "robots", content: "noindex" },
     ],

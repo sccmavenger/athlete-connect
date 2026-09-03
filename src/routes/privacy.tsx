@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const TITLE = "Privacy Policy — Recruiting Hub";
+const TITLE = "Privacy Policy — The HUB";
 const DESC =
-  "How Recruiting Hub collects, uses, and protects athlete, parent, and coach information on the Summit Hoops recruiting platform.";
+  "How The HUB collects, uses, and protects athlete, parent, and coach information on the Summit Hoops recruiting platform.";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -29,7 +29,7 @@ function PrivacyPage() {
         <h1 className="font-display text-4xl font-bold">Privacy Policy</h1>
         <p className="mt-2 text-sm text-muted-foreground">Last updated: July 29, 2026</p>
         <p className="mt-4 text-sm text-muted-foreground">
-          This page is maintained by Summit Hoops to explain how Recruiting Hub handles personal
+          This page is maintained by Summit Hoops to explain how The HUB handles personal
           information. It describes current practices in the app and is not an independent
           certification or audit.
         </p>

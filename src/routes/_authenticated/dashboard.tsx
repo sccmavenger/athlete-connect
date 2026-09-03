@@ -22,7 +22,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
-    meta: [{ title: "Dashboard — Recruiting Hub" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Dashboard — The HUB" }, { name: "robots", content: "noindex" }],
   }),
   component: Dashboard,
 });

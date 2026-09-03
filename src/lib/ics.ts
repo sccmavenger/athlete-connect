@@ -35,7 +35,7 @@ export function buildIcs(events: IcsEvent[], calendarName = "Summit Hoops games"
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Summit Hoops//Recruiting Hub//EN",
+    "PRODID:-//Summit Hoops//The HUB//EN",
     "CALSCALE:GREGORIAN",
     `X-WR-CALNAME:${esc(calendarName)}`,
   ];

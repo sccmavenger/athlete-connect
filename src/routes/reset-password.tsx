@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Reset password — Recruiting Hub" },
+      { title: "Reset password — The HUB" },
       { name: "robots", content: "noindex" },
     ],
   }),

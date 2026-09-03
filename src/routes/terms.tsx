@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const TITLE = "Terms of Service — Recruiting Hub";
+const TITLE = "Terms of Service — The HUB";
 const DESC =
-  "The terms that govern athlete, parent, and coach use of the Recruiting Hub recruiting platform for Summit Hoops.";
+  "The terms that govern athlete, parent, and coach use of The HUB recruiting platform for Summit Hoops.";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -33,7 +33,7 @@ function TermsPage() {
           <section>
             <h2 className="font-display text-xl font-bold">1. About these terms</h2>
             <p className="mt-2">
-              Recruiting Hub ("the Service") is a regional recruiting database operated by Summit
+              The HUB ("the Service") is a regional recruiting database operated by Summit
               Hoops. By creating an account or using the Service you agree to these terms. If you do
               not agree, do not use the Service.
             </p>
@@ -73,7 +73,7 @@ function TermsPage() {
             <h2 className="font-display text-xl font-bold">5. Coach access and recruiting rules</h2>
             <p className="mt-2">
               Approved coaches are responsible for complying with NCAA, NAIA, NJCAA, and state
-              association contact rules. Recruiting Hub does not verify eligibility or monitor
+              association contact rules. The HUB does not verify eligibility or monitor
               recruiting contact, and approval of a coach account is not an endorsement.
             </p>
           </section>

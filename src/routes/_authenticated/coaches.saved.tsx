@@ -25,7 +25,7 @@ import { Bookmark, X, Download, Save } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/coaches/saved")({
   head: () => ({
     meta: [
-      { title: "My pipeline — Recruiting Hub" },
+      { title: "My pipeline — The HUB" },
       { name: "description", content: "Your private recruiting shortlist with stages, tags and notes." },
       { name: "robots", content: "noindex" },
     ],

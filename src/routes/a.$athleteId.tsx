@@ -39,7 +39,7 @@ export const Route = createFileRoute("/a/$athleteId")({
   head: ({ loaderData }) => {
     const a = loaderData?.athlete;
     const name = a?.full_name ?? "Athlete profile";
-    const title = a ? `${name} — Summit Hoops Recruiting Profile` : "Athlete profile — Summit Hoops";
+    const title = a ? `${name} — The HUB Profile` : "Athlete profile — The HUB";
     const description = a
       ? `${name}${a.position ? `, ${a.position}` : ""}${a.grad_year ? `, Class of ${a.grad_year}` : ""}${
           a.high_school ? ` at ${a.high_school}` : ""

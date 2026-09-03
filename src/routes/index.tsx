@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import heroImg from "@/assets/hero-basketball.jpg";
 import { Trophy, Video, GraduationCap, Users, MapPin, Calendar } from "lucide-react";
 
-const TITLE = "Recruiting Hub — Midwest youth basketball recruiting";
+const TITLE = "The HUB — Midwest youth basketball recruiting";
 const DESC =
   "Build a recruiting profile with measurements, academics, highlights, and your Summit Hoops schedule so college coaches can find you.";
 
@@ -47,7 +47,7 @@ function Landing() {
               Get seen by the coaches who matter.
             </h1>
             <p className="mt-5 max-w-xl text-base text-foreground/85 sm:mt-6 sm:text-lg">
-              Recruiting Hub is a regional recruiting database built for Summit Hoops athletes.
+              The HUB is a regional recruiting database built for Summit Hoops athletes.
               Build your profile, share your highlights, and let college coaches find you.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -116,7 +116,7 @@ function Landing() {
 
       <footer className="border-t bg-background">
         <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row">
-          <span>&copy; {new Date().getFullYear()} Recruiting Hub</span>
+          <span>&copy; {new Date().getFullYear()} The HUB — powered by Summit Hoops</span>
           <nav className="flex items-center gap-4">
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
