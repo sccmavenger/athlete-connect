@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 const TITLE = "Support — The HUB";
 const DESC =
-  "Get help with your The HUB account, athlete profile, coach access, or privacy requests. Contact the Summit Hoops support team.";
+  "Get help with your HUB account, athlete profile, coach access, or privacy requests. Contact the Summit Hoops support team.";
 
 export const Route = createFileRoute("/support")({
   head: () => ({

@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 const TITLE = "Terms of Service — The HUB";
 const DESC =
-  "The terms that govern athlete, parent, and coach use of the The HUB recruiting platform for Summit Hoops.";
+  "The terms that govern athlete, parent, and coach use of The HUB recruiting platform for Summit Hoops.";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({

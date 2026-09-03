@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/account")({
       { title: "Account settings — Summit Hoops" },
       {
         name: "description",
-        content: "Manage your The HUB account, review your data, or permanently delete your account.",
+        content: "Manage your HUB account, review your data, or permanently delete your account.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -128,7 +128,7 @@ function AccountPage() {
           <div className="min-w-0 flex-1">
             <h2 className="font-display text-lg font-bold tracking-wide">DELETE ACCOUNT</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              This permanently deletes your The HUB account and cannot be undone. Removed
+              This permanently deletes your HUB account and cannot be undone. Removed
               immediately:
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted-foreground">

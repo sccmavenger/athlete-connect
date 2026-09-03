@@ -20,7 +20,7 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — The HUB" },
-      { name: "description", content: "Sign in or create your The HUB account." },
+      { name: "description", content: "Sign in or create your HUB account." },
       { name: "robots", content: "noindex" },
     ],
   }),
