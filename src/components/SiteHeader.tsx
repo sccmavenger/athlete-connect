@@ -68,10 +68,11 @@ export function SiteHeader() {
     >
       <div className="container mx-auto grid h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-16">
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <img src={summitLogo.url} alt="Summit Hoops" className="h-8 w-auto shrink-0 sm:h-10" />
-          <span className="truncate font-display text-base font-bold tracking-wide sm:text-xl">
-            SUMMIT HOOPS
-          </span>
+          <img
+            src={hubLogo.url}
+            alt="The HUB — powered by Summit Hoops"
+            className="h-7 w-auto shrink-0 sm:h-9"
+          />
         </Link>
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
