@@ -11,7 +11,7 @@ import { Users, ShieldCheck, MessageSquare, IdCard } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({
     meta: [
-      { title: "Admin console — Summit Hoops Recruiting Hub" },
+      { title: "Admin console — The HUB" },
       { name: "description", content: "Manage users, roles and coach access for the recruiting hub." },
       { name: "robots", content: "noindex" },
     ],

@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const TITLE = "Support — Summit Hoops Recruiting";
+const TITLE = "Support — The HUB";
 const DESC =
-  "Get help with your Summit Hoops account, athlete profile, coach access, or privacy requests. Contact the Summit Hoops support team.";
+  "Get help with your The HUB account, athlete profile, coach access, or privacy requests. Contact the Summit Hoops support team.";
 
 export const Route = createFileRoute("/support")({
   head: () => ({

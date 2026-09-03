@@ -14,7 +14,7 @@ import { MessageSquare } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/coaches/messages")({
   head: () => ({
     meta: [
-      { title: "Coach inbox — Recruiting Hub" },
+      { title: "Coach inbox — The HUB" },
       { name: "description", content: "Conversations with athletes and families in your recruiting pipeline." },
       { name: "robots", content: "noindex" },
     ],
