@@ -116,7 +116,7 @@ function Landing() {
 
       <footer className="border-t bg-background">
         <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row">
-          <span>&copy; {new Date().getFullYear()} The HUB</span>
+          <span>&copy; {new Date().getFullYear()} The HUB — powered by Summit Hoops</span>
           <nav className="flex items-center gap-4">
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
