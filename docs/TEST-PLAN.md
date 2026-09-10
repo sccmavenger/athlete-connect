@@ -65,3 +65,31 @@ rejected. Runs with the full suite.
   what failed, root cause, fix.
 - Failures are triaged immediately: fix the product bug (not the test) unless the
   test itself encodes a stale expectation.
+
+## Suite D — Admin & moderation (`e2e/admin-view.spec.ts`)
+- D1 admin signs in and opens the admin console
+- D2 admin approves a pending coach request
+- D3 admin finds a user and toggles a role
+- D4 admin reviews and resolves an open report
+- D5 admin hides a reported athlete profile
+- D6 a non-admin is denied the admin console
+
+## Suite M — iOS/mobile layout (`e2e/mobile-layout.spec.ts`, 390x844)
+Per route it checks: no horizontal scroll, no element past the right edge, tap targets >= 44px
+(checkboxes inside a `<label>` are exempt because the label carries the hit area), and no content
+permanently hidden behind the fixed bottom tab bar.
+- M1 public: `/`, `/auth`, `/support`, `/privacy`, `/terms`
+- M2 athlete: dashboard, profile editor, colleges, messages, insights, family, account, public profile
+- M3 coach: dashboard, search, saved, games, messages, account, athlete profile
+- M4 admin: console, users, coach requests, reports
+
+## Code-review checklist (run with the suites)
+- Every mutating server function calls `requireSupabaseAuth`; admin functions assert the admin role.
+- Async buttons have disabled/busy states and a success or error toast.
+- All primary buttons/links are at least 44px tall on mobile.
+- Account deletion still removes rows across all owned tables plus storage folders.
+
+## Commands
+- `bun run test:e2e:views` — athlete + coach suites
+- `bunx playwright test e2e/admin-view.spec.ts e2e/mobile-layout.spec.ts` — admin + mobile suites
+- `bun run test:e2e:cleanup` — remove throwaway data

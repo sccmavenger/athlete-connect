@@ -21,6 +21,9 @@ jobs:
       - run: bunx playwright install --with-deps chromium
       - name: Athlete + coach journeys
         run: bun run test:e2e:views
+
+      - name: Admin and mobile layout suites
+        run: bunx playwright test e2e/admin-view.spec.ts e2e/mobile-layout.spec.ts
       - name: Always clean up test data
         if: always()
         run: bun run test:e2e:cleanup
