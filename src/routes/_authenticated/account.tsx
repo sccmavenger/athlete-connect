@@ -47,13 +47,18 @@ function AccountPage() {
   const changeBlock = useServerFn(setBlock);
   const blocks = useQuery({ queryKey: ["my-blocks"], queryFn: () => loadBlocks() });
 
+  const [unblocking, setUnblocking] = useState<string | null>(null);
+
   async function unblock(userId: string) {
+    setUnblocking(userId);
     try {
       await changeBlock({ data: { targetUserId: userId, blocked: false } });
       await qc.invalidateQueries({ queryKey: ["my-blocks"] });
       toast.success("Unblocked");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "That didn't work");
+    } finally {
+      setUnblocking(null);
     }
   }
 
