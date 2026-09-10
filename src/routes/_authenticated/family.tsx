@@ -223,7 +223,7 @@ function Family() {
               placeholder="8-character code"
             />
           </div>
-          <Button onClick={useCode} disabled={busy || code.length < 6}>
+          <Button className="h-11" onClick={useCode} disabled={busy || code.length < 6}>
             <UserPlus className="mr-1.5 h-4 w-4" />
             Link my account
           </Button>

@@ -199,7 +199,7 @@ function AthleteView() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
       {user && (
-        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
+        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 h-11">
           <Link to="/dashboard">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to dashboard
@@ -271,13 +271,13 @@ function AthleteView() {
               reportedUserId={a.user_id}
               what="this profile"
               trigger={
-                <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+                <Button variant="ghost" size="sm" className="h-11 flex-1 text-muted-foreground sm:flex-none">
                   <Flag className="mr-1 h-4 w-4" /> Report
                 </Button>
               }
             />
           ) : !user ? (
-            <Button asChild variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+            <Button asChild variant="ghost" size="sm" className="h-11 flex-1 text-muted-foreground sm:flex-none">
               <Link to="/support">
                 <Flag className="mr-1 h-4 w-4" /> Report
               </Link>
