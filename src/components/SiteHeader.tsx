@@ -63,7 +63,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className="border-b bg-card text-card-foreground"
+      className="sticky top-0 z-50 border-b bg-card/95 text-card-foreground backdrop-blur"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="container mx-auto grid h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-16">
