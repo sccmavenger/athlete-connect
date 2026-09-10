@@ -106,19 +106,19 @@ async function expectCleanMobileLayout(page: Page, route: string) {
   await page.goto(route, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(1200);
   const audit = await auditViewport(page);
-  expect(
+  expect.soft(
     audit.documentOverflow,
     `${route} scrolls sideways by ${audit.documentOverflow}px; offenders: ${JSON.stringify(audit.offenders)}`,
   ).toBeLessThanOrEqual(1);
-  expect(
+  expect.soft(
     audit.offenders,
     `${route} has elements past the right edge: ${JSON.stringify(audit.offenders)}`,
   ).toEqual([]);
-  expect(
+  expect.soft(
     audit.smallTapTargets,
     `${route} has tap targets under 44px: ${JSON.stringify(audit.smallTapTargets)}`,
   ).toEqual([]);
-  expect(audit.hiddenBehindTabBar, `${route}: ${audit.hiddenBehindTabBar.join(", ")}`).toEqual([]);
+  expect.soft(audit.hiddenBehindTabBar, `${route}: ${audit.hiddenBehindTabBar.join(", ")}`).toEqual([]);
 }
 
 test("M1 public pages fit an iPhone screen", async ({ page }) => {
