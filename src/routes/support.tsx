@@ -53,7 +53,7 @@ function SupportPage() {
           <p className="mt-2 text-sm text-foreground/90">
             Email:{" "}
             <a
-              className="font-medium text-primary underline"
+              className="inline-flex min-h-11 items-center font-medium text-primary underline"
               href="mailto:support@gforcedigital.net"
             >
               support@gforcedigital.net
