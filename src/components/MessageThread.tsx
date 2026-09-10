@@ -140,10 +140,71 @@ export function MessageThread({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b px-4 py-3">
-        <h2 className="font-display text-lg font-bold">{title}</h2>
-        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+      <div className="flex items-start justify-between gap-2 border-b px-4 py-3">
+        <div className="min-w-0">
+          <h2 className="truncate font-display text-lg font-bold">{title}</h2>
+          {subtitle && <p className="truncate text-xs text-muted-foreground">{subtitle}</p>}
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-11 w-11 shrink-0" aria-label="Safety options">
+              <MoreVertical className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <ReportDialog
+              targetType="user"
+              targetId={otherUserId ?? coachUserId}
+              athleteId={athleteId}
+              reportedUserId={otherUserId}
+              what="this conversation"
+              trigger={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <Flag className="mr-2 h-4 w-4" />
+                  Report conversation
+                </DropdownMenuItem>
+              }
+            />
+            {iBlockedThem ? (
+              <DropdownMenuItem onSelect={() => toggleBlock(false)}>
+                <ShieldOff className="mr-2 h-4 w-4" />
+                Unblock
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                className="text-destructive"
+                disabled={!otherUserId}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setConfirmBlock(true);
+                }}
+              >
+                <Ban className="mr-2 h-4 w-4" />
+                Block this person
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      <AlertDialog open={confirmBlock} onOpenChange={setConfirmBlock}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Block {title}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You won't see their messages and they can't message you. You can undo this any time
+              from this conversation or your Account page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="h-11">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="h-11" onClick={() => toggleBlock(true)}>
+              Block
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       <div className="max-h-[50vh] min-h-40 flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {q.isPending ? (
