@@ -38,3 +38,21 @@ report/block→unblock all behave as designed.
 
 Cleanup: verified — every throwaway account deleted, 0 remaining, no residual
 reports, blocks or athlete rows.
+
+## Run 2 — full audit (manual)
+
+Suites: athlete (A1-A10), coach (C1-C8), admin (D1-D6), mobile/iOS layout (M1-M4).
+Result: all suites passing after fixes below.
+
+Found and fixed:
+- Admin report queue buttons had no in-flight state — added per-report busy state and disabled buttons.
+- Account "Unblock" had no busy state — now disables and shows "Unblocking…".
+- Coach bookmark toggle on the public profile had no busy state or confirmation — added both.
+- Tap targets under 44px (Apple minimum) enlarged: header logo link and guest "Sign in",
+  landing footer Terms/Privacy, support/privacy/terms inline links, auth tabs and submit buttons,
+  admin user role toggles, family consent checkbox / gender toggle / create + link buttons,
+  athlete profile Back, Edit, Report and "Add to calendar" buttons.
+- Test helper `seedReport` used an invalid `target_type` ("profile") — corrected to "athlete_profile".
+- Admin coach-request row locator in the test was ambiguous — now scopes to the containing card.
+
+Cleanup: global teardown removed all throwaway `e2e-*@example.com` accounts; no seeded data left behind.

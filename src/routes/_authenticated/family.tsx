@@ -223,7 +223,7 @@ function Family() {
               placeholder="8-character code"
             />
           </div>
-          <Button onClick={useCode} disabled={busy || code.length < 6}>
+          <Button className="h-11" onClick={useCode} disabled={busy || code.length < 6}>
             <UserPlus className="mr-1.5 h-4 w-4" />
             Link my account
           </Button>
@@ -279,6 +279,7 @@ function Family() {
                   key={value}
                   type="button"
                   size="sm"
+                  className="h-11 flex-1"
                   variant={child.sportGender === value ? "default" : "outline"}
                   onClick={() => setChild({ ...child, sportGender: value })}
                 >
@@ -308,7 +309,7 @@ function Family() {
         <label className="mt-3 flex items-start gap-2 text-sm">
           <input
             type="checkbox"
-            className="mt-1"
+            className="mt-1 h-5 w-5 shrink-0"
             checked={child.consent}
             onChange={(e) => setChild({ ...child, consent: e.target.checked })}
           />
@@ -317,7 +318,7 @@ function Family() {
           </span>
         </label>
 
-        <Button className="mt-4" onClick={createChild} disabled={busy}>
+        <Button className="mt-4 h-11" onClick={createChild} disabled={busy}>
           <UserPlus className="mr-1.5 h-4 w-4" />
           Create profile
         </Button>
@@ -410,7 +411,7 @@ function Family() {
             title="No athlete profile on this account"
             description="Parents don't need their own profile — link to your child's with an invite code above. If you're the athlete, build your profile first."
             action={
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="h-11">
                 <Link to="/profile/edit">Build a profile</Link>
               </Button>
             }

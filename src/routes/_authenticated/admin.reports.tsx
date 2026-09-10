@@ -44,6 +44,7 @@ function AdminReports() {
   const resolve = useServerFn(resolveReport);
   const unpublish = useServerFn(unpublishReportedAthlete);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const q = useQuery({
     enabled: isAdmin,
@@ -52,21 +53,27 @@ function AdminReports() {
   });
 
   async function act(id: string, status: ContentReportRow["status"]) {
+    setBusyId(id);
     try {
       await resolve({ data: { id, status, note: notes[id] } });
       await qc.invalidateQueries({ queryKey: ["admin-reports"] });
       toast.success("Report updated");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "That didn't work");
+    } finally {
+      setBusyId(null);
     }
   }
 
-  async function hideProfile(athleteId: string) {
+  async function hideProfile(reportId: string, athleteId: string) {
+    setBusyId(reportId);
     try {
       await unpublish({ data: { athleteId } });
       toast.success("Profile hidden from the public directory");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "That didn't work");
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -86,7 +93,7 @@ function AdminReports() {
   const open = reports.filter((r) => r.status === "open").length;
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 pb-28 sm:py-10">
+    <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
       <h1 className="font-display text-3xl font-bold sm:text-4xl">Reported content</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {open} open {open === 1 ? "report" : "reports"} • reports should be reviewed within 24 hours.
@@ -145,13 +152,13 @@ function AdminReports() {
               />
 
               <div className="mt-3 flex flex-wrap gap-2">
-                <Button size="sm" className="h-11" onClick={() => act(r.id, "actioned")}>
+                <Button size="sm" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "actioned")}>
                   Action taken
                 </Button>
-                <Button size="sm" variant="secondary" className="h-11" onClick={() => act(r.id, "reviewed")}>
+                <Button size="sm" variant="secondary" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "reviewed")}>
                   Mark reviewed
                 </Button>
-                <Button size="sm" variant="ghost" className="h-11" onClick={() => act(r.id, "dismissed")}>
+                <Button size="sm" variant="ghost" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "dismissed")}>
                   Dismiss
                 </Button>
                 {r.athlete_id && (
@@ -159,7 +166,8 @@ function AdminReports() {
                     size="sm"
                     variant="destructive"
                     className="h-11"
-                    onClick={() => hideProfile(r.athlete_id!)}
+                    disabled={busyId === r.id}
+                    onClick={() => hideProfile(r.id, r.athlete_id!)}
                   >
                     <EyeOff className="mr-1.5 h-4 w-4" />
                     Hide profile

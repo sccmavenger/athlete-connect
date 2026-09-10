@@ -53,7 +53,7 @@ function SupportPage() {
           <p className="mt-2 text-sm text-foreground/90">
             Email:{" "}
             <a
-              className="font-medium text-primary underline"
+              className="inline-flex min-h-11 items-center font-medium text-primary underline"
               href="mailto:support@gforcedigital.net"
             >
               support@gforcedigital.net
@@ -79,11 +79,11 @@ function SupportPage() {
 
         <p className="mt-10 text-sm text-muted-foreground">
           See also our{" "}
-          <Link className="text-primary underline" to="/privacy">
+          <Link className="inline-flex min-h-11 items-center text-primary underline" to="/privacy">
             Privacy Policy
           </Link>{" "}
           and{" "}
-          <Link className="text-primary underline" to="/terms">
+          <Link className="inline-flex min-h-11 items-center text-primary underline" to="/terms">
             Terms of Service
           </Link>
           .

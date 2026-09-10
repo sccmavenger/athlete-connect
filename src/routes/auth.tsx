@@ -162,9 +162,9 @@ function AuthPage() {
 
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signup">Sign up</TabsTrigger>
-            <TabsTrigger value="signin">Sign in</TabsTrigger>
+          <TabsList className="grid h-12 w-full grid-cols-2">
+            <TabsTrigger value="signup" className="min-h-11">Sign up</TabsTrigger>
+            <TabsTrigger value="signin" className="min-h-11">Sign in</TabsTrigger>
           </TabsList>
 
           <TabsContent value="signup">
@@ -272,7 +272,7 @@ function AuthPage() {
                 </>
               )}
 
-              <Button type="submit" disabled={loading || under13} className="w-full">
+              <Button type="submit" disabled={loading || under13} className="h-11 w-full">
                 {loading ? "Creating account..." : "Create account"}
               </Button>
             </form>
@@ -288,7 +288,7 @@ function AuthPage() {
                 <Label htmlFor="si-pass">Password</Label>
                 <Input id="si-pass" type="password" value={siPass} onChange={(e) => setSiPass(e.target.value)} required />
               </div>
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" disabled={loading} className="h-11 w-full">
                 {loading ? "Signing in..." : "Sign in"}
               </Button>
               <div className="text-center text-sm">

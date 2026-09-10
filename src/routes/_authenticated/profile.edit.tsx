@@ -935,7 +935,7 @@ function ProfileEdit() {
                     type="button"
                     variant="secondary"
                     size="icon"
-                    className="absolute right-1 top-1 h-8 w-8"
+                    className="absolute right-1 top-1 h-10 w-10"
                     onClick={() => setPhotos((all) => all.filter((_, idx) => idx !== i))}
                     aria-label="Remove photo"
                   >

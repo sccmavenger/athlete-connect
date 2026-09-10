@@ -248,7 +248,7 @@ function SavedList() {
                     {stageLabel(row.stage)}
                   </span>
                   <Select value={row.stage ?? "watching"} onValueChange={(v) => setStage(row.id, v)}>
-                    <SelectTrigger className="h-8 flex-1 text-xs" aria-label={`Stage for ${a.full_name}`}>
+                    <SelectTrigger className="h-10 flex-1 text-xs" aria-label={`Stage for ${a.full_name}`}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

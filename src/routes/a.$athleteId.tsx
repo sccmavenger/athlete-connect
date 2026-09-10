@@ -134,19 +134,28 @@ function AthleteView() {
     },
   });
 
+  const [savingBookmark, setSavingBookmark] = useState(false);
+
   async function toggleSave() {
     if (!user) return;
-    if (savedQ.data) {
-      const { error } = await supabase.from("coach_saved_athletes").delete().eq("id", savedQ.data.id);
-      if (error) return toast.error(error.message);
-    } else {
-      const { error } = await supabase
-        .from("coach_saved_athletes")
-        .insert({ coach_user_id: user.id, athlete_id: athleteId });
-      if (error) return toast.error(error.message);
+    setSavingBookmark(true);
+    try {
+      if (savedQ.data) {
+        const { error } = await supabase.from("coach_saved_athletes").delete().eq("id", savedQ.data.id);
+        if (error) return toast.error(error.message);
+        toast.success("Removed from your shortlist");
+      } else {
+        const { error } = await supabase
+          .from("coach_saved_athletes")
+          .insert({ coach_user_id: user.id, athlete_id: athleteId });
+        if (error) return toast.error(error.message);
+        toast.success("Saved to your shortlist");
+      }
+      qc.invalidateQueries({ queryKey: ["saved-flag"] });
+      qc.invalidateQueries({ queryKey: ["saved-athletes"] });
+    } finally {
+      setSavingBookmark(false);
     }
-    qc.invalidateQueries({ queryKey: ["saved-flag"] });
-    qc.invalidateQueries({ queryKey: ["saved-athletes"] });
   }
 
   if (q.isLoading) return <ProfileSkeleton />;
@@ -190,7 +199,7 @@ function AthleteView() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
       {user && (
-        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
+        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 h-11">
           <Link to="/dashboard">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to dashboard
@@ -230,6 +239,7 @@ function AthleteView() {
             <Button
               variant={savedQ.data ? "default" : "outline"}
               className="flex-1 sm:flex-none"
+              disabled={savingBookmark}
               onClick={toggleSave}
             >
               {savedQ.data ? (
@@ -249,7 +259,7 @@ function AthleteView() {
             </Button>
           )}
           {user?.id === a.user_id && (
-            <Button asChild variant="outline" className="flex-1 sm:flex-none">
+            <Button asChild variant="outline" className="h-11 flex-1 sm:flex-none">
               <Link to="/profile/edit">Edit</Link>
             </Button>
           )}
@@ -261,13 +271,13 @@ function AthleteView() {
               reportedUserId={a.user_id}
               what="this profile"
               trigger={
-                <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+                <Button variant="ghost" size="sm" className="h-11 flex-1 text-muted-foreground sm:flex-none">
                   <Flag className="mr-1 h-4 w-4" /> Report
                 </Button>
               }
             />
           ) : !user ? (
-            <Button asChild variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+            <Button asChild variant="ghost" size="sm" className="h-11 flex-1 text-muted-foreground sm:flex-none">
               <Link to="/support">
                 <Flag className="mr-1 h-4 w-4" /> Report
               </Link>
@@ -446,6 +456,7 @@ function AthleteView() {
             <Button
               size="sm"
               variant="outline"
+              className="h-11"
               onClick={() => {
                 const events: IcsEvent[] = (q.data?.events ?? []).map((ev: any) => ({
                   uid: ev.id,
