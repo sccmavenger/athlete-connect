@@ -239,6 +239,7 @@ function AthleteView() {
             <Button
               variant={savedQ.data ? "default" : "outline"}
               className="flex-1 sm:flex-none"
+              disabled={savingBookmark}
               onClick={toggleSave}
             >
               {savedQ.data ? (
