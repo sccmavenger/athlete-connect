@@ -56,7 +56,36 @@ export function MessageThread({
   const qc = useQueryClient();
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [confirmBlock, setConfirmBlock] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const loadSafety = useServerFn(getThreadSafety);
+  const changeBlock = useServerFn(setBlock);
+
+  const safety = useQuery({
+    queryKey: ["thread-safety", athleteId, coachUserId],
+    queryFn: () => loadSafety({ data: { athleteId, coachUserId } }),
+  });
+
+  const otherUserId = safety.data?.otherUserId ?? null;
+  const iBlockedThem = !!safety.data?.iBlockedThem;
+  const theyBlockedMe = !!safety.data?.theyBlockedMe;
+  const conversationBlocked = iBlockedThem || theyBlockedMe;
+
+  async function toggleBlock(blocked: boolean) {
+    if (!otherUserId) return;
+    try {
+      await changeBlock({ data: { targetUserId: otherUserId, blocked } });
+      await qc.invalidateQueries({ queryKey: ["thread-safety", athleteId, coachUserId] });
+      toast.success(
+        blocked
+          ? "Blocked. They can no longer message you, and you won't see their messages."
+          : "Unblocked. You can message each other again.",
+      );
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That didn't work. Please try again.");
+    }
+  }
 
   const q = useQuery({
     queryKey: ["thread", athleteId, coachUserId],
