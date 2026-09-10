@@ -93,12 +93,9 @@ test("C5 coach finds the athlete's game on the calendar", async ({ page }) => {
 
 test("C6 coach messages the athlete and reads the reply", async ({ page }) => {
   await signIn(page, coach);
-  await page.goto("/coaches/messages");
-  await expect(async () => {
-    await page.reload();
-    await expect(page.getByText(athlete.name).first()).toBeVisible({ timeout: 5000 });
-  }).toPass({ timeout: 60_000 });
-  await page.getByText(athlete.name).first().click();
+  // Coaches start conversations from the athlete profile.
+  await page.goto(`/a/${athleteId}`);
+  await page.getByRole("button", { name: /^Message$/ }).first().click();
   await page.getByPlaceholder(/Message this athlete/i).fill("We'd like to see you play live.");
   await page.getByRole("button", { name: /^Send$/ }).click();
   await expect(page.getByText("see you play live").first()).toBeVisible({ timeout: 20_000 });
