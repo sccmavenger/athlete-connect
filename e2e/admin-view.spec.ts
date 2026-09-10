@@ -27,6 +27,13 @@ let athlete: TestUser;
 let athleteId: string;
 let reportId: string;
 
+/** The card that contains a given email (cards are the outer `p-4` container). */
+function cardFor(page: import("@playwright/test").Page, email: string) {
+  return page
+    .getByText(email, { exact: true })
+    .locator("xpath=ancestor::div[contains(@class,'p-4')][1]");
+}
+
 test.describe.configure({ mode: "serial" });
 
 test.beforeAll(async () => {
@@ -60,7 +67,7 @@ test("D2 admin approves a pending coach request", async ({ page }) => {
   await signIn(page, adminUser);
   await page.goto("/admin/coach-requests");
   await expect(page.getByRole("heading", { name: "Coach requests" })).toBeVisible();
-  const row = page.locator("div").filter({ hasText: coach.email }).last();
+  const row = cardFor(page, coach.email);
   await expect(row).toBeVisible();
   await row.getByRole("button", { name: "Approve" }).click();
 
@@ -84,7 +91,7 @@ test("D3 admin finds a user and toggles a role", async ({ page }) => {
   await expect(page.getByText(athlete.email, { exact: false }).first()).toBeVisible();
 
   const admin = adminClient();
-  const row = page.locator("div").filter({ hasText: athlete.email }).last();
+  const row = cardFor(page, athlete.email);
   await row.getByRole("button", { name: "parent", exact: true }).click();
   await expect(async () => {
     const { data } = await admin.from("user_roles").select("role").eq("user_id", athlete.id);

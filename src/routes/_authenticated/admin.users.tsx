@@ -176,7 +176,7 @@ function AdminUsers() {
                           type="button"
                           disabled={busy === row.id}
                           onClick={() => toggleRole(row, role)}
-                          className="disabled:opacity-50"
+                          className="flex min-h-11 items-center disabled:opacity-50"
                         >
                           <Badge variant={on ? "default" : "outline"}>{role}</Badge>
                         </button>
