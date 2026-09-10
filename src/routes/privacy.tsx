@@ -127,7 +127,7 @@ function PrivacyPage() {
             <p className="mt-2">
               For privacy questions or deletion requests, reach out through the Summit Hoops contact
               channel used for your account. See also our{" "}
-              <Link to="/terms" className="text-primary underline underline-offset-4">
+              <Link to="/terms" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">
                 Terms of Service
               </Link>
               .

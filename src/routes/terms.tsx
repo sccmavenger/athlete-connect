@@ -107,7 +107,7 @@ function TermsPage() {
             <p className="mt-2">
               Questions about these terms? Reach out through the Summit Hoops contact channel used
               for your account. See also our{" "}
-              <Link to="/privacy" className="text-primary underline underline-offset-4">
+              <Link to="/privacy" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">
                 Privacy Policy
               </Link>
               .
