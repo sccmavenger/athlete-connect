@@ -86,7 +86,7 @@ function AdminReports() {
   const open = reports.filter((r) => r.status === "open").length;
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 pb-28 sm:py-10">
+    <div className="container mx-auto max-w-4xl px-4 py-8 sm:py-10">
       <h1 className="font-display text-3xl font-bold sm:text-4xl">Reported content</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {open} open {open === 1 ? "report" : "reports"} • reports should be reviewed within 24 hours.

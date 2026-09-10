@@ -78,8 +78,8 @@ function AccountPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-6 pb-28">
-      <h1 className="font-display text-2xl font-bold tracking-wide">ACCOUNT</h1>
+    <div className="container mx-auto max-w-2xl px-4 py-6">
+      <h1 className="font-display text-3xl font-bold tracking-wide sm:text-4xl">ACCOUNT</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Your sign-in details and permanent account controls.
       </p>
@@ -146,7 +146,7 @@ function AccountPage() {
                 {(blocks.data ?? []).map((b) => (
                   <li key={b.user_id} className="flex items-center justify-between gap-2">
                     <span className="truncate text-sm">{b.name}</span>
-                    <Button size="sm" variant="secondary" className="h-9" onClick={() => unblock(b.user_id)}>
+                    <Button size="sm" variant="secondary" className="h-11" onClick={() => unblock(b.user_id)}>
                       Unblock
                     </Button>
                   </li>
