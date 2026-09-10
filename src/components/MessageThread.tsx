@@ -290,6 +290,7 @@ export function MessageThread({
           </Button>
         </div>
       </div>
+      )}
     </div>
   );
 }
