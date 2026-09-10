@@ -44,6 +44,7 @@ function AdminReports() {
   const resolve = useServerFn(resolveReport);
   const unpublish = useServerFn(unpublishReportedAthlete);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const q = useQuery({
     enabled: isAdmin,
@@ -52,21 +53,27 @@ function AdminReports() {
   });
 
   async function act(id: string, status: ContentReportRow["status"]) {
+    setBusyId(id);
     try {
       await resolve({ data: { id, status, note: notes[id] } });
       await qc.invalidateQueries({ queryKey: ["admin-reports"] });
       toast.success("Report updated");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "That didn't work");
+    } finally {
+      setBusyId(null);
     }
   }
 
-  async function hideProfile(athleteId: string) {
+  async function hideProfile(reportId: string, athleteId: string) {
+    setBusyId(reportId);
     try {
       await unpublish({ data: { athleteId } });
       toast.success("Profile hidden from the public directory");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "That didn't work");
+    } finally {
+      setBusyId(null);
     }
   }
 
