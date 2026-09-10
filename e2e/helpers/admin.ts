@@ -67,3 +67,38 @@ export async function getAthleteId(userId: string): Promise<string | null> {
   const { data } = await admin.from("athletes").select("id").eq("user_id", userId).maybeSingle();
   return data?.id ?? null;
 }
+
+/** Grants an extra role directly (used to create an admin for the admin suite). */
+export async function grantRole(userId: string, role: "admin" | "coach" | "athlete" | "parent") {
+  const admin = adminClient();
+  const { error } = await admin
+    .from("user_roles")
+    .upsert({ user_id: userId, role }, { onConflict: "user_id,role" });
+  if (error) throw error;
+}
+
+/** Files a report directly so the admin queue has something to review. */
+export async function seedReport(opts: {
+  reporterUserId: string;
+  reportedUserId: string;
+  athleteId: string;
+  reason?: string;
+}) {
+  const admin = adminClient();
+  const { data, error } = await admin
+    .from("content_reports")
+    .insert({
+      reporter_user_id: opts.reporterUserId,
+      reported_user_id: opts.reportedUserId,
+      athlete_id: opts.athleteId,
+      target_type: "profile",
+      target_id: opts.athleteId,
+      reason: opts.reason ?? "Fake or misleading profile",
+      details: "E2E seeded report",
+      status: "open",
+    })
+    .select("id")
+    .single();
+  if (error) throw error;
+  return data.id as string;
+}
