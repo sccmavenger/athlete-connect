@@ -67,7 +67,7 @@ export function SiteHeader() {
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="container mx-auto grid h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-16">
-        <Link to="/" className="flex min-w-0 items-center gap-2">
+        <Link to="/" className="flex min-h-11 min-w-0 items-center gap-2">
           <img
             src={hubLogo.url}
             alt="The HUB — powered by Summit Hoops"
