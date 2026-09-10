@@ -103,6 +103,10 @@ export function MessageThread({
   });
 
   const messages = q.data ?? [];
+  // A blocked person's messages are hidden from the person who blocked them.
+  const visibleMessages = iBlockedThem
+    ? messages.filter((m) => m.sender_user_id === currentUserId)
+    : messages;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "nearest" });
