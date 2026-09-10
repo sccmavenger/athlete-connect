@@ -12,6 +12,7 @@ import { buildIcs, downloadFile, type IcsEvent } from "@/lib/ics";
 import { MessageThread } from "@/components/MessageThread";
 import { ProfileSkeleton } from "@/components/Skeletons";
 import { VideoEmbed } from "@/components/VideoEmbed";
+import { ReportDialog } from "@/components/ReportDialog";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
   BookmarkCheck,
   Calendar,
   Download,
+  Flag,
   GraduationCap,
   Instagram,
   Lock,
