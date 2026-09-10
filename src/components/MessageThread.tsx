@@ -214,10 +214,10 @@ export function MessageThread({
             {hint ?? "No messages yet — send the first one."}
           </p>
         ) : (
-          messages.map((m) => {
+          visibleMessages.map((m) => {
             const mine = m.sender_user_id === currentUserId;
             return (
-              <div key={m.id} className={mine ? "flex justify-end" : "flex justify-start"}>
+              <div key={m.id} className={mine ? "flex justify-end" : "flex items-end justify-start gap-1"}>
                 <div
                   className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
                     mine ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
@@ -228,6 +228,25 @@ export function MessageThread({
                     {new Date(m.created_at).toLocaleString()}
                   </p>
                 </div>
+                {!mine && (
+                  <ReportDialog
+                    targetType="message"
+                    targetId={m.id}
+                    athleteId={athleteId}
+                    reportedUserId={m.sender_user_id}
+                    what="this message"
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 shrink-0 text-muted-foreground"
+                        aria-label="Report this message"
+                      >
+                        <Flag className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                )}
               </div>
             );
           })
