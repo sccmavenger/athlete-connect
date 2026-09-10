@@ -259,7 +259,7 @@ function AthleteView() {
             </Button>
           )}
           {user?.id === a.user_id && (
-            <Button asChild variant="outline" className="flex-1 sm:flex-none">
+            <Button asChild variant="outline" className="h-11 flex-1 sm:flex-none">
               <Link to="/profile/edit">Edit</Link>
             </Button>
           )}
