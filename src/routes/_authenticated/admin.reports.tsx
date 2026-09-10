@@ -152,13 +152,13 @@ function AdminReports() {
               />
 
               <div className="mt-3 flex flex-wrap gap-2">
-                <Button size="sm" className="h-11" onClick={() => act(r.id, "actioned")}>
+                <Button size="sm" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "actioned")}>
                   Action taken
                 </Button>
-                <Button size="sm" variant="secondary" className="h-11" onClick={() => act(r.id, "reviewed")}>
+                <Button size="sm" variant="secondary" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "reviewed")}>
                   Mark reviewed
                 </Button>
-                <Button size="sm" variant="ghost" className="h-11" onClick={() => act(r.id, "dismissed")}>
+                <Button size="sm" variant="ghost" className="h-11" disabled={busyId === r.id} onClick={() => act(r.id, "dismissed")}>
                   Dismiss
                 </Button>
                 {r.athlete_id && (
@@ -166,7 +166,8 @@ function AdminReports() {
                     size="sm"
                     variant="destructive"
                     className="h-11"
-                    onClick={() => hideProfile(r.athlete_id!)}
+                    disabled={busyId === r.id}
+                    onClick={() => hideProfile(r.id, r.athlete_id!)}
                   >
                     <EyeOff className="mr-1.5 h-4 w-4" />
                     Hide profile
