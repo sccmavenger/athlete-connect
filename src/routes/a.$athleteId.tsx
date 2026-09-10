@@ -251,7 +251,26 @@ function AthleteView() {
               <Link to="/profile/edit">Edit</Link>
             </Button>
           )}
-
+          {user && user.id !== a.user_id ? (
+            <ReportDialog
+              targetType="athlete_profile"
+              targetId={a.id}
+              athleteId={a.id}
+              reportedUserId={a.user_id}
+              what="this profile"
+              trigger={
+                <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+                  <Flag className="mr-1 h-4 w-4" /> Report
+                </Button>
+              }
+            />
+          ) : !user ? (
+            <Button asChild variant="ghost" size="sm" className="flex-1 text-muted-foreground sm:flex-none">
+              <Link to="/support">
+                <Flag className="mr-1 h-4 w-4" /> Report
+              </Link>
+            </Button>
+          ) : null}
         </div>
       </div>
 
