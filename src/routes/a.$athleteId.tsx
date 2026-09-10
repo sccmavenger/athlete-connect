@@ -456,6 +456,7 @@ function AthleteView() {
             <Button
               size="sm"
               variant="outline"
+              className="h-11"
               onClick={() => {
                 const events: IcsEvent[] = (q.data?.events ?? []).map((ev: any) => ({
                   uid: ev.id,
