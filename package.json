@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:views": "playwright test e2e/athlete-view.spec.ts e2e/coach-view.spec.ts",
+    "test:e2e:cleanup": "bun run e2e/global-teardown.ts"
   },
   "dependencies": {
     "@capacitor/cli": "^8.4.2",
