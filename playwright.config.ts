@@ -10,7 +10,8 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   retries: 0,
-  reporter: [["list"]],
+  reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
+  globalTeardown: "./e2e/global-teardown.ts",
   use: {
     baseURL,
     viewport: { width: 1280, height: 1800 },
