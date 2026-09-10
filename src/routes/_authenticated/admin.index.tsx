@@ -91,6 +91,15 @@ function AdminHome() {
             <Link to="/admin/coach-requests">Review requests</Link>
           </Button>
         </Card>
+        <Card className="p-5">
+          <h2 className="font-display text-lg font-bold">Reported content</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Review reported messages, profiles and members, and take action.
+          </p>
+          <Button asChild variant="secondary" className="mt-4">
+            <Link to="/admin/reports">Review reports</Link>
+          </Button>
+        </Card>
       </div>
     </div>
   );

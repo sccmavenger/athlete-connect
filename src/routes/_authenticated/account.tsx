@@ -5,13 +5,14 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount, deleteMyAccount } from "@/lib/account.functions";
+import { listMyBlocks, setBlock } from "@/lib/safety.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, ShieldCheck, Trash2 } from "lucide-react";
+import { AlertTriangle, Ban, ShieldCheck, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
@@ -41,6 +42,20 @@ function AccountPage() {
     queryKey: ["my-account"],
     queryFn: () => fetchAccount({} as never),
   });
+
+  const loadBlocks = useServerFn(listMyBlocks);
+  const changeBlock = useServerFn(setBlock);
+  const blocks = useQuery({ queryKey: ["my-blocks"], queryFn: () => loadBlocks() });
+
+  async function unblock(userId: string) {
+    try {
+      await changeBlock({ data: { targetUserId: userId, blocked: false } });
+      await qc.invalidateQueries({ queryKey: ["my-blocks"] });
+      toast.success("Unblocked");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That didn't work");
+    }
+  }
 
   async function handleDelete() {
     if (confirm.trim().toUpperCase() !== "DELETE") {
@@ -110,6 +125,36 @@ function AccountPage() {
             )}
           </div>
         )}
+      </Card>
+
+      <Card className="mt-4 p-4">
+        <div className="flex items-start gap-3">
+          <Ban className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-lg font-bold tracking-wide">BLOCKED PEOPLE</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Blocked people can't message you and their messages stay hidden.
+            </p>
+            {blocks.isPending ? (
+              <Skeleton className="mt-3 h-4 w-40" />
+            ) : (blocks.data ?? []).length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">
+                You haven't blocked anyone. You can block someone from any conversation.
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {(blocks.data ?? []).map((b) => (
+                  <li key={b.user_id} className="flex items-center justify-between gap-2">
+                    <span className="truncate text-sm">{b.name}</span>
+                    <Button size="sm" variant="secondary" className="h-9" onClick={() => unblock(b.user_id)}>
+                      Unblock
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </Card>
 
       <Card className="mt-4 border-accent/30 p-4">

@@ -1,10 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Send } from "lucide-react";
+import { Send, Flag, MoreVertical, Ban, ShieldOff } from "lucide-react";
+import { ReportDialog } from "@/components/ReportDialog";
+import { getThreadSafety, setBlock } from "@/lib/safety.functions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export type MessageRow = {
   id: string;
@@ -37,7 +56,36 @@ export function MessageThread({
   const qc = useQueryClient();
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [confirmBlock, setConfirmBlock] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const loadSafety = useServerFn(getThreadSafety);
+  const changeBlock = useServerFn(setBlock);
+
+  const safety = useQuery({
+    queryKey: ["thread-safety", athleteId, coachUserId],
+    queryFn: () => loadSafety({ data: { athleteId, coachUserId } }),
+  });
+
+  const otherUserId = safety.data?.otherUserId ?? null;
+  const iBlockedThem = !!safety.data?.iBlockedThem;
+  const theyBlockedMe = !!safety.data?.theyBlockedMe;
+  const conversationBlocked = iBlockedThem || theyBlockedMe;
+
+  async function toggleBlock(blocked: boolean) {
+    if (!otherUserId) return;
+    try {
+      await changeBlock({ data: { targetUserId: otherUserId, blocked } });
+      await qc.invalidateQueries({ queryKey: ["thread-safety", athleteId, coachUserId] });
+      toast.success(
+        blocked
+          ? "Blocked. They can no longer message you, and you won't see their messages."
+          : "Unblocked. You can message each other again.",
+      );
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That didn't work. Please try again.");
+    }
+  }
 
   const q = useQuery({
     queryKey: ["thread", athleteId, coachUserId],
@@ -55,6 +103,10 @@ export function MessageThread({
   });
 
   const messages = q.data ?? [];
+  // A blocked person's messages are hidden from the person who blocked them.
+  const visibleMessages = iBlockedThem
+    ? messages.filter((m) => m.sender_user_id === currentUserId)
+    : messages;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "nearest" });
@@ -92,23 +144,84 @@ export function MessageThread({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b px-4 py-3">
-        <h2 className="font-display text-lg font-bold">{title}</h2>
-        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+      <div className="flex items-start justify-between gap-2 border-b px-4 py-3">
+        <div className="min-w-0">
+          <h2 className="truncate font-display text-lg font-bold">{title}</h2>
+          {subtitle && <p className="truncate text-xs text-muted-foreground">{subtitle}</p>}
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-11 w-11 shrink-0" aria-label="Safety options">
+              <MoreVertical className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <ReportDialog
+              targetType="user"
+              targetId={otherUserId ?? coachUserId}
+              athleteId={athleteId}
+              reportedUserId={otherUserId}
+              what="this conversation"
+              trigger={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <Flag className="mr-2 h-4 w-4" />
+                  Report conversation
+                </DropdownMenuItem>
+              }
+            />
+            {iBlockedThem ? (
+              <DropdownMenuItem onSelect={() => toggleBlock(false)}>
+                <ShieldOff className="mr-2 h-4 w-4" />
+                Unblock
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                className="text-destructive"
+                disabled={!otherUserId}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setConfirmBlock(true);
+                }}
+              >
+                <Ban className="mr-2 h-4 w-4" />
+                Block this person
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      <AlertDialog open={confirmBlock} onOpenChange={setConfirmBlock}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Block {title}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You won't see their messages and they can't message you. You can undo this any time
+              from this conversation or your Account page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="h-11">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="h-11" onClick={() => toggleBlock(true)}>
+              Block
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       <div className="max-h-[50vh] min-h-40 flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {q.isPending ? (
           <p className="text-sm text-muted-foreground">Loading conversation…</p>
-        ) : messages.length === 0 ? (
+        ) : visibleMessages.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             {hint ?? "No messages yet — send the first one."}
           </p>
         ) : (
-          messages.map((m) => {
+          visibleMessages.map((m) => {
             const mine = m.sender_user_id === currentUserId;
             return (
-              <div key={m.id} className={mine ? "flex justify-end" : "flex justify-start"}>
+              <div key={m.id} className={mine ? "flex justify-end" : "flex items-end justify-start gap-1"}>
                 <div
                   className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
                     mine ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
@@ -119,6 +232,25 @@ export function MessageThread({
                     {new Date(m.created_at).toLocaleString()}
                   </p>
                 </div>
+                {!mine && (
+                  <ReportDialog
+                    targetType="message"
+                    targetId={m.id}
+                    athleteId={athleteId}
+                    reportedUserId={m.sender_user_id}
+                    what="this message"
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 shrink-0 text-muted-foreground"
+                        aria-label="Report this message"
+                      >
+                        <Flag className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                )}
               </div>
             );
           })
@@ -126,6 +258,22 @@ export function MessageThread({
         <div ref={endRef} />
       </div>
 
+      {conversationBlocked ? (
+        <div className="border-t p-4 text-sm text-muted-foreground">
+          {iBlockedThem ? (
+            <>
+              <p className="font-medium text-foreground">You blocked this person.</p>
+              <p className="mt-1">Their messages are hidden and they can't contact you.</p>
+              <Button variant="secondary" className="mt-3 h-11" onClick={() => toggleBlock(false)}>
+                <ShieldOff className="mr-2 h-4 w-4" />
+                Unblock
+              </Button>
+            </>
+          ) : (
+            <p>This conversation is closed. You can no longer send messages here.</p>
+          )}
+        </div>
+      ) : (
       <div className="border-t p-3">
         <Textarea
           value={body}
@@ -146,6 +294,7 @@ export function MessageThread({
           </Button>
         </div>
       </div>
+      )}
     </div>
   );
 }
