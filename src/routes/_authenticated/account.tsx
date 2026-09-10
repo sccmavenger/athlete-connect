@@ -112,6 +112,36 @@ function AccountPage() {
         )}
       </Card>
 
+      <Card className="mt-4 p-4">
+        <div className="flex items-start gap-3">
+          <Ban className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-lg font-bold tracking-wide">BLOCKED PEOPLE</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Blocked people can't message you and their messages stay hidden.
+            </p>
+            {blocks.isPending ? (
+              <Skeleton className="mt-3 h-4 w-40" />
+            ) : (blocks.data ?? []).length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">
+                You haven't blocked anyone. You can block someone from any conversation.
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {(blocks.data ?? []).map((b) => (
+                  <li key={b.user_id} className="flex items-center justify-between gap-2">
+                    <span className="truncate text-sm">{b.name}</span>
+                    <Button size="sm" variant="secondary" className="h-9" onClick={() => unblock(b.user_id)}>
+                      Unblock
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </Card>
+
       <Card className="mt-4 border-accent/30 p-4">
         <div className="flex items-start gap-3">
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
