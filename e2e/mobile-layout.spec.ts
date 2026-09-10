@@ -68,7 +68,9 @@ async function auditViewport(page: Page): Promise<Overflow> {
           text: (el.textContent || "").trim().slice(0, 60),
         });
       }
-      if (el.matches("button, a[href], [role='button'], input[type='checkbox']")) {
+      // Checkboxes inside a <label> get the label's full hit area, so they're exempt.
+      const exempt = el.matches("input[type='checkbox']") && !!el.closest("label");
+      if (!exempt && el.matches("button, a[href], [role='button'], input[type='checkbox']")) {
         if (r.height < 40 || r.width < 32) {
           smallTapTargets.push({
             label:
