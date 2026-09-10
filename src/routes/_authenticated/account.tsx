@@ -5,13 +5,14 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount, deleteMyAccount } from "@/lib/account.functions";
+import { listMyBlocks, setBlock } from "@/lib/safety.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, ShieldCheck, Trash2 } from "lucide-react";
+import { AlertTriangle, Ban, ShieldCheck, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
@@ -41,6 +42,20 @@ function AccountPage() {
     queryKey: ["my-account"],
     queryFn: () => fetchAccount({} as never),
   });
+
+  const loadBlocks = useServerFn(listMyBlocks);
+  const changeBlock = useServerFn(setBlock);
+  const blocks = useQuery({ queryKey: ["my-blocks"], queryFn: () => loadBlocks() });
+
+  async function unblock(userId: string) {
+    try {
+      await changeBlock({ data: { targetUserId: userId, blocked: false } });
+      await qc.invalidateQueries({ queryKey: ["my-blocks"] });
+      toast.success("Unblocked");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That didn't work");
+    }
+  }
 
   async function handleDelete() {
     if (confirm.trim().toUpperCase() !== "DELETE") {
