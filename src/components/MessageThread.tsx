@@ -209,7 +209,7 @@ export function MessageThread({
       <div className="max-h-[50vh] min-h-40 flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {q.isPending ? (
           <p className="text-sm text-muted-foreground">Loading conversation…</p>
-        ) : messages.length === 0 ? (
+        ) : visibleMessages.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             {hint ?? "No messages yet — send the first one."}
           </p>
