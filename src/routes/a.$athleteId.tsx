@@ -134,19 +134,28 @@ function AthleteView() {
     },
   });
 
+  const [savingBookmark, setSavingBookmark] = useState(false);
+
   async function toggleSave() {
     if (!user) return;
-    if (savedQ.data) {
-      const { error } = await supabase.from("coach_saved_athletes").delete().eq("id", savedQ.data.id);
-      if (error) return toast.error(error.message);
-    } else {
-      const { error } = await supabase
-        .from("coach_saved_athletes")
-        .insert({ coach_user_id: user.id, athlete_id: athleteId });
-      if (error) return toast.error(error.message);
+    setSavingBookmark(true);
+    try {
+      if (savedQ.data) {
+        const { error } = await supabase.from("coach_saved_athletes").delete().eq("id", savedQ.data.id);
+        if (error) return toast.error(error.message);
+        toast.success("Removed from your shortlist");
+      } else {
+        const { error } = await supabase
+          .from("coach_saved_athletes")
+          .insert({ coach_user_id: user.id, athlete_id: athleteId });
+        if (error) return toast.error(error.message);
+        toast.success("Saved to your shortlist");
+      }
+      qc.invalidateQueries({ queryKey: ["saved-flag"] });
+      qc.invalidateQueries({ queryKey: ["saved-athletes"] });
+    } finally {
+      setSavingBookmark(false);
     }
-    qc.invalidateQueries({ queryKey: ["saved-flag"] });
-    qc.invalidateQueries({ queryKey: ["saved-athletes"] });
   }
 
   if (q.isLoading) return <ProfileSkeleton />;

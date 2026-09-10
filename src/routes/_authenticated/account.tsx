@@ -151,8 +151,14 @@ function AccountPage() {
                 {(blocks.data ?? []).map((b) => (
                   <li key={b.user_id} className="flex items-center justify-between gap-2">
                     <span className="truncate text-sm">{b.name}</span>
-                    <Button size="sm" variant="secondary" className="h-11" onClick={() => unblock(b.user_id)}>
-                      Unblock
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="h-11"
+                      disabled={unblocking === b.user_id}
+                      onClick={() => unblock(b.user_id)}
+                    >
+                      {unblocking === b.user_id ? "Unblocking…" : "Unblock"}
                     </Button>
                   </li>
                 ))}
