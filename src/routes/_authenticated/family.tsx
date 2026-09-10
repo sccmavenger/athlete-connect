@@ -279,6 +279,7 @@ function Family() {
                   key={value}
                   type="button"
                   size="sm"
+                  className="h-11 flex-1"
                   variant={child.sportGender === value ? "default" : "outline"}
                   onClick={() => setChild({ ...child, sportGender: value })}
                 >
