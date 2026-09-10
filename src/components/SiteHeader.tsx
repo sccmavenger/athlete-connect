@@ -118,7 +118,7 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : loading ? null : (
-            <Button asChild variant="secondary" size="sm">
+            <Button asChild variant="secondary" size="sm" className="h-11 px-4">
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
