@@ -254,6 +254,22 @@ export function MessageThread({
         <div ref={endRef} />
       </div>
 
+      {conversationBlocked ? (
+        <div className="border-t p-4 text-sm text-muted-foreground">
+          {iBlockedThem ? (
+            <>
+              <p className="font-medium text-foreground">You blocked this person.</p>
+              <p className="mt-1">Their messages are hidden and they can't contact you.</p>
+              <Button variant="secondary" className="mt-3 h-11" onClick={() => toggleBlock(false)}>
+                <ShieldOff className="mr-2 h-4 w-4" />
+                Unblock
+              </Button>
+            </>
+          ) : (
+            <p>This conversation is closed. You can no longer send messages here.</p>
+          )}
+        </div>
+      ) : (
       <div className="border-t p-3">
         <Textarea
           value={body}
