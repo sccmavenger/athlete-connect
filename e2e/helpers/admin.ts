@@ -91,7 +91,7 @@ export async function seedReport(opts: {
       reporter_user_id: opts.reporterUserId,
       reported_user_id: opts.reportedUserId,
       athlete_id: opts.athleteId,
-      target_type: "profile",
+      target_type: "athlete_profile",
       target_id: opts.athleteId,
       reason: opts.reason ?? "Fake or misleading profile",
       details: "E2E seeded report",
