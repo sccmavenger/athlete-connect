@@ -170,7 +170,7 @@ test("A9 profile insights page loads", async ({ page }) => {
 test("A10 athlete permanently deletes the account", async ({ page }) => {
   await signIn(page, athlete);
   await page.goto("/account");
-  await expect(page.getByRole("heading", { name: "ACCOUNT" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ACCOUNT", exact: true })).toBeVisible();
   await expect(page.getByText(athlete.email)).toBeVisible({ timeout: 20_000 });
 
   await page.getByRole("button", { name: /Delete my account/i }).click();
