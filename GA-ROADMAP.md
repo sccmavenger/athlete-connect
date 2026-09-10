@@ -38,6 +38,8 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | 23 | Bookmark notifications | [x] | `notifications` table + trigger on `coach_saved_athletes`; in-app bell in the header with unread badge and mark-all-read |
 
 
+| 24 | Reporting & blocking for user-generated content (Apple 1.2) | [x] | Report any message, conversation or athlete profile; block/unblock (server-enforced) with an Account → Blocked people list; admin queue at `/admin/reports` |
+
 ## Nice-to-have / post-launch
 
 | # | Task | Status | Notes |
