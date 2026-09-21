@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import appStoreBadge from "@/assets/download-on-the-app-store.svg.asset.json";
 import hubLogo from "@/assets/hub-wordmark-white.png.asset.json";
+
+const APP_IS_LIVE = false;
+const APP_STORE_URL = "https://apps.apple.com/app/id6813542102";
 
 const TITLE = "The HUB — Midwest youth basketball recruiting app";
 const DESC =
@@ -70,12 +74,28 @@ function Landing() {
 
       {/* Status + required links */}
       <footer className="relative z-10 mt-14 space-y-12">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/80">
-            Coming soon to the App Store
-          </span>
-        </div>
+        {APP_IS_LIVE ? (
+          <a
+            href={APP_STORE_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Download The HUB on the App Store"
+            className="inline-flex p-1"
+          >
+            <img
+              src={appStoreBadge.url}
+              alt="Download on the App Store"
+              className="h-12 w-auto sm:h-[52px]"
+            />
+          </a>
+        ) : (
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/80">
+              Coming soon to the App Store
+            </span>
+          </div>
+        )}
 
         <nav className="grid max-w-sm grid-cols-2 gap-x-8 gap-y-1 border-t border-border pt-8">
           {LINKS.map((l) => (
