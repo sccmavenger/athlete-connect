@@ -11,28 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AAthleteIdRouteImport } from './routes/a.$athleteId'
-import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
-import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
-import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated/family'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedCollegesRouteImport } from './routes/_authenticated/colleges'
-import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
-import { Route as AuthenticatedCoachesIndexRouteImport } from './routes/_authenticated/coaches.index'
-import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
-import { Route as ApiPublicCollegeLogoRouteImport } from './routes/api/public/college-logo'
-import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
-import { Route as AuthenticatedCoachesSavedRouteImport } from './routes/_authenticated/coaches.saved'
-import { Route as AuthenticatedCoachesMessagesRouteImport } from './routes/_authenticated/coaches.messages'
-import { Route as AuthenticatedCoachesGamesRouteImport } from './routes/_authenticated/coaches.games'
-import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
-import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin.reports'
-import { Route as AuthenticatedAdminCoachRequestsRouteImport } from './routes/_authenticated/admin.coach-requests'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -44,23 +24,9 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -68,265 +34,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AAthleteIdRoute = AAthleteIdRouteImport.update({
-  id: '/a/$athleteId',
-  path: '/a/$athleteId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedFamilyRoute = AuthenticatedFamilyRouteImport.update({
-  id: '/family',
-  path: '/family',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCollegesRoute = AuthenticatedCollegesRouteImport.update({
-  id: '/colleges',
-  path: '/colleges',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCoachesIndexRoute =
-  AuthenticatedCoachesIndexRouteImport.update({
-    id: '/coaches/',
-    path: '/coaches/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const ApiPublicCollegeLogoRoute = ApiPublicCollegeLogoRouteImport.update({
-  id: '/api/public/college-logo',
-  path: '/api/public/college-logo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedProfileEditRoute =
-  AuthenticatedProfileEditRouteImport.update({
-    id: '/profile/edit',
-    path: '/profile/edit',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCoachesSavedRoute =
-  AuthenticatedCoachesSavedRouteImport.update({
-    id: '/coaches/saved',
-    path: '/coaches/saved',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCoachesMessagesRoute =
-  AuthenticatedCoachesMessagesRouteImport.update({
-    id: '/coaches/messages',
-    path: '/coaches/messages',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCoachesGamesRoute =
-  AuthenticatedCoachesGamesRouteImport.update({
-    id: '/coaches/games',
-    path: '/coaches/games',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAdminReportsRoute =
-  AuthenticatedAdminReportsRouteImport.update({
-    id: '/admin/reports',
-    path: '/admin/reports',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAdminCoachRequestsRoute =
-  AuthenticatedAdminCoachRequestsRouteImport.update({
-    id: '/admin/coach-requests',
-    path: '/admin/coach-requests',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
-  '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/colleges': typeof AuthenticatedCollegesRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/family': typeof AuthenticatedFamilyRoute
-  '/insights': typeof AuthenticatedInsightsRoute
-  '/messages': typeof AuthenticatedMessagesRoute
-  '/a/$athleteId': typeof AAthleteIdRoute
-  '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
-  '/admin/reports': typeof AuthenticatedAdminReportsRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/coaches/games': typeof AuthenticatedCoachesGamesRoute
-  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
-  '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
-  '/profile/edit': typeof AuthenticatedProfileEditRoute
-  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
-  '/admin/': typeof AuthenticatedAdminIndexRoute
-  '/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
-  '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/colleges': typeof AuthenticatedCollegesRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/family': typeof AuthenticatedFamilyRoute
-  '/insights': typeof AuthenticatedInsightsRoute
-  '/messages': typeof AuthenticatedMessagesRoute
-  '/a/$athleteId': typeof AAthleteIdRoute
-  '/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
-  '/admin/reports': typeof AuthenticatedAdminReportsRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/coaches/games': typeof AuthenticatedCoachesGamesRoute
-  '/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
-  '/coaches/saved': typeof AuthenticatedCoachesSavedRoute
-  '/profile/edit': typeof AuthenticatedProfileEditRoute
-  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
-  '/admin': typeof AuthenticatedAdminIndexRoute
-  '/coaches': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
-  '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
-  '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/colleges': typeof AuthenticatedCollegesRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/family': typeof AuthenticatedFamilyRoute
-  '/_authenticated/insights': typeof AuthenticatedInsightsRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
-  '/a/$athleteId': typeof AAthleteIdRoute
-  '/_authenticated/admin/coach-requests': typeof AuthenticatedAdminCoachRequestsRoute
-  '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
-  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/_authenticated/coaches/games': typeof AuthenticatedCoachesGamesRoute
-  '/_authenticated/coaches/messages': typeof AuthenticatedCoachesMessagesRoute
-  '/_authenticated/coaches/saved': typeof AuthenticatedCoachesSavedRoute
-  '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
-  '/api/public/college-logo': typeof ApiPublicCollegeLogoRoute
-  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
-  '/_authenticated/coaches/': typeof AuthenticatedCoachesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/auth'
-    | '/privacy'
-    | '/reset-password'
-    | '/support'
-    | '/terms'
-    | '/account'
-    | '/colleges'
-    | '/dashboard'
-    | '/family'
-    | '/insights'
-    | '/messages'
-    | '/a/$athleteId'
-    | '/admin/coach-requests'
-    | '/admin/reports'
-    | '/admin/users'
-    | '/coaches/games'
-    | '/coaches/messages'
-    | '/coaches/saved'
-    | '/profile/edit'
-    | '/api/public/college-logo'
-    | '/admin/'
-    | '/coaches/'
+  fullPaths: '/' | '/privacy' | '/support' | '/terms'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/auth'
-    | '/privacy'
-    | '/reset-password'
-    | '/support'
-    | '/terms'
-    | '/account'
-    | '/colleges'
-    | '/dashboard'
-    | '/family'
-    | '/insights'
-    | '/messages'
-    | '/a/$athleteId'
-    | '/admin/coach-requests'
-    | '/admin/reports'
-    | '/admin/users'
-    | '/coaches/games'
-    | '/coaches/messages'
-    | '/coaches/saved'
-    | '/profile/edit'
-    | '/api/public/college-logo'
-    | '/admin'
-    | '/coaches'
-  id:
-    | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/auth'
-    | '/privacy'
-    | '/reset-password'
-    | '/support'
-    | '/terms'
-    | '/_authenticated/account'
-    | '/_authenticated/colleges'
-    | '/_authenticated/dashboard'
-    | '/_authenticated/family'
-    | '/_authenticated/insights'
-    | '/_authenticated/messages'
-    | '/a/$athleteId'
-    | '/_authenticated/admin/coach-requests'
-    | '/_authenticated/admin/reports'
-    | '/_authenticated/admin/users'
-    | '/_authenticated/coaches/games'
-    | '/_authenticated/coaches/messages'
-    | '/_authenticated/coaches/saved'
-    | '/_authenticated/profile/edit'
-    | '/api/public/college-logo'
-    | '/_authenticated/admin/'
-    | '/_authenticated/coaches/'
+  to: '/' | '/privacy' | '/support' | '/terms'
+  id: '__root__' | '/' | '/privacy' | '/support' | '/terms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
   PrivacyRoute: typeof PrivacyRoute
-  ResetPasswordRoute: typeof ResetPasswordRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
-  AAthleteIdRoute: typeof AAthleteIdRoute
-  ApiPublicCollegeLogoRoute: typeof ApiPublicCollegeLogoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -345,32 +85,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -380,177 +99,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/a/$athleteId': {
-      id: '/a/$athleteId'
-      path: '/a/$athleteId'
-      fullPath: '/a/$athleteId'
-      preLoaderRoute: typeof AAthleteIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/messages': {
-      id: '/_authenticated/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/insights': {
-      id: '/_authenticated/insights'
-      path: '/insights'
-      fullPath: '/insights'
-      preLoaderRoute: typeof AuthenticatedInsightsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/family': {
-      id: '/_authenticated/family'
-      path: '/family'
-      fullPath: '/family'
-      preLoaderRoute: typeof AuthenticatedFamilyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/colleges': {
-      id: '/_authenticated/colleges'
-      path: '/colleges'
-      fullPath: '/colleges'
-      preLoaderRoute: typeof AuthenticatedCollegesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/account': {
-      id: '/_authenticated/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AuthenticatedAccountRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/coaches/': {
-      id: '/_authenticated/coaches/'
-      path: '/coaches'
-      fullPath: '/coaches/'
-      preLoaderRoute: typeof AuthenticatedCoachesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin/': {
-      id: '/_authenticated/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/api/public/college-logo': {
-      id: '/api/public/college-logo'
-      path: '/api/public/college-logo'
-      fullPath: '/api/public/college-logo'
-      preLoaderRoute: typeof ApiPublicCollegeLogoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/profile/edit': {
-      id: '/_authenticated/profile/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof AuthenticatedProfileEditRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/coaches/saved': {
-      id: '/_authenticated/coaches/saved'
-      path: '/coaches/saved'
-      fullPath: '/coaches/saved'
-      preLoaderRoute: typeof AuthenticatedCoachesSavedRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/coaches/messages': {
-      id: '/_authenticated/coaches/messages'
-      path: '/coaches/messages'
-      fullPath: '/coaches/messages'
-      preLoaderRoute: typeof AuthenticatedCoachesMessagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/coaches/games': {
-      id: '/_authenticated/coaches/games'
-      path: '/coaches/games'
-      fullPath: '/coaches/games'
-      preLoaderRoute: typeof AuthenticatedCoachesGamesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin/users': {
-      id: '/_authenticated/admin/users'
-      path: '/admin/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin/reports': {
-      id: '/_authenticated/admin/reports'
-      path: '/admin/reports'
-      fullPath: '/admin/reports'
-      preLoaderRoute: typeof AuthenticatedAdminReportsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin/coach-requests': {
-      id: '/_authenticated/admin/coach-requests'
-      path: '/admin/coach-requests'
-      fullPath: '/admin/coach-requests'
-      preLoaderRoute: typeof AuthenticatedAdminCoachRequestsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
-  AuthenticatedCollegesRoute: typeof AuthenticatedCollegesRoute
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedFamilyRoute: typeof AuthenticatedFamilyRoute
-  AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
-  AuthenticatedAdminCoachRequestsRoute: typeof AuthenticatedAdminCoachRequestsRoute
-  AuthenticatedAdminReportsRoute: typeof AuthenticatedAdminReportsRoute
-  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
-  AuthenticatedCoachesGamesRoute: typeof AuthenticatedCoachesGamesRoute
-  AuthenticatedCoachesMessagesRoute: typeof AuthenticatedCoachesMessagesRoute
-  AuthenticatedCoachesSavedRoute: typeof AuthenticatedCoachesSavedRoute
-  AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
-  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
-  AuthenticatedCoachesIndexRoute: typeof AuthenticatedCoachesIndexRoute
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedCollegesRoute: AuthenticatedCollegesRoute,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedFamilyRoute: AuthenticatedFamilyRoute,
-  AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
-  AuthenticatedAdminCoachRequestsRoute: AuthenticatedAdminCoachRequestsRoute,
-  AuthenticatedAdminReportsRoute: AuthenticatedAdminReportsRoute,
-  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
-  AuthenticatedCoachesGamesRoute: AuthenticatedCoachesGamesRoute,
-  AuthenticatedCoachesMessagesRoute: AuthenticatedCoachesMessagesRoute,
-  AuthenticatedCoachesSavedRoute: AuthenticatedCoachesSavedRoute,
-  AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
-  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
-  AuthenticatedCoachesIndexRoute: AuthenticatedCoachesIndexRoute,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
   PrivacyRoute: PrivacyRoute,
-  ResetPasswordRoute: ResetPasswordRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
-  AAthleteIdRoute: AAthleteIdRoute,
-  ApiPublicCollegeLogoRoute: ApiPublicCollegeLogoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
