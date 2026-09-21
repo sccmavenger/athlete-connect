@@ -21,12 +21,12 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const LINKS = [
+const LINKS: { to: string; label: string; accent?: boolean }[] = [
   { to: "/support", label: "Support" },
   { to: "/privacy", label: "Privacy" },
   { to: "/terms", label: "Terms" },
   { to: "/delete-account", label: "Delete Account", accent: true },
-] as const;
+];
 
 function Landing() {
   return (
