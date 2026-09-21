@@ -74,3 +74,7 @@ Each day we check this file and answer:
 - 2.1(a) Crash: profile photo upload now decodes with a downscaled `createImageBitmap` and a pixel/byte ceiling (25MB source cap) so large iPad photos no longer kill the webview.
 - 5.1.1(v) Account deletion: `/account` route with server-side cascade delete of profile, media, messages, bookmarks, notifications and the auth user.
 - 2.1(a) Information Needed: both Apple review accounts seeded with fictional demo content (published Jordan Blake profile, highlights, schedule, 5 target schools, two-way coach thread, notifications, profile views, coach pipeline).
+
+## 2026-09-21 — Web project reduced to App Store support site
+
+The web portal (auth, dashboards, coach search, messaging, admin, E2E suites, Capacitor/iOS wrapper) was removed from this repo. It now serves only the pages Apple requires: `/` (marketing), `/privacy`, `/support`, `/terms`, `/delete-account`. The native app lives in sccmavenger/the-hub-ios and continues to use the same backend, which was left untouched.
