@@ -37,11 +37,11 @@ const FAQ = [
   },
   {
     q: "How do I report or block someone?",
-    a: "Open the menu in the top-right of a profile or message thread and choose Report or Block. Reports go straight to our administrators for review, and blocking immediately stops that person from messaging you.",
+    a: "Open a message thread and tap the menu in the top right, then choose Report or Block. Reports go straight to our administrators for review, and blocking immediately stops that person from messaging you.",
   },
   {
     q: "How do I delete my account or data?",
-    a: "Open Account in the app and use Delete account, or email us from the address on your account. See our Delete account page for full details.",
+    a: "Open The HUB and sign in, tap More in the bottom tab bar, tap Account, scroll to Delete Account, type DELETE, then tap the delete button. You can also email us from the address on your account.",
   },
   {
     q: "I forgot my password.",
@@ -59,7 +59,7 @@ function SupportPage() {
           Questions about your account, profile, or coach access? We are happy to help.
         </p>
 
-        <div className="mt-8 rounded-xl border border-border bg-card p-6">
+        <div className="mt-8 rounded-lg border border-border bg-card p-6">
           <h2 className="font-display text-xl font-bold">Contact us</h2>
           <p className="mt-2 text-sm text-foreground/90">
             Email:{" "}

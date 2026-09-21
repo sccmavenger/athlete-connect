@@ -75,10 +75,10 @@ function TermsPage() {
           <section>
             <h2 className="font-display text-xl font-bold">5. Objectionable content, reporting, and moderation</h2>
             <p className="mt-2">
-              There is zero tolerance for objectionable content or abusive behavior. Every profile
-              and conversation includes controls to report content and to block a user. Reports are
-              reviewed by administrators, who may hide content, restrict messaging, or remove
-              accounts. Blocking a user takes effect immediately.
+              There is zero tolerance for objectionable content or abusive behavior. Message threads
+              include controls to report content and to block a user. Reports are reviewed by
+              administrators, who may hide content, restrict messaging, or remove accounts. Blocking
+              a user takes effect immediately.
             </p>
           </section>
 

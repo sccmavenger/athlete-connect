@@ -37,8 +37,15 @@ function DeleteAccountPage() {
           <h2 className="font-display text-xl font-bold">Delete from inside the app</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground/90">
             <li>Open The HUB and sign in.</li>
-            <li>Tap your account button in the top-right corner, then tap <strong>Account</strong>.</li>
-            <li>Scroll to <strong>Delete account</strong>.</li>
+            <li>
+              Tap <strong>More</strong> in the bottom tab bar.
+            </li>
+            <li>
+              Tap <strong>Account</strong>.
+            </li>
+            <li>
+              Scroll to <strong>Delete Account</strong>.
+            </li>
             <li>
               Type <strong>DELETE</strong> to confirm, then tap the delete button.
             </li>
