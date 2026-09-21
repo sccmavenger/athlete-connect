@@ -31,7 +31,7 @@ Each page gets its own title, description, and social preview tags, plus a share
 - All authentication and signed-in pages: dashboard, profile editor, coach directory, messages, insights, family, colleges, admin console, public athlete profiles, auth/reset-password.
 - Server functions, Supabase client usage, backend tables usage in the site, the E2E test suites and weekly regression workflow, mock/demo data, demo images.
 - The database itself is left untouched — the iOS app keeps using it. Only the website stops talking to it.
-- Capacitor config and iOS docs: your native app now lives in the separate `sccmavenger/the-hub-ios` repo, so these come out of this project too.
+- All Capacitor config, packages, iOS build scripts, and iOS docs — deleted permanently, not coming back. The native app lives in the separate `sccmavenger/the-hub-ios` repo.
 
 ## Design
 
