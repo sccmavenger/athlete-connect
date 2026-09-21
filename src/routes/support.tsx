@@ -65,9 +65,9 @@ function SupportPage() {
             Email:{" "}
             <a
               className="font-medium text-primary underline underline-offset-4"
-              href="mailto:informed@summithoops.net"
+              href="mailto:info@summithoops.net"
             >
-              informed@summithoops.net
+              info@summithoops.net
             </a>
           </p>
           <p className="mt-1 text-sm text-muted-foreground">

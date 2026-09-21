@@ -52,9 +52,9 @@ function DeleteAccountPage() {
             If you cannot sign in, email us from the address on your account at{" "}
             <a
               className="font-medium text-primary underline underline-offset-4"
-              href="mailto:informed@summithoops.net?subject=Account%20deletion%20request"
+              href="mailto:info@summithoops.net?subject=Account%20deletion%20request"
             >
-              informed@summithoops.net
+              info@summithoops.net
             </a>{" "}
             with the subject "Account deletion request". We verify ownership of the email address and
             complete deletion within 7 days.

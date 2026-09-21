@@ -156,9 +156,9 @@ function PrivacyPage() {
               For privacy questions or deletion requests, email{" "}
               <a
                 className="font-medium text-primary underline underline-offset-4"
-                href="mailto:informed@summithoops.net"
+                href="mailto:info@summithoops.net"
               >
-                informed@summithoops.net
+                info@summithoops.net
               </a>
               . See also our{" "}
               <Link to="/terms" className="text-primary underline underline-offset-4">
