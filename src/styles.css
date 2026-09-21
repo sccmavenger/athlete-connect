@@ -28,6 +28,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
   --font-display: "Barlow Condensed", "Bebas Neue", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
