@@ -16,6 +16,12 @@ export function SiteFooter() {
             Terms
           </Link>
           <Link
+            to="/age-suitability"
+            className="inline-flex min-h-11 items-center px-1 hover:text-foreground"
+          >
+            Age suitability
+          </Link>
+          <Link
             to="/delete-account"
             className="inline-flex min-h-11 items-center px-1 hover:text-foreground"
           >

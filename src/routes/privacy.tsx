@@ -103,9 +103,10 @@ function PrivacyPage() {
           <section>
             <h2 className="font-display text-xl font-bold">Reporting and blocking</h2>
             <p className="mt-2">
-              Any user can report a profile or conversation and block another user. Blocking stops
-              messages immediately. Reports are reviewed by administrators, who may hide content or
-              remove accounts. The person reported is not told who reported them.
+              Users can report or block from a message thread by opening the thread menu and choosing
+              Report or Block. Blocking stops messages immediately. Reports are reviewed by
+              administrators, who may hide content or remove accounts. The person reported is not
+              told who reported them.
             </p>
           </section>
 

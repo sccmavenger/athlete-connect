@@ -33,7 +33,7 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.875rem;
   /* Summit Hoops palette — black background, white text, dodger blue accent */
   --background: oklch(0.13 0 0);
   --foreground: oklch(0.98 0 0);

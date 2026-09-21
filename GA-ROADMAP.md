@@ -38,7 +38,7 @@ A living checklist we review daily until the GA milestone. Update statuses as it
 | 23 | Bookmark notifications | [x] | `notifications` table + trigger on `coach_saved_athletes`; in-app bell in the header with unread badge and mark-all-read |
 
 
-| 24 | Reporting & blocking for user-generated content (Apple 1.2) | [x] | Report any message, conversation or athlete profile; block/unblock (server-enforced) with an Account → Blocked people list; admin queue at `/admin/reports` |
+| 24 | Reporting & blocking for user-generated content (Apple 1.2) | [x] | Report or block from a message thread; block/unblock is server-enforced; admin queue at `/admin/reports` |
 
 ## Nice-to-have / post-launch
 
@@ -77,4 +77,4 @@ Each day we check this file and answer:
 
 ## 2026-09-21 — Web project reduced to App Store support site
 
-The web portal (auth, dashboards, coach search, messaging, admin, E2E suites, Capacitor/iOS wrapper) was removed from this repo. It now serves only the pages Apple requires: `/` (marketing), `/privacy`, `/support`, `/terms`, `/delete-account`. The native app lives in sccmavenger/the-hub-ios and continues to use the same backend, which was left untouched.
+The web portal (auth, dashboards, coach search, messaging, admin, E2E suites, Capacitor/iOS wrapper) was removed from this repo. It now serves only the pages Apple requires: `/` (marketing), `/privacy`, `/support`, `/terms`, `/delete-account`, plus `/age-suitability` for the 13+ App Store rating override. The native app lives in sccmavenger/the-hub-ios and continues to use the same backend, which was left untouched.

@@ -25,6 +25,7 @@ const LINKS: { to: string; label: string; accent?: boolean }[] = [
   { to: "/support", label: "Support" },
   { to: "/privacy", label: "Privacy" },
   { to: "/terms", label: "Terms" },
+  { to: "/age-suitability", label: "Age Suitability" },
   { to: "/delete-account", label: "Delete Account", accent: true },
 ];
 
