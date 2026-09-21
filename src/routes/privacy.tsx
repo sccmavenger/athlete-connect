@@ -156,9 +156,9 @@ function PrivacyPage() {
               For privacy questions or deletion requests, email{" "}
               <a
                 className="font-medium text-primary underline underline-offset-4"
-                href="mailto:support@gforcedigital.net"
+                href="mailto:informed@summithoops.net"
               >
-                support@gforcedigital.net
+                informed@summithoops.net
               </a>
               . See also our{" "}
               <Link to="/terms" className="text-primary underline underline-offset-4">

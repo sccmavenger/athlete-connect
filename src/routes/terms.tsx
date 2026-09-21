@@ -126,9 +126,9 @@ function TermsPage() {
               Questions about these terms? Email{" "}
               <a
                 className="font-medium text-primary underline underline-offset-4"
-                href="mailto:support@gforcedigital.net"
+                href="mailto:informed@summithoops.net"
               >
-                support@gforcedigital.net
+                informed@summithoops.net
               </a>
               . See also our{" "}
               <Link to="/privacy" className="text-primary underline underline-offset-4">
