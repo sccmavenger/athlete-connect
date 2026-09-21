@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const TITLE = "Support — The HUB";
 const DESC =
-  "Get help with your HUB account, athlete profile, coach access, or privacy requests. Contact the Summit Hoops support team.";
+  "Get help with your HUB account, athlete profile, coach access, reporting, or account deletion. Contact the Summit Hoops support team.";
 
 export const Route = createFileRoute("/support")({
   head: () => ({
@@ -13,8 +14,10 @@ export const Route = createFileRoute("/support")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESC },
       { property: "og:type", content: "article" },
+      { property: "og:url", content: "https://recruit.gforcedigital.net/support" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://recruit.gforcedigital.net/support" }],
   }),
   component: SupportPage,
 });
@@ -22,7 +25,7 @@ export const Route = createFileRoute("/support")({
 const FAQ = [
   {
     q: "How do I create an athlete profile?",
-    a: "Sign up with the athlete role, then open Profile to add measurements, academics, highlight links, and your game schedule. Publish your profile when you are ready for coaches to see it.",
+    a: "Sign up in the app with the athlete role, then open Profile to add measurements, academics, highlight links, and your game schedule. Publish your profile when you are ready for coaches to see it.",
   },
   {
     q: "My child is under 13 — can they have a profile?",
@@ -30,19 +33,27 @@ const FAQ = [
   },
   {
     q: "How do coaches find athletes?",
-    a: "Approved college coaches can search by position, GPA, graduation year, and distance from their location, then bookmark athletes and message them.",
+    a: "Administrator-approved college coaches can search by position, GPA, graduation year, and distance from their location, then save athletes and message them.",
+  },
+  {
+    q: "How do I report or block someone?",
+    a: "Open the menu in the top-right of a profile or message thread and choose Report or Block. Reports go straight to our administrators for review, and blocking immediately stops that person from messaging you.",
   },
   {
     q: "How do I delete my account or data?",
-    a: "Email us from the address on your account and ask for deletion. We remove your profile, media, and messages from the platform.",
+    a: "Open Account in the app and use Delete account, or email us from the address on your account. See our Delete account page for full details.",
+  },
+  {
+    q: "I forgot my password.",
+    a: "Use the 'Forgot password' link on the sign-in screen to get a reset email. If the email does not arrive, contact us and we will help.",
   },
 ];
 
 function SupportPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
-      <main className="container mx-auto max-w-3xl px-4 py-14">
+      <main className="container mx-auto max-w-3xl flex-1 px-4 py-14">
         <h1 className="font-display text-4xl font-bold">Support</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           Questions about your account, profile, or coach access? We are happy to help.
@@ -53,7 +64,7 @@ function SupportPage() {
           <p className="mt-2 text-sm text-foreground/90">
             Email:{" "}
             <a
-              className="inline-flex min-h-11 items-center font-medium text-primary underline"
+              className="font-medium text-primary underline underline-offset-4"
               href="mailto:support@gforcedigital.net"
             >
               support@gforcedigital.net
@@ -79,16 +90,21 @@ function SupportPage() {
 
         <p className="mt-10 text-sm text-muted-foreground">
           See also our{" "}
-          <Link className="inline-flex min-h-11 items-center text-primary underline" to="/privacy">
+          <Link className="text-primary underline underline-offset-4" to="/privacy">
             Privacy Policy
-          </Link>{" "}
-          and{" "}
-          <Link className="inline-flex min-h-11 items-center text-primary underline" to="/terms">
-            Terms of Service
           </Link>
-          .
+          ,{" "}
+          <Link className="text-primary underline underline-offset-4" to="/terms">
+            Terms of Use
+          </Link>
+          , and{" "}
+          <Link className="text-primary underline underline-offset-4" to="/delete-account">
+            Delete account
+          </Link>{" "}
+          page.
         </p>
       </main>
+      <SiteFooter />
     </div>
   );
 }
