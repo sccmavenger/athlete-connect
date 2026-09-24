@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as DeleteAccountRouteImport } from './routes/delete-account'
+import { Route as ConfirmedRouteImport } from './routes/confirmed'
 import { Route as AgeSuitabilityRouteImport } from './routes/age-suitability'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,11 @@ const DeleteAccountRoute = DeleteAccountRouteImport.update({
   path: '/delete-account',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfirmedRoute = ConfirmedRouteImport.update({
+  id: '/confirmed',
+  path: '/confirmed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgeSuitabilityRoute = AgeSuitabilityRouteImport.update({
   id: '/age-suitability',
   path: '/age-suitability',
@@ -50,6 +56,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/age-suitability': typeof AgeSuitabilityRoute
+  '/confirmed': typeof ConfirmedRoute
   '/delete-account': typeof DeleteAccountRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/age-suitability': typeof AgeSuitabilityRoute
+  '/confirmed': typeof ConfirmedRoute
   '/delete-account': typeof DeleteAccountRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/age-suitability': typeof AgeSuitabilityRoute
+  '/confirmed': typeof ConfirmedRoute
   '/delete-account': typeof DeleteAccountRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/age-suitability'
+    | '/confirmed'
     | '/delete-account'
     | '/privacy'
     | '/support'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/age-suitability'
+    | '/confirmed'
     | '/delete-account'
     | '/privacy'
     | '/support'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/age-suitability'
+    | '/confirmed'
     | '/delete-account'
     | '/privacy'
     | '/support'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgeSuitabilityRoute: typeof AgeSuitabilityRoute
+  ConfirmedRoute: typeof ConfirmedRoute
   DeleteAccountRoute: typeof DeleteAccountRoute
   PrivacyRoute: typeof PrivacyRoute
   SupportRoute: typeof SupportRoute
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeleteAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confirmed': {
+      id: '/confirmed'
+      path: '/confirmed'
+      fullPath: '/confirmed'
+      preLoaderRoute: typeof ConfirmedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/age-suitability': {
       id: '/age-suitability'
       path: '/age-suitability'
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgeSuitabilityRoute: AgeSuitabilityRoute,
+  ConfirmedRoute: ConfirmedRoute,
   DeleteAccountRoute: DeleteAccountRoute,
   PrivacyRoute: PrivacyRoute,
   SupportRoute: SupportRoute,
