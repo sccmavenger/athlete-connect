@@ -18,6 +18,35 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
+// Apple universal links: the app-site-association file must be a direct 200 at
+// this exact path with Content-Type application/json — no redirect, no extension.
+const AASA_PATH = "/.well-known/apple-app-site-association";
+const AASA_BODY = JSON.stringify(
+  {
+    applinks: {
+      apps: [],
+      details: [
+        {
+          appIDs: ["CB4AAVWWUD.com.summithoops.SummitHoops-TheHub"],
+          components: [{ "/": "/confirmed", comment: "email confirmation opens the app" }],
+        },
+      ],
+    },
+  },
+  null,
+  2,
+);
+
+function aasaResponse(): Response {
+  return new Response(AASA_BODY, {
+    status: 200,
+    headers: {
+      "content-type": "application/json",
+      "cache-control": "public, max-age=3600",
+    },
+  });
+}
+
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
