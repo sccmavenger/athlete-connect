@@ -36,7 +36,7 @@ const LINKS: { to: string; label: string; accent?: boolean }[] = [
 function Landing() {
   return (
     <div
-      className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-background px-8 py-10 text-foreground selection:bg-accent selection:text-accent-foreground sm:px-12 sm:py-14"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 text-foreground selection:bg-accent selection:text-accent-foreground sm:px-12"
       style={{
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))",
@@ -48,69 +48,83 @@ function Landing() {
         className="pointer-events-none absolute -right-24 top-1/4 h-64 w-64 rounded-full bg-accent opacity-10 blur-[100px]"
       />
 
-      {/* Brand */}
-      <header className="relative z-10">
-        <img
-          src={hubLogo.url}
-          alt="The HUB — powered by Summit Hoops"
-          className="h-10 w-auto sm:h-12"
-        />
-      </header>
+      {/* App-style column: phone-width everywhere, so no dead space at any size */}
+      <div className="relative z-10 flex min-h-[640px] w-full max-w-[390px] flex-col justify-between">
+        {/* Brand */}
+        <header>
+          <img
+            src={hubLogo.url}
+            alt="The HUB — powered by Summit Hoops"
+            className="h-10 w-auto"
+          />
+        </header>
 
-      {/* Hero */}
-      <main className="relative z-10 mb-auto mt-14 max-w-md">
-        <div className="mb-6 h-16 w-1 bg-accent" />
-        <h1 className="font-display text-5xl font-extrabold uppercase leading-[0.9] tracking-tight sm:text-6xl">
-          Your Path
-          <br />
-          <span className="text-accent">To The Next</span>
-          <br />
-          Level
-        </h1>
-        <p className="mt-6 text-lg font-light leading-relaxed text-muted-foreground">
-          The mobile platform for Midwest youth basketball recruiting and athlete exposure.
-        </p>
-      </main>
-
-      {/* Status + required links */}
-      <footer className="relative z-10 mt-14 space-y-12">
-        {APP_IS_LIVE ? (
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Download The HUB on the App Store"
-            className="inline-flex p-1"
-          >
-            <img
-              src={appStoreBadge.url}
-              alt="Download on the App Store"
-              className="h-12 w-auto sm:h-[52px]"
-            />
-          </a>
-        ) : (
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/80">
-              Coming soon to the App Store
-            </span>
+        {/* Hero */}
+        <main className="flex flex-col justify-center py-10">
+          <div className="flex gap-5">
+            <div aria-hidden className="w-1 shrink-0 bg-accent" />
+            <div className="flex flex-col gap-6">
+              <h1 className="font-display text-5xl font-extrabold uppercase leading-[0.9] tracking-tight">
+                Your Path
+                <br />
+                <span className="text-accent">To The Next</span>
+                <br />
+                Level
+              </h1>
+              <p className="max-w-[300px] text-base leading-relaxed text-muted-foreground">
+                The mobile platform for Midwest youth basketball recruiting and athlete
+                exposure.
+              </p>
+            </div>
           </div>
-        )}
 
-        <nav className="grid max-w-sm grid-cols-2 gap-x-8 gap-y-1 border-t border-border pt-8">
-          {LINKS.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`inline-flex min-h-11 items-center text-xs uppercase tracking-widest transition-colors hover:text-accent ${
-                l.accent ? "text-accent/70" : "text-muted-foreground"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-      </footer>
+          {/* Download */}
+          <div className="mt-10">
+            {APP_IS_LIVE ? (
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Download The HUB on the App Store"
+                className="inline-flex p-1 transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <img
+                  src={appStoreBadge.url}
+                  alt="Download on the App Store"
+                  className="h-12 w-auto sm:h-[52px]"
+                />
+              </a>
+            ) : (
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/80">
+                  Coming soon to the App Store
+                </span>
+              </div>
+            )}
+          </div>
+        </main>
+
+        {/* Required links */}
+        <footer className="border-t border-border pt-8">
+          <nav className="grid grid-cols-2 gap-x-8 gap-y-3">
+            {LINKS.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className={`inline-flex min-h-11 items-center text-xs uppercase tracking-widest transition-colors hover:text-accent ${
+                  l.accent ? "text-accent/70" : "text-muted-foreground"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <p className="mt-6 text-[10px] uppercase tracking-widest text-muted-foreground/60">
+            © 2026 Summit Hoops. All rights reserved.
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }
