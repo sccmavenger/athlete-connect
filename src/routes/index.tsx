@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import appStoreBadge from "@/assets/download-on-the-app-store.svg.asset.json";
 import hubLogo from "@/assets/hub-wordmark-white.png.asset.json";
 
-const APP_IS_LIVE = false;
+const APP_IS_LIVE = true;
 const APP_STORE_URL = "https://apps.apple.com/app/id6813542102";
 
 const TITLE = "The HUB — Midwest youth basketball recruiting app";
